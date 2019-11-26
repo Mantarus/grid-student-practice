@@ -22,9 +22,9 @@ public class MessageController {
         return new MessageService().getMessage(id);
     }
 
-    @RequestMapping(value = "/messages", method = RequestMethod.POST)
-    public void sendMessage(@RequestBody Message message) {
-        MessageService.sendMessage(message);
-    }
+//    @RequestMapping(value = "/messages", method = RequestMethod.POST)
+//    public void sendMessage(@RequestBody Message message) {
+//        MessageService.sendMessage(message);
+//    }
 
 }
