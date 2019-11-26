@@ -18,7 +18,7 @@ public class MessageService {
             new Message(mCounter.incrementAndGet(), "Trofim", "Nah, not bruh...", today)
             );
 
-    public void sendMessage(Message message) {
+    public static void sendMessage(Message message) {
         messageList.add(message);
     }
 
