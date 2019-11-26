@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.gridstudentpractice.chatservice;
 
 
 import org.springframework.boot.SpringApplication;
