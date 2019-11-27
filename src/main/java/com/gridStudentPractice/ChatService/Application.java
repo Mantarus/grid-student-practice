@@ -1,4 +1,4 @@
-package com.example.FirstStep;
+package com.gridStudentPractice.ChatService;
 
 
 import org.springframework.boot.SpringApplication;
