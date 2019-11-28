@@ -1,23 +1,23 @@
 package com.gridstudentpractice.chatservice.messages;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Message {
 
-    private long mId;
+    private long mID;
     private String mSender;
     private String mBody;
-    private Date mTimestamp;
+    private LocalDateTime mTimestamp = LocalDateTime.now();
 
-    public Message(long mId, String mSender, String mBody, Date mTimestamp) {
-        this.mId = mId;
+    public Message() {
+
+    }
+
+    public Message(long mID, String mSender, String mBody, LocalDateTime mTimestamp) {
+        this.mID = mID;
         this.mSender = mSender;
         this.mBody = mBody;
         this.mTimestamp = mTimestamp;
-    }
-
-    public long getMId() {
-        return mId;
     }
 
     public String getMSender() {
@@ -28,12 +28,8 @@ public class Message {
         return mBody;
     }
 
-    public Date getMTimestamp() {
+    public LocalDateTime getMTimestamp() {
         return mTimestamp;
-    }
-
-    public void setMId(long mId) {
-        this.mId = mId;
     }
 
     public void setMSender(String mSender) {
@@ -44,8 +40,16 @@ public class Message {
         this.mBody = mBody;
     }
 
-    public void setMTimestamp(Date mTimestamp) {
+    public void setMTimestamp(LocalDateTime mTimestamp) {
         this.mTimestamp = mTimestamp;
+    }
+
+    public long getMID() {
+        return mID;
+    }
+
+    public void setMID(long mID) {
+        this.mID = mID;
     }
 
 }
