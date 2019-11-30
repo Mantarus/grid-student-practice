@@ -1,4 +1,4 @@
-package com.gridstudentpractice.chatservice.messages;
+package com.gridstudentpractice.chatservice.message.model;
 
 import java.time.LocalDateTime;
 
