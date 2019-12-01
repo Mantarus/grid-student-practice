@@ -18,15 +18,8 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-//    @InitBinder
-//    public void initBinder(WebDataBinder binder) {
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-//        binder.registerCustomEditor(LocalDateTime.class, new CustomDateEditor(
-//                dateFormat, true));
-//    }
-
     @RequestMapping(method = RequestMethod.GET)
-    public String getMessages(Model model) {
+    public String displayMessages(Model model) {
         model.addAttribute("message", new Message());
         return "page";
     }

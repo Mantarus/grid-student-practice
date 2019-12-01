@@ -1,4 +1,4 @@
-package com.gridstudentpractice.chatservice;
+package com.gridstudentpractice.chatservice.greeting.model;
 
 public class Greeting {
 

@@ -1,20 +1,22 @@
 package com.gridstudentpractice.chatservice.message.model;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Message {
 
-    private long mID;
+    private long mId;
+    private static AtomicLong mIdCounter = new AtomicLong(0);
     private String mSender;
     private String mBody;
     private LocalDateTime mTimestamp = LocalDateTime.now();
 
     public Message() {
-
+        this.mId = mIdCounter.incrementAndGet();
     }
 
-    public Message(long mID, String mSender, String mBody, LocalDateTime mTimestamp) {
-        this.mID = mID;
+    public Message(String mSender, String mBody, LocalDateTime mTimestamp) {
+        this.mId = mIdCounter.incrementAndGet();
         this.mSender = mSender;
         this.mBody = mBody;
         this.mTimestamp = mTimestamp;
@@ -45,11 +47,7 @@ public class Message {
     }
 
     public long getMID() {
-        return mID;
-    }
-
-    public void setMID(long mID) {
-        this.mID = mID;
+        return mId;
     }
 
 }

@@ -1,5 +1,6 @@
-package com.gridstudentpractice.chatservice;
+package com.gridstudentpractice.chatservice.greeting.controller;
 
+import com.gridstudentpractice.chatservice.greeting.model.Greeting;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
