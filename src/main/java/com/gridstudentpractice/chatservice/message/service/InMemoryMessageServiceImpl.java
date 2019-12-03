@@ -2,25 +2,24 @@ package com.gridstudentpractice.chatservice.message.service;
 
 
 import com.gridstudentpractice.chatservice.message.model.Message;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-@Component
 public class InMemoryMessageServiceImpl implements MessageService {
 
-    private Map<Long, Message> messages = new HashMap<>();
+    private List<Message> messages = new ArrayList<>();
 
     @Override
     public void sendMessage(Message message) {
-        messages.put(message.getMID(), message);
+        messages.add(message);
     }
 
     @Override
     public List<Message> getMessages() {
-        return new ArrayList<>(messages.values());
+        return new ArrayList<>(messages);
     }
 
 }

@@ -12,10 +12,11 @@ public class Message {
     private LocalDateTime mTimestamp = LocalDateTime.now();
 
     public Message() {
-        this.mId = mIdCounter.incrementAndGet();
+
     }
 
     public Message(String mSender, String mBody, LocalDateTime mTimestamp) {
+        this();
         this.mId = mIdCounter.incrementAndGet();
         this.mSender = mSender;
         this.mBody = mBody;

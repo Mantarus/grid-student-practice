@@ -16,7 +16,7 @@ public class MessageRestController {
 
     @RequestMapping("/restMessages")
     public List<Message> getAllMessages() {
-        return new InMemoryMessageServiceImpl().getMessages();
+        return messageService.getMessages();
     }
 
 }
