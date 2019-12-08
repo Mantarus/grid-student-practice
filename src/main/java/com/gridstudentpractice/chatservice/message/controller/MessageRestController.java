@@ -4,6 +4,7 @@ import com.gridstudentpractice.chatservice.message.model.Message;
 import com.gridstudentpractice.chatservice.message.service.InMemoryMessageServiceImpl;
 import com.gridstudentpractice.chatservice.message.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

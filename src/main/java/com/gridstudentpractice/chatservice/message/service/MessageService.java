@@ -5,6 +5,6 @@ import com.gridstudentpractice.chatservice.message.model.Message;
 import java.util.List;
 
 public interface MessageService {
-    void sendMessage(Message message);
+    Message sendMessage(Message message);
     List<Message> getMessages();
 }
