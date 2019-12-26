@@ -1,0 +1,142 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #edeff2;
+  font-family: "Calibri", "Roboto", sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  background-color: #f8f8f8;
+  overflow: hidden;
+}
+
+.app-header {
+  background-color: #fff;
+  width: 100%;
+  text-align: center;
+  padding: 20px 0 15px;
+  color: #bcbdc0;
+  font-size: 20px;
+  box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
+}
+
+.message-feed {
+  position: relative;
+  list-style: none;
+  padding: 20px 10px 0 10px;
+  margin: 0;
+  overflow: scroll;
+}
+.message-feed .message {
+  clear: both;
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: all 0.5s linear;
+}
+.message-feed .message .sender {
+  background-color: #f5886e;
+  display: inline-block;
+  border-radius: 50px;
+  padding: 15px;
+  color: #9c5646
+}
+.message-feed .message .text-wrapper {
+  display: inline-block;
+  padding: 20px;
+  border-radius: 6px;
+  min-width: 100px;
+  position: relative;
+  background-color: #ffe6cb;
+  margin-left: 20px;
+}
+
+.message-feed .message .text-wrapper::after, .message-feed .message .text-wrapper:before {
+  top: 18px;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  right: 100%;
+  border-right-color: #ffe6cb;
+}
+.message-feed .message .text-wrapper::after {
+  border-width: 13px;
+  margin-top: 0;
+}
+.message-feed .message .text-wrapper::before {
+  border-width: 15px;
+  margin-top: -2px;
+}
+.message-feed .message .text-wrapper .text {
+  font-size: 18px;
+  font-weight: 300;
+  color: #c48843;
+}
+
+.message-feed .message .text-wrapper .time {
+  font-size: 11px;
+  font-weight: 300;
+  color: #c48843;
+  margin-right: 10px
+}
+
+.submit-wrapper {
+  width: 100%;
+  background-color: #fff;
+  padding: 20px 20px;
+}
+.submit-wrapper .submit-form {
+  display: inline-block;
+  height: 50px;
+  position: relative;
+  padding: 0 20px;
+  width: 100%
+}
+.submit-wrapper .submit-form .sender-form {
+  border-radius: 25px;
+  border: 1px solid #bcbdc0;
+  height: 100%;
+  box-sizing: border-box;
+  width: 30%;
+  padding-left: 10px;
+  outline-width: 0;
+  color: gray;
+}
+
+.submit-wrapper .submit-form .message-form {
+  border-radius: 25px;
+  border: 1px solid #bcbdc0;
+  height: 100%;
+  box-sizing: border-box;
+  width: 50%;
+  padding-left: 10px;
+  outline-width: 0;
+  color: gray;
+}
+.submit-wrapper .submit-form .submit-button {
+  width: 15%;
+  height: 50px;
+  display: inline-block;
+  border-radius: 50px;
+  background-color: #a3d063;
+  border: 2px solid #a3d063;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  float: right;
+}
+
