@@ -1,5 +1,6 @@
 package com.gridstudentpractice.chatservice.message.model;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -7,7 +8,9 @@ public class Message {
 
     private long mId;
     private static AtomicLong mIdCounter = new AtomicLong(0);
+    @NotBlank
     private String mSender;
+    @NotBlank
     private String mBody;
     private LocalDateTime mTimestamp = LocalDateTime.now();
 
