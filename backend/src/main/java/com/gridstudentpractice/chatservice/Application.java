@@ -14,6 +14,7 @@ public class Application {
     static final String DB_URL = "jdbc:postgresql://localhost:5432/chat";
     static final String USER = "postgres";
     static final String PASS = "password";
+    private static Connection connection = null;
 
     public static void main(String[] args) {
 
@@ -28,7 +29,6 @@ public class Application {
         }
 
         System.out.println("PostgreSQL JDBC Driver successfully connected");
-        Connection connection = null;
 
         try {
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -44,5 +44,9 @@ public class Application {
         } else {
             System.out.println("Failed to make connection to database");
         }
+    }
+
+    public static Connection getConnection() {
+        return connection;
     }
 }
