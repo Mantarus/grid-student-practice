@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,20 +43,29 @@ import java.util.List;
 
         Statement statement = null;
         statement = Application.getConnection().createStatement();
-        // выбираем данные с БД
+
         ResultSet rs = statement.executeQuery(selectTableSQL);
 
-        // И если что то было получено то цикл while сработает
+        List<Message> messages = new ArrayList<>();
+
         while (rs.next()) {
+
             String sender = rs.getString("sender");
             String body = rs.getString("body");
             String time1 = rs.getString("time1");
+
+            Message message = new Message();
+            message.setMSender(sender);
+            message.setMBody(body);
+            message.setMTimestamp(LocalDateTime.parse(time1));
+
+            messages.add(message);
 
             System.out.println("sender : " + sender);
             System.out.println("body : " + body);
             System.out.println("time1 : " + time1);
         }
-        return null;
+        return messages;
     }
 }
 
