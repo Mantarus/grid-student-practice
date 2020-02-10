@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.*;
 
 @RestController
@@ -16,12 +17,12 @@ public class MessageRestController {
     private MessageService messageService;
 
     @GetMapping
-    public List<Message> getAllMessages() {
+    public List<Message> getAllMessages() throws SQLException {
         return messageService.getMessages();
     }
 
     @PostMapping
-    public void sendMessage(@Valid @RequestBody Message message) {
+    public void sendMessage(@Valid @RequestBody Message message) throws SQLException {
         messageService.sendMessage(message);
     }
 

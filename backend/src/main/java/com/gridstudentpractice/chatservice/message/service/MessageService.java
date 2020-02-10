@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MessageService {
     Message sendMessage(Message message) throws SQLException;
-    List<Message> getMessages();
+    List<Message> getMessages() throws SQLException;
 }
