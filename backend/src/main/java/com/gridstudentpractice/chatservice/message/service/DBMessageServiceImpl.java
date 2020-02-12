@@ -1,13 +1,10 @@
 package com.gridstudentpractice.chatservice.message.service;
 
-import com.gridstudentpractice.chatservice.Application;
+import com.gridstudentpractice.chatservice.message.DB_Util;
 import com.gridstudentpractice.chatservice.message.model.Message;
 import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,57 +12,69 @@ import java.util.List;
 @Service
  public class DBMessageServiceImpl implements MessageService {
 
+    final static String insertTableSQL = "INSERT INTO messages (sender, body, time1) VALUES (\'?\', \'?\',\'?\')" ;
+    final static String selectTableSQL = "SELECT sender, body, time1 from messages";
+
     @Override
-    public Message sendMessage(Message message) throws SQLException {
+    public Message sendMessage(Message message) {
 
         String mSender = message.getMSender();
         String mBody = message.getMBody();
         String mTime = message.getMTimestamp().toString();
-        String insertTableSQL = "INSERT INTO messages (sender, body, time1) VALUES" + "('"  + mSender + "\', \'" + mBody + "\',\'" + mTime + "\')" ;
 
-        System.out.println(insertTableSQL);
+        try (PreparedStatement preparedStatement = DB_Util.getConnection().prepareStatement(insertTableSQL)) {
 
-        Statement statement = null;
-        statement = Application.getConnection().createStatement();
-        statement.executeUpdate(insertTableSQL);
-        System.out.println("SQL injection complited");
+            preparedStatement.setString(1, mSender);
+            preparedStatement.setString(2, mBody);
+            preparedStatement.setString(3, mTime);
 
-        if (statement != null)
-            statement.close();
+            preparedStatement.executeUpdate();
+            System.out.println("SQL injection completed");
 
+            preparedStatement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
-    public List<Message> getMessages() throws SQLException {
+    public List<Message> getMessages() {
 
-        String selectTableSQL = "SELECT sender, body, time1 from messages";
+        try (Statement statement = DB_Util.getConnection().createStatement()) {
+            try (ResultSet rs = statement.executeQuery(selectTableSQL)) {
+                List<Message> messages = new ArrayList<>();
 
-        Statement statement = null;
-        statement = Application.getConnection().createStatement();
+                while (rs.next()) {
 
-        ResultSet rs = statement.executeQuery(selectTableSQL);
+                    String sender = rs.getString("sender");
+                    String body = rs.getString("body");
+                    String time1 = rs.getString("time1");
 
-        List<Message> messages = new ArrayList<>();
+                    Message message = new Message();
+                    message.setMSender(sender);
+                    message.setMBody(body);
+                    message.setMTimestamp(LocalDateTime.parse(time1));
 
-        while (rs.next()) {
+                    messages.add(message);
 
-            String sender = rs.getString("sender");
-            String body = rs.getString("body");
-            String time1 = rs.getString("time1");
+                    String out = String.format("%s %s : %s", time1, sender, body);
+                    System.out.println(out);
 
-            Message message = new Message();
-            message.setMSender(sender);
-            message.setMBody(body);
-            message.setMTimestamp(LocalDateTime.parse(time1));
+                    statement.close();
+                }
 
-            messages.add(message);
+                return messages;
 
-            System.out.println("sender : " + sender);
-            System.out.println("body : " + body);
-            System.out.println("time1 : " + time1);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-        return messages;
     }
 }
 

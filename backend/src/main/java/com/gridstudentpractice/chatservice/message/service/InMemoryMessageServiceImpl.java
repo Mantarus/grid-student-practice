@@ -1,4 +1,4 @@
-/* package com.gridstudentpractice.chatservice.message.service;
+ package com.gridstudentpractice.chatservice.message.service;
 
 
 import com.gridstudentpractice.chatservice.message.model.Message;
@@ -23,4 +23,4 @@ public class InMemoryMessageServiceImpl implements MessageService {
         return new ArrayList<>(messages);
     }
 
-} */
+}

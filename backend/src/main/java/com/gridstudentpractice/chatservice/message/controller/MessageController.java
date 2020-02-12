@@ -1,4 +1,4 @@
-/*package com.gridstudentpractice.chatservice.message.controller;
+package com.gridstudentpractice.chatservice.message.controller;
 
 import com.gridstudentpractice.chatservice.message.model.Message;
 import com.gridstudentpractice.chatservice.message.service.MessageService;
@@ -32,4 +32,3 @@ public class MessageController {
     }
 
 }
-*/
