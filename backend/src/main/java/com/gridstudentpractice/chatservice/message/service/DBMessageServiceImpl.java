@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.message.service;
 
-import com.gridstudentpractice.chatservice.message.DB_Util;
+import com.gridstudentpractice.chatservice.message.DbUtil;
 import com.gridstudentpractice.chatservice.message.model.Message;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +12,8 @@ import java.util.List;
 @Service
  public class DBMessageServiceImpl implements MessageService {
 
-    final static String insertTableSQL = "INSERT INTO messages (sender, body, time1) VALUES (\'?\', \'?\',\'?\')" ;
-    final static String selectTableSQL = "SELECT sender, body, time1 from messages";
+    final static String insertTableSql = "INSERT INTO messages (sender, body, time1) VALUES (\'?\', \'?\',\'?\')" ;
+    final static String selectTableSql = "SELECT sender, body, time1 from messages";
 
     @Override
     public Message sendMessage(Message message) {
@@ -22,15 +22,13 @@ import java.util.List;
         String mBody = message.getMBody();
         String mTime = message.getMTimestamp().toString();
 
-        try (PreparedStatement preparedStatement = DB_Util.getConnection().prepareStatement(insertTableSQL)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(insertTableSql)) {
 
             preparedStatement.setString(1, mSender);
             preparedStatement.setString(2, mBody);
             preparedStatement.setString(3, mTime);
 
             preparedStatement.executeUpdate();
-            System.out.println("SQL injection completed");
-
             preparedStatement.close();
 
         } catch (SQLException e) {
@@ -42,8 +40,8 @@ import java.util.List;
     @Override
     public List<Message> getMessages() {
 
-        try (Statement statement = DB_Util.getConnection().createStatement()) {
-            try (ResultSet rs = statement.executeQuery(selectTableSQL)) {
+        try (Statement statement = DbUtil.getConnection().createStatement()) {
+            try (ResultSet rs = statement.executeQuery(selectTableSql)) {
                 List<Message> messages = new ArrayList<>();
 
                 while (rs.next()) {

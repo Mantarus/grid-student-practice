@@ -3,6 +3,7 @@ package com.gridstudentpractice.chatservice.message.controller;
 import com.gridstudentpractice.chatservice.message.model.Message;
 import com.gridstudentpractice.chatservice.message.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 public class MessageController {
 
     @Autowired
+    @Qualifier("DBMessageServiceImpl")
     private MessageService messageService;
 
     @RequestMapping(method = RequestMethod.GET)
