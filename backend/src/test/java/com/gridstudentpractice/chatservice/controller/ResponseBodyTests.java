@@ -3,6 +3,7 @@ package com.gridstudentpractice.chatservice.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gridstudentpractice.chatservice.message.controller.MessageRestController;
 import com.gridstudentpractice.chatservice.message.model.Message;
+import com.gridstudentpractice.chatservice.message.service.DBMessageServiceImpl;
 import com.gridstudentpractice.chatservice.message.service.MessageService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ class ResponseBodyTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockBean(name = "DBMessageServiceImpl")
     private MessageService messageService;
 
 
