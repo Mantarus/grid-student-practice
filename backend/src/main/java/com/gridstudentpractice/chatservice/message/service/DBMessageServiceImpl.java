@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.message.service;
 
-import com.gridstudentpractice.chatservice.message.DbUtil;
+import com.gridstudentpractice.chatservice.DbUtil;
 import com.gridstudentpractice.chatservice.message.model.Message;
 import org.springframework.stereotype.Service;
 

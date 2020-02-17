@@ -1,4 +1,4 @@
-package com.gridstudentpractice.chatservice.message;
+package com.gridstudentpractice.chatservice;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
