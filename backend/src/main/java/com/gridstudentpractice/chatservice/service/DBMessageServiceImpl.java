@@ -18,9 +18,9 @@ import java.util.List;
     @Override
     public Message sendMessage(Message message) {
 
-        String mSender = message.getMSender();
-        String mBody = message.getMBody();
-        String mTime = message.getMTimestamp().toString();
+        String mSender = message.getSender();
+        String mBody = message.getBody();
+        String mTime = message.getTimestamp().toString();
 
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(insertTableSql)) {
 
@@ -51,9 +51,9 @@ import java.util.List;
                     String time1 = rs.getString("time1");
 
                     Message message = new Message();
-                    message.setMSender(sender);
-                    message.setMBody(body);
-                    message.setMTimestamp(LocalDateTime.parse(time1));
+                    message.setSender(sender);
+                    message.setBody(body);
+                    message.setTimestamp(LocalDateTime.parse(time1));
 
                     messages.add(message);
 

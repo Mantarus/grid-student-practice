@@ -39,17 +39,17 @@ class ResponseBodyTests {
 
     private Message invalidMessage () {
         Message message = new Message();
-        message.setMSender("");
-        message.setMBody("");
-        message.setMTimestamp(LocalDateTime.now());
+        message.setSender("");
+        message.setBody("");
+        message.setTimestamp(LocalDateTime.now());
         return message;
     }
 
     private Message validMessage() {
         Message message = new Message();
-        message.setMSender("Mock");
-        message.setMBody("test");
-        message.setMTimestamp(LocalDateTime.now());
+        message.setSender("Mock");
+        message.setBody("test");
+        message.setTimestamp(LocalDateTime.now());
         return message;
     }
 

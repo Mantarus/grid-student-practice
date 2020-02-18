@@ -2,55 +2,54 @@ package com.gridstudentpractice.chatservice.model;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Message {
 
-    private long mId;
-    private static AtomicLong mIdCounter = new AtomicLong(0);
+    private int id;
     @NotBlank
-    private String mSender;
+    private String sender;
     @NotBlank
-    private String mBody;
-    private LocalDateTime mTimestamp = LocalDateTime.now();
+    private String body;
+    private LocalDateTime timestamp = LocalDateTime.now();
 
-    public Message() {
-        this.mId = mIdCounter.incrementAndGet();
+    public Message() {}
+
+    public Message(String sender, String body, LocalDateTime timestamp) {
+        this.sender = sender;
+        this.body = body;
+        this.timestamp = timestamp;
     }
 
-    public Message(String mSender, String mBody, LocalDateTime mTimestamp) {
-        this();
-        this.mSender = mSender;
-        this.mBody = mBody;
-        this.mTimestamp = mTimestamp;
+    public String getSender() {
+        return sender;
     }
 
-    public String getMSender() {
-        return mSender;
+    public String getBody() {
+        return body;
     }
 
-    public String getMBody() {
-        return mBody;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public LocalDateTime getMTimestamp() {
-        return mTimestamp;
+    public void setSender(String mSender) {
+        this.sender = mSender;
     }
 
-    public void setMSender(String mSender) {
-        this.mSender = mSender;
+    public void setBody(String mBody) {
+        this.body = mBody;
     }
 
-    public void setMBody(String mBody) {
-        this.mBody = mBody;
+    public void setTimestamp(LocalDateTime mTimestamp) {
+        this.timestamp = mTimestamp;
     }
 
-    public void setMTimestamp(LocalDateTime mTimestamp) {
-        this.mTimestamp = mTimestamp;
+    public int getId() {
+        return id;
     }
 
-    public long getMID() {
-        return mId;
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

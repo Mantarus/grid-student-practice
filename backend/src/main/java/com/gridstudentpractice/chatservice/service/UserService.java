@@ -4,7 +4,7 @@ import com.gridstudentpractice.chatservice.model.User;
 
 public interface UserService {
 
-    User addUser(User user);
-    boolean checkUser(User user);
+    boolean addUser(User user);
+    User getUser(String loginToGet);
 
 }

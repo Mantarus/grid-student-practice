@@ -12,58 +12,59 @@ import java.sql.SQLException;
 public class DbUserServiceImpl implements UserService {
 
     final static String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)" ;
-    final static String checkUserSql = "SELECT login FROM users WHERE login = ?";
+    final static String checkUserSql = "SELECT * FROM users WHERE login = ?";
 
     @Override
-    public User addUser(User user) {
-
-        String uLogin = user.getULogin();
-        String uPass = user.getUPass();
+    public boolean addUser(User user) {
 
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(addUserSql)) {
 
-            preparedStatement.setString(1, uLogin);
-            preparedStatement.setString(2, uPass);
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getPassword());
 
-            preparedStatement.executeUpdate();
+            if (preparedStatement.executeUpdate() == 0) {
+                return false;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return true;
     }
 
     @Override
-    public boolean checkUser(User user) {
-
-        String uLogin = user.getULogin();
-        boolean result = false;
+    public User getUser(String loginToGet) {
 
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(checkUserSql)) {
 
-            preparedStatement.setString(1, uLogin);
+            preparedStatement.setString(1, loginToGet);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
 
+                User user = new User();
+
                 while (rs.next()) {
 
-                    String login = rs.getString("login");
-
-                    if (login.equals(uLogin))
-                        result = true;
+                   user.setId(rs.getInt("id"));
+                   user.setLogin(rs.getString("login"));
+                   user.setPass(rs.getString("password"));
                 }
 
                 preparedStatement.close();
 
+                if (!(user.getLogin().equals("null") || user.getPassword().equals("null")))
+                    return user;
+                else return null;
+
             } catch (SQLException e) {
                 e.printStackTrace();
-                return false;
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
 
-        return result;
+
     }
 }

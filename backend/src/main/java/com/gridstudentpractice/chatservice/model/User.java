@@ -1,43 +1,43 @@
 package com.gridstudentpractice.chatservice.model;
 
 import javax.validation.constraints.NotBlank;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class User {
-    private long uId;
-    private static AtomicLong uIdCounter = new AtomicLong(0);
+
+    private int id;
     @NotBlank
-    private String uLogin;
+    private String login;
     @NotBlank
-    private String uPass;
+    private String password;
 
-    public User() {
-        this.uId = uIdCounter.incrementAndGet();
+    public User() {}
+
+    public User(String login, String password) {
+        this.login = login;
+        this.password = password;
     }
 
-    public User(String uLogin, String uPass) {
-        this();
-        this.uLogin = uLogin;
-        this.uPass = uPass;
+    public String getLogin() {
+        return login;
     }
 
-    public String getULogin() {
-        return uLogin;
+    public String getPassword() {
+        return password;
     }
 
-    public String getUPass() {
-        return uPass;
+    public long getID() {
+        return id;
     }
 
-    public long getUID() {
-        return uId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setULogin(String uLogin) {
-        this.uLogin = uLogin;
+    public void setLogin(String uLogin) {
+        this.login = uLogin;
     }
 
-    public void setUPass(String uPass) {
-        this.uPass = uPass;
+    public void setPass(String uPass) {
+        this.password = uPass;
     }
 }
