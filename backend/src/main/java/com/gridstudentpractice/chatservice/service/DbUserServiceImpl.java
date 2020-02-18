@@ -1,24 +1,18 @@
-package com.gridstudentpractice.chatservice.user.service;
+package com.gridstudentpractice.chatservice.service;
 
 import com.gridstudentpractice.chatservice.DbUtil;
-import com.gridstudentpractice.chatservice.message.model.Message;
-import com.gridstudentpractice.chatservice.user.model.User;
+import com.gridstudentpractice.chatservice.model.User;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Service
 public class DbUserServiceImpl implements UserService {
 
-    final static String addUserSql = "INSERT INTO users (login, password) VALUES (\'?\', \'?\')" ;
-    final static String checkUserSql = "SELECT EXISTS(SELECT login FROM user WHERE login = ";
+    final static String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)" ;
+    final static String checkUserSql = "SELECT login FROM users WHERE login = ?";
 
     @Override
     public User addUser(User user) {
@@ -32,13 +26,11 @@ public class DbUserServiceImpl implements UserService {
             preparedStatement.setString(2, uPass);
 
             preparedStatement.executeUpdate();
-            preparedStatement.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
-
     }
 
     @Override
@@ -47,20 +39,21 @@ public class DbUserServiceImpl implements UserService {
         String uLogin = user.getULogin();
         boolean result = false;
 
-        try (Statement statement = DbUtil.getConnection().createStatement()) {
-            try (ResultSet rs = statement.executeQuery(checkUserSql)) {
-                List<Message> messages = new ArrayList<>();
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(checkUserSql)) {
+
+            preparedStatement.setString(1, uLogin);
+
+            try (ResultSet rs = preparedStatement.executeQuery()) {
 
                 while (rs.next()) {
 
-                    String sender = rs.getString("sender");
-                    String body = rs.getString("body");
-                    String time1 = rs.getString("time1");
+                    String login = rs.getString("login");
 
-                    statement.close();
+                    if (login.equals(uLogin))
+                        result = true;
                 }
 
-                return result;
+                preparedStatement.close();
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -70,5 +63,7 @@ public class DbUserServiceImpl implements UserService {
             e.printStackTrace();
             return false;
         }
+
+        return result;
     }
 }

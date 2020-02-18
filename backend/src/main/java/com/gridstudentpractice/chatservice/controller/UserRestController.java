@@ -1,7 +1,7 @@
-package com.gridstudentpractice.chatservice.user.controller;
+package com.gridstudentpractice.chatservice.controller;
 
-import com.gridstudentpractice.chatservice.user.model.User;
-import com.gridstudentpractice.chatservice.user.service.UserService;
+import com.gridstudentpractice.chatservice.model.User;
+import com.gridstudentpractice.chatservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

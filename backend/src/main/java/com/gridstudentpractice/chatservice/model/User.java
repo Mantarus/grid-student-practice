@@ -1,4 +1,4 @@
-package com.gridstudentpractice.chatservice.user.model;
+package com.gridstudentpractice.chatservice.model;
 
 import javax.validation.constraints.NotBlank;
 import java.util.concurrent.atomic.AtomicLong;
