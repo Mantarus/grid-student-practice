@@ -32,16 +32,16 @@ public class Message {
         return timestamp;
     }
 
-    public void setSender(String mSender) {
-        this.sender = mSender;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
-    public void setBody(String mBody) {
-        this.body = mBody;
+    public void setBody(String body) {
+        this.body = body;
     }
 
-    public void setTimestamp(LocalDateTime mTimestamp) {
-        this.timestamp = mTimestamp;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public int getId() {
