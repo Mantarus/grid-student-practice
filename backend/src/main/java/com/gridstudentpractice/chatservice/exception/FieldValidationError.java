@@ -1,4 +1,4 @@
-package com.gridstudentpractice.chatservice.message.exception;
+package com.gridstudentpractice.chatservice.exception;
 
 public class FieldValidationError {
 

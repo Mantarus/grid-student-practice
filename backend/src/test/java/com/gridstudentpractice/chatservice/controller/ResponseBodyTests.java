@@ -1,17 +1,14 @@
 package com.gridstudentpractice.chatservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gridstudentpractice.chatservice.message.controller.MessageRestController;
-import com.gridstudentpractice.chatservice.message.model.Message;
-import com.gridstudentpractice.chatservice.message.service.DBMessageServiceImpl;
-import com.gridstudentpractice.chatservice.message.service.MessageService;
+import com.gridstudentpractice.chatservice.model.Message;
+import com.gridstudentpractice.chatservice.service.MessageService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -42,17 +39,17 @@ class ResponseBodyTests {
 
     private Message invalidMessage () {
         Message message = new Message();
-        message.setMSender("");
-        message.setMBody("");
-        message.setMTimestamp(LocalDateTime.now());
+        message.setSender("");
+        message.setBody("");
+        message.setTimestamp(LocalDateTime.now());
         return message;
     }
 
     private Message validMessage() {
         Message message = new Message();
-        message.setMSender("Mock");
-        message.setMBody("test");
-        message.setMTimestamp(LocalDateTime.now());
+        message.setSender("Mock");
+        message.setBody("test");
+        message.setTimestamp(LocalDateTime.now());
         return message;
     }
 
