@@ -20,7 +20,7 @@ public class UserRestController {
     }
 
     @PostMapping
-    public boolean addUser(@Valid @RequestBody User user) {
-        return userService.addUser(user);
+    public void addUser(@Valid @RequestBody User user) {
+        userService.addUser(user);
     }
 }

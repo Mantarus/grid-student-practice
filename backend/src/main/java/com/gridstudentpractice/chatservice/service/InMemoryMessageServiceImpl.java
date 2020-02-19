@@ -12,9 +12,8 @@ public class InMemoryMessageServiceImpl implements MessageService {
     private List<Message> messages = new ArrayList<>();
 
     @Override
-    public Message sendMessage(Message message) {
+    public void sendMessage(Message message) {
         messages.add(message);
-        return message;
     }
 
     @Override
