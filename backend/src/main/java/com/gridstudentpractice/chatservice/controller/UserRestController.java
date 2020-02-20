@@ -14,9 +14,9 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{login}")
-    public User getUser(@PathVariable String login) {
-        return userService.getUser(login);
+    @GetMapping("/{userLogin}")
+    public User getUser(@PathVariable String userLogin) {
+        return userService.getUser(userLogin);
     }
 
     @PostMapping

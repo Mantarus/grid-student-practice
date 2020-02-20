@@ -7,6 +7,6 @@ import java.util.List;
 public interface MessageRepository {
 
     boolean createMessage(Message message);
-    List<Message> readMessages();
+    List<Message> getMessages();
 
 }

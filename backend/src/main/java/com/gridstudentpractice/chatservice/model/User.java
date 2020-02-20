@@ -1,7 +1,16 @@
 package com.gridstudentpractice.chatservice.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     private int id;
@@ -10,34 +19,4 @@ public class User {
     @NotBlank
     private String password;
 
-    public User() {}
-
-    public User(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public long getID() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setLogin(String uLogin) {
-        this.login = uLogin;
-    }
-
-    public void setPass(String uPass) {
-        this.password = uPass;
-    }
 }

@@ -20,7 +20,7 @@ import java.util.List;
 
     @Override
     public List<Message> getMessages() {
-        return messageRepository.readMessages();
+        return messageRepository.getMessages();
     }
 }
 

@@ -41,7 +41,6 @@ class ResponseBodyTests {
         Message message = new Message();
         message.setSender("");
         message.setBody("");
-        message.setTimestamp(LocalDateTime.now());
         return message;
     }
 
@@ -49,7 +48,6 @@ class ResponseBodyTests {
         Message message = new Message();
         message.setSender("Mock");
         message.setBody("test");
-        message.setTimestamp(LocalDateTime.now());
         return message;
     }
 

@@ -17,7 +17,7 @@ public class DbUserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(String loginToGet) {
-        return  userRepository.readUser(loginToGet);
+    public User getUser(String userLogin) {
+        return  userRepository.getUser(userLogin);
     }
 }
