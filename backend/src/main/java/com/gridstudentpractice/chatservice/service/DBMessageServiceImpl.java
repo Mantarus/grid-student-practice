@@ -1,7 +1,9 @@
 package com.gridstudentpractice.chatservice.service;
 
+import com.gridstudentpractice.chatservice.AppProperties;
 import com.gridstudentpractice.chatservice.DbUtil;
 import com.gridstudentpractice.chatservice.model.Message;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
@@ -15,6 +17,9 @@ import java.util.List;
     final static String insertTableSql = "INSERT INTO messages (sender, body, time1) VALUES (\'?\', \'?\',\'?\')" ;
     final static String selectTableSql = "SELECT sender, body, time1 from messages";
 
+    @Autowired
+    private AppProperties appProperties;
+
     @Override
     public Message sendMessage(Message message) {
 
@@ -22,7 +27,7 @@ import java.util.List;
         String mBody = message.getBody();
         String mTime = message.getTimestamp().toString();
 
-        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(insertTableSql)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(insertTableSql)) {
 
             preparedStatement.setString(1, mSender);
             preparedStatement.setString(2, mBody);
@@ -40,7 +45,7 @@ import java.util.List;
     @Override
     public List<Message> getMessages() {
 
-        try (Statement statement = DbUtil.getConnection().createStatement()) {
+        try (Statement statement = DbUtil.getConnection(appProperties).createStatement()) {
             try (ResultSet rs = statement.executeQuery(selectTableSql)) {
                 List<Message> messages = new ArrayList<>();
 

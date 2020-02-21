@@ -1,7 +1,9 @@
 package com.gridstudentpractice.chatservice.service;
 
+import com.gridstudentpractice.chatservice.AppProperties;
 import com.gridstudentpractice.chatservice.DbUtil;
 import com.gridstudentpractice.chatservice.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -14,10 +16,13 @@ public class DbUserServiceImpl implements UserService {
     final static String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)" ;
     final static String checkUserSql = "SELECT * FROM users WHERE login = ?";
 
+    @Autowired
+    private AppProperties appProperties;
+
     @Override
     public boolean addUser(User user) {
 
-        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(addUserSql)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(addUserSql)) {
 
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
@@ -35,7 +40,7 @@ public class DbUserServiceImpl implements UserService {
     @Override
     public User getUser(String loginToGet) {
 
-        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(checkUserSql)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(checkUserSql)) {
 
             preparedStatement.setString(1, loginToGet);
 

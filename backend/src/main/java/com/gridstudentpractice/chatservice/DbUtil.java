@@ -6,17 +6,14 @@ import java.sql.SQLException;
 
 public class DbUtil {
 
-    static final String DB_URL = "jdbc:postgresql://localhost:5432/chat";
-    static final String USER = "postgres";
-    static final String PASS = "password";
     private static Connection connection = null;
 
-    public static Connection getConnection() {
+    public static Connection getConnection(AppProperties appProperties) {
 
         if (connection == null) {
 
             try {
-                connection = DriverManager.getConnection(DB_URL, USER, PASS);
+                connection = DriverManager.getConnection(appProperties.getDatabaseUrl(), appProperties.getDatabaseUser(), appProperties.getDatabasePassword());
 
             } catch (SQLException e) {
                 e.printStackTrace();
