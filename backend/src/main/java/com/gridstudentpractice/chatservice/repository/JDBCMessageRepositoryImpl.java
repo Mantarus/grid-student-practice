@@ -22,6 +22,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
     @Override
     public boolean createMessage(Message message) {
 
+
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(insertTableSql)) {
 
             preparedStatement.setString(1, message.getSender());
@@ -30,7 +31,6 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
             if (preparedStatement.executeUpdate() == 0) {
                 return false;
             }
-            preparedStatement.close();
 
         } catch (SQLException e) {
             throw new RepositoryException("Message creation error", e);
@@ -50,11 +50,12 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
                     messages.add(message);
 
                 }
-                statement.close();
                 return messages;
 
             } catch (SQLException e) {
                 throw new RepositoryException("ResultSet error", e);
+            } finally {
+                statement.close();
             }
         } catch (SQLException e) {
             throw new RepositoryException("Message reading error", e);

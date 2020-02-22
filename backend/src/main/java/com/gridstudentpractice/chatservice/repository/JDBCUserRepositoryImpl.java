@@ -25,7 +25,6 @@ public class JDBCUserRepositoryImpl implements UserRepository {
             if (preparedStatement.executeUpdate() == 0) {
                 return false;
             }
-            preparedStatement.close();
 
         } catch (SQLException e) {
             throw new RepositoryException("User creation error", e);
@@ -50,14 +49,14 @@ public class JDBCUserRepositoryImpl implements UserRepository {
                     user.setPassword(rs.getString("password"));
                 }
 
-                preparedStatement.close();
-
-                if (!(user.getLogin().equals("null") || user.getPassword().equals("null")))
+                if (!(user.getLogin() == null || user.getPassword() == null))
                     return user;
                 else return null;
 
             } catch (SQLException e) {
                 throw new RepositoryException("ResultSet error", e);
+            } finally {
+                preparedStatement.close();
             }
         } catch (SQLException e) {
             throw new RepositoryException("User reading error", e);
