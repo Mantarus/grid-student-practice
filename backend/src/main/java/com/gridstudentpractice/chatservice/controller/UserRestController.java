@@ -14,12 +14,12 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{userLogin}")
+    @GetMapping("/get/{userLogin}")
     public User getUser(@PathVariable String userLogin) {
         return userService.getUser(userLogin);
     }
 
-    @PostMapping
+    @PostMapping("/post")
     public void addUser(@Valid @RequestBody User user) {
         userService.addUser(user);
     }

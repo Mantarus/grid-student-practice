@@ -17,11 +17,17 @@ import java.util.List;
 public class JDBCMessageRepositoryImpl implements MessageRepository {
 
     final static String insertTableSql = "INSERT INTO messages (sender, body) VALUES (?, ?)";
-    final static String selectTableSql = "SELECT * FROM messages";
+    final static String selectTableSql = "SELECT m.id AS id, " +
+                                                "u.login AS sender, " +
+                                                "m.body AS body, " +
+                                                "m.time1 AS time1, " +
+                                                "ch.chatroom_name AS chatroom " +
+            "FROM messages m " +
+            "JOIN users u ON u.id=m.sender " +
+            "JOIN chatrooms ch ON  ch.id=m.chatroom";;
 
     @Override
     public boolean createMessage(Message message) {
-
 
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(insertTableSql)) {
 
@@ -46,7 +52,8 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
                 while (rs.next()) {
 
                     Message message = new Message(rs.getInt("id"), rs.getString("sender"),
-                            rs.getString("body"), rs.getTimestamp("time1").toLocalDateTime());
+                            rs.getString("chatroom"), rs.getString("body"),
+                            rs.getTimestamp("time1").toLocalDateTime());
                     messages.add(message);
 
                 }

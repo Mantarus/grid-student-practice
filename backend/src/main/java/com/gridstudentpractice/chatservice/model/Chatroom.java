@@ -6,21 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class Chatroom {
 
     private int id;
     @NotBlank
-    private String sender;
-    @NotBlank
-    private  String chatroom;
-    @NotBlank
-    private String body;
-    private LocalDateTime timestamp;
+    private String chatroomName;
+    private String chatroomDescription;
 
 }
