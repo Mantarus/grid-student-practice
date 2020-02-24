@@ -20,11 +20,11 @@ public class DBChatroomServiceImpl implements ChatroomService {
 
     @Override
     public Chatroom getChatroomById(int chatroomId) {
-        return null;
+        return chatroomRepository.getChatroomById(chatroomId);
     }
 
     @Override
     public List<Chatroom> getChatroomByName(String chatroomName) {
-        return null;
+        return chatroomRepository.getChatroomByName(chatroomName);
     }
 }
