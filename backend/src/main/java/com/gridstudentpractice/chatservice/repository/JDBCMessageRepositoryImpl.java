@@ -21,7 +21,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
                                                 "u.login AS sender, " +
                                                 "m.body AS body, " +
                                                 "m.time1 AS time1, " +
-                                                "ch.chatroom_name AS chatroom " +
+                                                "ch.name AS chatroom " +
             "FROM messages m " +
             "JOIN users u ON u.id=m.sender " +
             "JOIN chatrooms ch ON  ch.id=m.chatroom";;

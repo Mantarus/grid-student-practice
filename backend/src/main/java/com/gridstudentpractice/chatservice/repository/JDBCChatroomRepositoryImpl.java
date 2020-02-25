@@ -14,17 +14,17 @@ import java.util.List;
 @Repository
 public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
-    final static String createChatroom = "INSERT INTO chatrooms (chatroom_name, chatroom_description) VALUES (?, ?)";
+    final static String createChatroom = "INSERT INTO chatrooms (name, description) VALUES (?, ?)";
     final static String getChatroomById = "SELECT c.* FROM chatrooms c WHERE c.id = ?";
-    final static String getChatroomByName = "SELECT c.* FROM chatrooms c WHERE c.chatroom_name = ?";
+    final static String getChatroomByName = "SELECT c.* FROM chatrooms c WHERE c.name = ?";
 
 
     @Override
     public boolean createChatroom(Chatroom chatroom) {
         try(PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createChatroom)) {
 
-            preparedStatement.setString(1, chatroom.getChatroomName());
-            preparedStatement.setString(2, chatroom.getChatroomDescription());
+            preparedStatement.setString(1, chatroom.getName());
+            preparedStatement.setString(2, chatroom.getDescription());
 
             if (preparedStatement.executeUpdate() == 0) {
                 return false;
@@ -44,10 +44,10 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
                 Chatroom chatroom = new Chatroom();
                 while (rs1.next()) {
                     chatroom.setId(rs1.getInt("id"));
-                    chatroom.setChatroomName(rs1.getString("chatroom_name"));
-                    chatroom.setChatroomDescription(rs1.getString("chatroom_description"));
+                    chatroom.setName(rs1.getString("name"));
+                    chatroom.setDescription(rs1.getString("description"));
                 }
-                if (!(chatroom.getChatroomName()==null || chatroom.getChatroomDescription()==null)) {
+                if (!(chatroom.getName()==null || chatroom.getDescription()==null)) {
                     return chatroom;
                 } else return null;
             } catch (SQLException e) {
@@ -70,7 +70,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
                 while (rs2.next()) {
                     Chatroom chatroom = new Chatroom(rs2.getInt("id"), rs2.getString("chatroom_name"),
                             rs2.getString("chatroom_description"));
-                    if (!(chatroom.getChatroomName()==null || chatroom.getChatroomDescription()==null)) {
+                    if (!(chatroom.getName()==null || chatroom.getDescription()==null)) {
                         chatrooms.add(chatroom);
                     }
                 }

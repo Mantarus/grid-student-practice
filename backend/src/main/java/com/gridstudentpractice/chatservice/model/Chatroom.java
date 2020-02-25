@@ -15,7 +15,7 @@ public class Chatroom {
 
     private int id;
     @NotBlank
-    private String chatroomName;
-    private String chatroomDescription;
+    private String name;
+    private String description;
 
 }
