@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class Chatroom {
 
-    private int id;
+    private int cId;
     @NotBlank
     private String name;
     private String description;

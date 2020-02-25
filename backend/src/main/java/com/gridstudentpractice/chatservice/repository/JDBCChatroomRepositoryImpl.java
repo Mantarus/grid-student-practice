@@ -46,7 +46,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
             try (ResultSet rs1 = preparedStatement.executeQuery()) {
                 Chatroom chatroom = new Chatroom();
                 while (rs1.next()) {
-                    chatroom.setId(rs1.getInt("id"));
+                    chatroom.setCId(rs1.getInt("id"));
                     chatroom.setName(rs1.getString("name"));
                     chatroom.setDescription(rs1.getString("description"));
                 }
@@ -89,12 +89,13 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
         }
     }
 
+    //not working yet
     @Override
     public boolean createUserInChatroom(User user, Chatroom chatroom) {
         try(PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createUserInChatroom)) {
 
-            preparedStatement.setInt(1, user.getId());
-            preparedStatement.setInt(2, chatroom.getId());
+            preparedStatement.setInt(1, user.getUId());
+            preparedStatement.setInt(2, chatroom.getCId());
 
             if (preparedStatement.executeUpdate() == 0) {
                 return false;

@@ -44,7 +44,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
                 while (rs.next()) {
 
-                    user.setId(rs.getInt("id"));
+                    user.setUId(rs.getInt("id"));
                     user.setLogin(rs.getString("login"));
                     user.setPassword(rs.getString("password"));
                 }
