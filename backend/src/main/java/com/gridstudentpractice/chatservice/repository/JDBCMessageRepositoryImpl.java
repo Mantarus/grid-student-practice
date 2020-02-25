@@ -24,7 +24,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
                                                 "ch.name AS chatroom " +
             "FROM messages m " +
             "JOIN users u ON u.id=m.sender " +
-            "JOIN chatrooms ch ON  ch.id=m.chatroom";;
+            "JOIN chatrooms ch ON  ch.id=m.chatroom";
 
     @Override
     public boolean createMessage(Message message) {
