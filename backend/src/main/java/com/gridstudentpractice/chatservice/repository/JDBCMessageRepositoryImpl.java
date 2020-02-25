@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public class JDBCMessageRepositoryImpl implements MessageRepository {
 
-    final static String insertTableSql = "INSERT INTO messages (sender, body) VALUES (?, ?)";
+    final static String insertTableSql = "INSERT INTO messages (sender, body, chatroom) VALUES (?::integer, ?, ?::integer)";
     final static String selectTableSql = "SELECT m.id AS id, " +
                                                 "u.login AS sender, " +
                                                 "m.body AS body, " +
@@ -33,6 +33,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
 
             preparedStatement.setString(1, message.getSender());
             preparedStatement.setString(2, message.getBody());
+            preparedStatement.setString(3,message.getChatroom());
 
             if (preparedStatement.executeUpdate() == 0) {
                 return false;

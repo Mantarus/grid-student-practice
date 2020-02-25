@@ -1,6 +1,7 @@
 package com.gridstudentpractice.chatservice.controller;
 
 import com.gridstudentpractice.chatservice.model.Chatroom;
+import com.gridstudentpractice.chatservice.model.User;
 import com.gridstudentpractice.chatservice.service.ChatroomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +16,14 @@ public class ChatroomRestController {
     @Autowired
     private ChatroomService chatroomService;
 
-    @PostMapping("/post")
+    @PostMapping("/post/chatroom")
     public void addChatroom(@Valid @RequestBody Chatroom chatroom) {
         chatroomService.createChatroom(chatroom);
+    }
+
+    @PostMapping("/post/userInChatroom")
+    public void addUserIntoChatroom(@RequestBody User user, @RequestBody Chatroom chatroom) {
+        chatroomService.createUserInChatroom(user, chatroom);
     }
 
     @GetMapping("/get/byId/{id}")

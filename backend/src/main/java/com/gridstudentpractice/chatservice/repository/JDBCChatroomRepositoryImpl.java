@@ -3,6 +3,7 @@ package com.gridstudentpractice.chatservice.repository;
 import com.gridstudentpractice.chatservice.DbUtil;
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.Chatroom;
+import com.gridstudentpractice.chatservice.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -17,6 +18,8 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
     final static String createChatroom = "INSERT INTO chatrooms (name, description) VALUES (?, ?)";
     final static String getChatroomById = "SELECT c.* FROM chatrooms c WHERE c.id = ?";
     final static String getChatroomByName = "SELECT c.* FROM chatrooms c WHERE c.name = ?";
+    final static String createUserInChatroom = "INSERT INTO user_chatroom (user_id, chatroom_id) VALUES (?, ?)";
+
 
 
     @Override
@@ -68,8 +71,8 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
             try (ResultSet rs2 = preparedStatement.executeQuery()) {
                 List<Chatroom> chatrooms = new ArrayList<>();
                 while (rs2.next()) {
-                    Chatroom chatroom = new Chatroom(rs2.getInt("id"), rs2.getString("chatroom_name"),
-                            rs2.getString("chatroom_description"));
+                    Chatroom chatroom = new Chatroom(rs2.getInt("id"), rs2.getString("name"),
+                            rs2.getString("description"));
                     if (!(chatroom.getName()==null || chatroom.getDescription()==null)) {
                         chatrooms.add(chatroom);
                     }
@@ -84,5 +87,21 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
         } catch (SQLException e) {
             throw new RepositoryException("Chatroom reading error", e);
         }
+    }
+
+    @Override
+    public boolean createUserInChatroom(User user, Chatroom chatroom) {
+        try(PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createUserInChatroom)) {
+
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, chatroom.getId());
+
+            if (preparedStatement.executeUpdate() == 0) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Chatroom creation error", e);
+        }
+        return true;
     }
 }
