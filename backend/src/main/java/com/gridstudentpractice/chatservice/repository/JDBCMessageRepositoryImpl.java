@@ -16,8 +16,8 @@ import java.util.List;
 @Repository
 public class JDBCMessageRepositoryImpl implements MessageRepository {
 
-    final static String insertTableSql = "INSERT INTO messages (sender, body, chatroom) VALUES (?::integer, ?, ?::integer)";
-    final static String selectTableSql = "SELECT m.id AS id, " +
+    final static private String insertTableSql = "INSERT INTO messages (sender, body, chatroom) VALUES (?::integer, ?, ?::integer)";
+    final static private String selectTableSql = "SELECT m.id AS id, " +
                                                 "u.login AS sender, " +
                                                 "m.body AS body, " +
                                                 "m.time1 AS time1, " +
@@ -27,22 +27,18 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
             "JOIN chatrooms ch ON  ch.id=m.chatroom";
 
     @Override
-    public boolean createMessage(Message message) {
+    public void createMessage(Message message) {
 
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(insertTableSql)) {
 
             preparedStatement.setString(1, message.getSender());
             preparedStatement.setString(2, message.getBody());
             preparedStatement.setString(3,message.getChatroom());
-
-            if (preparedStatement.executeUpdate() == 0) {
-                return false;
-            }
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RepositoryException("Message creation error", e);
         }
-        return true;
     }
 
     @Override

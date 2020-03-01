@@ -15,27 +15,24 @@ import java.util.List;
 @Repository
 public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
-    final static String createChatroom = "INSERT INTO chatrooms (name, description) VALUES (?, ?)";
-    final static String getChatroomById = "SELECT c.* FROM chatrooms c WHERE c.id = ?";
-    final static String getChatroomByName = "SELECT c.* FROM chatrooms c WHERE c.name = ?";
-    final static String createUserInChatroom = "INSERT INTO user_chatroom (user_id, chatroom_id) VALUES (?, ?)";
+    final static private String createChatroom = "INSERT INTO chatrooms (name, description) VALUES (?, ?)";
+    final static private String getChatroomById = "SELECT c.* FROM chatrooms c WHERE c.id = ?";
+    final static private String getChatroomByName = "SELECT c.* FROM chatrooms c WHERE c.name = ?";
+    final static private String createUserInChatroom = "INSERT INTO user_chatroom (user_id, chatroom_id) VALUES (?, ?)";
 
 
 
     @Override
-    public boolean createChatroom(Chatroom chatroom) {
+    public void createChatroom(Chatroom chatroom) {
         try(PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createChatroom)) {
 
             preparedStatement.setString(1, chatroom.getName());
             preparedStatement.setString(2, chatroom.getDescription());
+            preparedStatement.executeUpdate();
 
-            if (preparedStatement.executeUpdate() == 0) {
-                return false;
-            }
         } catch (SQLException e) {
             throw new RepositoryException("Chatroom creation error", e);
         }
-        return true;
     }
 
     @Override
@@ -46,11 +43,12 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
             try (ResultSet rs1 = preparedStatement.executeQuery()) {
                 Chatroom chatroom = new Chatroom();
                 while (rs1.next()) {
-                    chatroom.setCId(rs1.getInt("id"));
+
+                    chatroom.setId(rs1.getInt("id"));
                     chatroom.setName(rs1.getString("name"));
                     chatroom.setDescription(rs1.getString("description"));
                 }
-                if (!(chatroom.getName()==null || chatroom.getDescription()==null)) {
+                if (!(chatroom.getName() == null || chatroom.getDescription() == null)) {
                     return chatroom;
                 } else return null;
             } catch (SQLException e) {
@@ -64,8 +62,8 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
     }
 
     @Override
-    public List<Chatroom> getChatroomByName(String chatroomName) {
-        try (PreparedStatement preparedStatement=DbUtil.getConnection().prepareStatement(getChatroomByName)) {
+    public List<Chatroom> getChatroomsByName(String chatroomName) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(getChatroomByName)) {
             preparedStatement.setString(1, chatroomName);
 
             try (ResultSet rs2 = preparedStatement.executeQuery()) {
@@ -73,7 +71,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
                 while (rs2.next()) {
                     Chatroom chatroom = new Chatroom(rs2.getInt("id"), rs2.getString("name"),
                             rs2.getString("description"));
-                    if (!(chatroom.getName()==null || chatroom.getDescription()==null)) {
+                    if (!(chatroom.getName() == null || chatroom.getDescription() == null)) {
                         chatrooms.add(chatroom);
                     }
                 }
@@ -89,13 +87,13 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
         }
     }
 
-    //not working yet
+    //TODO: not working yet
     @Override
-    public boolean createUserInChatroom(User user, Chatroom chatroom) {
+    public boolean addUserToChatroom(User user, Chatroom chatroom) {
         try(PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createUserInChatroom)) {
 
-            preparedStatement.setInt(1, user.getUId());
-            preparedStatement.setInt(2, chatroom.getCId());
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, chatroom.getId());
 
             if (preparedStatement.executeUpdate() == 0) {
                 return false;

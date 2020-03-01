@@ -10,29 +10,29 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/restChat/chatroom")
+@RequestMapping("/chatrooms")
 public class ChatroomRestController {
 
     @Autowired
     private ChatroomService chatroomService;
 
-    @PostMapping("/post/chatroom")
+    @PostMapping("/add-chatroom")
     public void addChatroom(@Valid @RequestBody Chatroom chatroom) {
         chatroomService.createChatroom(chatroom);
     }
 
-    @PostMapping("/post/userInChatroom")
-    public void addUserIntoChatroom(@RequestBody User user, @RequestBody Chatroom chatroom) {
-        chatroomService.createUserInChatroom(user, chatroom);
+    @PostMapping("/add-user")
+    public void addUserToChatroom(@Valid @RequestBody User user, @Valid @RequestBody Chatroom chatroom) {
+        chatroomService.addUserToChatroom(user, chatroom);
     }
 
-    @GetMapping("/get/byId/{id}")
+    @GetMapping("/{id}")
     public Chatroom getChatroomById(@PathVariable int id) {
         return chatroomService.getChatroomById(id);
     }
 
-    @GetMapping("/get/byName/{name}")
-    public List<Chatroom> getChatroomNyName(@PathVariable String name) {
-        return chatroomService.getChatroomByName(name);
+    @GetMapping("?name={name}")
+    public List<Chatroom> getChatroomsNyName(@PathVariable String name) {
+        return chatroomService.getChatroomsByName(name);
     }
 }

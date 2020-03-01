@@ -10,19 +10,19 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@RequestMapping("/restChat/message")
+@RequestMapping("/messages")
 public class MessageRestController {
 
     @Autowired
     @Qualifier("DBMessageServiceImpl")
     private MessageService messageService;
 
-    @GetMapping("/get")
+    @GetMapping
     public List<Message> getAllMessages() {
         return messageService.getMessages();
     }
 
-    @PostMapping("/post")
+    @PostMapping("/send-message")
     public void sendMessage(@Valid @RequestBody Message message) {
         messageService.sendMessage(message);
     }

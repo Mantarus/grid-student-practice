@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/restChat/user")
+@RequestMapping("/users")
 public class UserRestController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/get/{userLogin}")
+    @GetMapping("/{user-login}")
     public User getUser(@PathVariable String userLogin) {
         return userService.getUser(userLogin);
     }
 
-    @PostMapping("/post")
+    @PostMapping("/add-user")
     public void addUser(@Valid @RequestBody User user) {
         userService.addUser(user);
     }

@@ -25,12 +25,12 @@ public class DBChatroomServiceImpl implements ChatroomService {
     }
 
     @Override
-    public List<Chatroom> getChatroomByName(String chatroomName) {
-        return chatroomRepository.getChatroomByName(chatroomName);
+    public List<Chatroom> getChatroomsByName(String chatroomName) {
+        return chatroomRepository.getChatroomsByName(chatroomName);
     }
 
     @Override
-    public void createUserInChatroom(User user, Chatroom chatroom) {
-        chatroomRepository.createUserInChatroom(user, chatroom);
+    public void addUserToChatroom(User user, Chatroom chatroom) {
+        chatroomRepository.addUserToChatroom(user, chatroom);
     }
 }

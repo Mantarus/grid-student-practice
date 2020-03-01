@@ -12,24 +12,20 @@ import java.sql.SQLException;
 @Repository
 public class JDBCUserRepositoryImpl implements UserRepository {
 
-    final static String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)";
-    final static String checkUserSql = "SELECT * FROM users WHERE login = ?";
+    final static private String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)";
+    final static private String checkUserSql = "SELECT * FROM users WHERE login = ?";
 
     @Override
-    public boolean createUser(User user) {
+    public void createUser(User user) {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(addUserSql)) {
 
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
-
-            if (preparedStatement.executeUpdate() == 0) {
-                return false;
-            }
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RepositoryException("User creation error", e);
         }
-        return true;
     }
 
     @Override
@@ -44,7 +40,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
                 while (rs.next()) {
 
-                    user.setUId(rs.getInt("id"));
+                    user.setId(rs.getInt("id"));
                     user.setLogin(rs.getString("login"));
                     user.setPassword(rs.getString("password"));
                 }

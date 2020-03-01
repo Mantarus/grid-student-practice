@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface ChatroomRepository {
 
-    boolean createChatroom(Chatroom chatroom);
+    void createChatroom(Chatroom chatroom);
     Chatroom getChatroomById(int chatroomId);
-    List<Chatroom> getChatroomByName(String chatroomName);
-    boolean createUserInChatroom(User user, Chatroom chatroom);
+    List<Chatroom> getChatroomsByName(String chatroomName);
+    boolean addUserToChatroom(User user, Chatroom chatroom);
 
 }

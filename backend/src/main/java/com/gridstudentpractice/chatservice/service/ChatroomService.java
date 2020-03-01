@@ -9,7 +9,7 @@ public interface ChatroomService {
 
     void createChatroom(Chatroom chatroom);
     Chatroom getChatroomById(int chatroomId);
-    List<Chatroom> getChatroomByName(String chatroomName);
-    void createUserInChatroom(User user, Chatroom chatroom);
+    List<Chatroom> getChatroomsByName(String chatroomName);
+    void addUserToChatroom(User user, Chatroom chatroom);
 
 }
