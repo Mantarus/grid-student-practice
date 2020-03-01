@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class Chatroom {
 
     @NotNull
-    private int Id;
+    private int id;
     @NotBlank
     private String name;
     private String description;

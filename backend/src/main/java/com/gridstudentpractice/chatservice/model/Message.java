@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class Message {
 
     @NotNull
-    private int Id;
+    private int id;
     @NotBlank
     private String sender;
     @NotBlank

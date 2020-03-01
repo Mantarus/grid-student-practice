@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class User {
 
     @NotNull
-    private int Id;
+    private int id;
     @NotBlank
     private String login;
     @NotBlank
