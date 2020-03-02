@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@RequestMapping("/restChat")
+@RequestMapping("/api/messages")
 public class MessageRestController {
 
     @Autowired
@@ -22,7 +22,7 @@ public class MessageRestController {
         return messageService.getMessages();
     }
 
-    @PostMapping
+    @PostMapping("/send-message")
     public void sendMessage(@Valid @RequestBody Message message) {
         messageService.sendMessage(message);
     }
