@@ -5,7 +5,7 @@ Installation Docker and PostgreSQL
 
 First of all you need to install Docker on your computer. To be sure that you'll
 get the latest version you need to download this from official Docker repository.
-To do this you need to add official Docker repository to APT.
+To do this y`ou need to add official Docker repository to APT.
 
 Update existing package list:
 $ sudo apt Update
@@ -35,3 +35,10 @@ Where -d means run it in the background
 -e set environment variable
 -v mount volume/directory
 last word "postgres" indicates the name of installing container. Also you can write postgres:11.4 to get specific version. By default, the latest version will be installed.
+
+Swagger documentation browsing
+----------------------------------
+
+To view JSON Swagger documentation of Chatservice paste http://localhost:8080/v2/api-docs to the search bar in Postman.
+
+To browse human readable HTML-documentation paste http://localhost:8080/swagger-ui.html to the browser's search bar/
