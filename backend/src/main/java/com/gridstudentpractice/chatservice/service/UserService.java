@@ -6,5 +6,7 @@ public interface UserService {
 
     void addUser(User user);
     User getUser(String userLogin);
+    void editUser(User user, int id);
+    void deleteUser(int id);
 
 }

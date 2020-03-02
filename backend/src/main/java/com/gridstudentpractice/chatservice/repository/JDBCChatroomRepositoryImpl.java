@@ -17,8 +17,10 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     final static private String createChatroom = "INSERT INTO chatrooms (name, description) VALUES (?, ?)";
     final static private String getChatroomById = "SELECT c.* FROM chatrooms c WHERE c.id = ?";
-    final static private String getChatroomByName = "SELECT c.* FROM chatrooms c WHERE c.name = ?";
+    final static private String getChatroomByName = "SELECT c.* FROM chatrooms c WHERE c.name = ? ORDER BY c.id";
     final static private String createUserInChatroom = "INSERT INTO user_chatroom (user_id, chatroom_id) VALUES (?, ?)";
+    final static private String updateChatroom = "UPDATE chatrooms c SET name = ?, description = ? WHERE c.id = ?";
+    final static private String deleteChatroom = "DELETE FROM chatrooms c WHERE c.id = ?";
 
 
 
@@ -87,20 +89,47 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
         }
     }
 
+    @Override
+    public void updateChatroom(Chatroom chatroom, int id) {
+        if (chatroom.getId() == id) {
+            try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateChatroom)) {
+
+                preparedStatement.setString(1, chatroom.getName());
+                preparedStatement.setString(2, chatroom.getDescription());
+                preparedStatement.setInt(3, id);
+                preparedStatement.executeUpdate();
+
+            } catch (SQLException e) {
+                throw new RepositoryException("Chatroom update error", e);
+            }
+        } else throw new RepositoryException("No such chatroom");
+    }
+
+    @Override
+    public void deleteChatroom(int id) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(deleteChatroom)) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Chatroom delete error", e);
+        }
+    }
+
+
     //TODO: not working yet
     @Override
-    public boolean addUserToChatroom(User user, Chatroom chatroom) {
+    public void addUserToChatroom(User user, Chatroom chatroom) {
         try(PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createUserInChatroom)) {
 
             preparedStatement.setInt(1, user.getId());
             preparedStatement.setInt(2, chatroom.getId());
+            preparedStatement.executeUpdate();
 
-            if (preparedStatement.executeUpdate() == 0) {
-                return false;
-            }
         } catch (SQLException e) {
             throw new RepositoryException("Chatroom creation error", e);
         }
-        return true;
     }
+
 }

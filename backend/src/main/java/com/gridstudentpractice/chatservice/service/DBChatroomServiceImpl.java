@@ -33,4 +33,14 @@ public class DBChatroomServiceImpl implements ChatroomService {
     public void addUserToChatroom(User user, Chatroom chatroom) {
         chatroomRepository.addUserToChatroom(user, chatroom);
     }
+
+    @Override
+    public void editChatroom(Chatroom chatroom, int id) {
+        chatroomRepository.updateChatroom(chatroom, id);
+    }
+
+    @Override
+    public void deleteChatroom(int id) {
+        chatroomRepository.deleteChatroom(id);
+    }
 }

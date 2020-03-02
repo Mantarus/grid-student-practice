@@ -35,4 +35,14 @@ public class ChatroomRestController {
     public List<Chatroom> getChatroomsNyName(@PathVariable String name) {
         return chatroomService.getChatroomsByName(name);
     }
+
+    @PutMapping("/edit-chatroom/{id}")
+    public void editChatroom(@Valid @RequestBody Chatroom chatroom, @PathVariable int id) {
+        chatroomService.editChatroom(chatroom, id);
+    }
+
+    @DeleteMapping("/delete-chatroom/{id}")
+    public void deleteChatroom(@PathVariable int id) {
+        chatroomService.deleteChatroom(id);
+    }
 }

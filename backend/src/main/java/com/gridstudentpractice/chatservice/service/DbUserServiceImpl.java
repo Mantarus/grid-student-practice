@@ -20,4 +20,14 @@ public class DbUserServiceImpl implements UserService {
     public User getUser(String userLogin) {
         return  userRepository.getUser(userLogin);
     }
+
+    @Override
+    public void editUser(User user, int id) {
+        userRepository.updateUser(user, id);
+    }
+
+    @Override
+    public void deleteUser(int id) {
+        userRepository.deleteUser(id);
+    }
 }

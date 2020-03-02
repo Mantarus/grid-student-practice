@@ -22,5 +22,15 @@ import java.util.List;
     public List<Message> getMessages() {
         return messageRepository.getMessages();
     }
+
+    @Override
+    public void editMessage(Message message, int id) {
+        messageRepository.updateMessage(message, id);
+    }
+
+    @Override
+    public void deleteMessage(int id) {
+        messageRepository.deleteMessage(id);
+    }
 }
 

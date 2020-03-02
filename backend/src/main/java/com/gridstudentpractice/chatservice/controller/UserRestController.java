@@ -14,7 +14,7 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{user-login}")
+    @GetMapping("/{login}")
     public User getUser(@PathVariable String userLogin) {
         return userService.getUser(userLogin);
     }
@@ -22,5 +22,15 @@ public class UserRestController {
     @PostMapping("/add-user")
     public void addUser(@Valid @RequestBody User user) {
         userService.addUser(user);
+    }
+
+    @PutMapping("/{id}/edit-user")
+    public void editUser(@Valid @RequestBody User user, @PathVariable int id) {
+        userService.editUser(user, id);
+    }
+
+    @DeleteMapping("/{id}/delete-user")
+    public void deleteUser(@PathVariable int id) {
+        userService.deleteUser(id);
     }
 }

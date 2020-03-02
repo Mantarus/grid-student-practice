@@ -25,6 +25,8 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
             "FROM messages m " +
             "JOIN users u ON u.id=m.sender " +
             "JOIN chatrooms ch ON  ch.id=m.chatroom";
+    final static private String updateMessage = "UPDATE messages m SET body = ? WHERE m.id = ?";
+    final static private String deleteMessage = "DELETE FROM messages m WHERE m.id = ?";
 
     @Override
     public void createMessage(Message message) {
@@ -63,6 +65,33 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
             }
         } catch (SQLException e) {
             throw new RepositoryException("Message reading error", e);
+        }
+    }
+
+    @Override
+    public void updateMessage(Message message, int id) {
+        if (message.getId() == id) {
+            try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateMessage)) {
+
+                preparedStatement.setString(1, message.getBody());
+                preparedStatement.setInt(2, id);
+                preparedStatement.executeUpdate();
+
+            } catch (SQLException e) {
+                throw new RepositoryException("Message update error", e);
+            }
+        } else throw new RepositoryException("No such message");
+    }
+
+    @Override
+    public void deleteMessage(int id) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(deleteMessage)) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Message delete error", e);
         }
     }
 }

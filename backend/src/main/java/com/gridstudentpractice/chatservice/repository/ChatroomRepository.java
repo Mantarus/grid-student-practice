@@ -10,6 +10,8 @@ public interface ChatroomRepository {
     void createChatroom(Chatroom chatroom);
     Chatroom getChatroomById(int chatroomId);
     List<Chatroom> getChatroomsByName(String chatroomName);
-    boolean addUserToChatroom(User user, Chatroom chatroom);
+    void addUserToChatroom(User user, Chatroom chatroom);
+    void updateChatroom(Chatroom chatroom, int id);
+    void deleteChatroom(int id);
 
 }

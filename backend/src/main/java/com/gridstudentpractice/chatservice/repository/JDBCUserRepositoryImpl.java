@@ -13,7 +13,9 @@ import java.sql.SQLException;
 public class JDBCUserRepositoryImpl implements UserRepository {
 
     final static private String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)";
-    final static private String checkUserSql = "SELECT * FROM users WHERE login = ?";
+    final static private String checkUserSql = "SELECT * FROM users u WHERE u.login = ? ORDER BY u.id";
+    final static private String updateUserQuery = "UPDATE users u SET login = ? WHERE u.id = ?";
+    final static private String deleteUserQuery = "DELETE FROM users u WHERE u.id = ?";
 
     @Override
     public void createUser(User user) {
@@ -47,7 +49,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
                 if (!(user.getLogin() == null || user.getPassword() == null))
                     return user;
-                else return null;
+                else throw new RepositoryException("User login or password can't be null");
 
             } catch (SQLException e) {
                 throw new RepositoryException("ResultSet error", e);
@@ -56,6 +58,33 @@ public class JDBCUserRepositoryImpl implements UserRepository {
             }
         } catch (SQLException e) {
             throw new RepositoryException("User reading error", e);
+        }
+    }
+
+    @Override
+    public void updateUser(User user, int id) {
+        if(user.getId() == id) {
+            try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateUserQuery)) {
+
+                preparedStatement.setString(1, user.getLogin());
+                preparedStatement.setInt(2, id);
+                preparedStatement.executeUpdate();
+
+            } catch (SQLException e) {
+                throw new RepositoryException("User update error", e);
+            }
+        } else throw new RepositoryException("No such user");
+    }
+
+    @Override
+    public void deleteUser(int id) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(deleteUserQuery)) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RepositoryException("User delete error", e);
         }
     }
 }
