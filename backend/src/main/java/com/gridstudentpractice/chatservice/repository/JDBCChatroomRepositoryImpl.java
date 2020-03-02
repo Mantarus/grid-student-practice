@@ -26,7 +26,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public void createChatroom(Chatroom chatroom) {
-        try(PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createChatroom)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createChatroom)) {
 
             preparedStatement.setString(1, chatroom.getName());
             preparedStatement.setString(2, chatroom.getDescription());
@@ -39,7 +39,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public Chatroom getChatroomById(int chatroomId) {
-        try (PreparedStatement preparedStatement=DbUtil.getConnection().prepareStatement(getChatroomById)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(getChatroomById)) {
             preparedStatement.setInt(1, chatroomId);
 
             try (ResultSet rs1 = preparedStatement.executeQuery()) {
@@ -91,18 +91,16 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public void updateChatroom(Chatroom chatroom, int id) {
-        if (chatroom.getId() == id) {
-            try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateChatroom)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateChatroom)) {
 
-                preparedStatement.setString(1, chatroom.getName());
-                preparedStatement.setString(2, chatroom.getDescription());
-                preparedStatement.setInt(3, id);
-                preparedStatement.executeUpdate();
+            preparedStatement.setString(1, chatroom.getName());
+            preparedStatement.setString(2, chatroom.getDescription());
+            preparedStatement.setInt(3, id);
+            preparedStatement.executeUpdate();
 
-            } catch (SQLException e) {
-                throw new RepositoryException("Chatroom update error", e);
-            }
-        } else throw new RepositoryException("No such chatroom");
+        } catch (SQLException e) {
+            throw new RepositoryException("Chatroom update error", e);
+        }
     }
 
     @Override
@@ -121,7 +119,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
     //TODO: not working yet
     @Override
     public void addUserToChatroom(User user, Chatroom chatroom) {
-        try(PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createUserInChatroom)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createUserInChatroom)) {
 
             preparedStatement.setInt(1, user.getId());
             preparedStatement.setInt(2, chatroom.getId());

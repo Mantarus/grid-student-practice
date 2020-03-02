@@ -27,12 +27,12 @@ public class MessageRestController {
         messageService.sendMessage(message);
     }
 
-    @PutMapping("/edit-message/{id}")
-    public void editMessage(@Valid @RequestBody Message message, @PathVariable int id) {
+    @PutMapping("/{id}/edit-message")
+    public void editMessage(@RequestBody Message message, @PathVariable int id) {
         messageService.editMessage(message, id);
     }
 
-    @DeleteMapping("/delete-message/{id}")
+    @DeleteMapping("/{id}/delete-message")
     public void deleteMessage(@PathVariable int id) {
         messageService.deleteMessage(id);
     }

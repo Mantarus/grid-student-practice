@@ -31,17 +31,17 @@ public class ChatroomRestController {
         return chatroomService.getChatroomById(id);
     }
 
-    @GetMapping("?name={name}")
+    @GetMapping("/{name}")
     public List<Chatroom> getChatroomsNyName(@PathVariable String name) {
         return chatroomService.getChatroomsByName(name);
     }
 
-    @PutMapping("/edit-chatroom/{id}")
+    @PutMapping("/{id}/edit-chatroom")
     public void editChatroom(@Valid @RequestBody Chatroom chatroom, @PathVariable int id) {
         chatroomService.editChatroom(chatroom, id);
     }
 
-    @DeleteMapping("/delete-chatroom/{id}")
+    @DeleteMapping("/{id}/delete-chatroom")
     public void deleteChatroom(@PathVariable int id) {
         chatroomService.deleteChatroom(id);
     }

@@ -14,7 +14,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     final static private String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)";
     final static private String checkUserSql = "SELECT * FROM users u WHERE u.login = ? ORDER BY u.id";
-    final static private String updateUserQuery = "UPDATE users u SET login = ? WHERE u.id = ?";
+    final static private String updateUserQuery = "UPDATE users u SET login = ?, password = ? WHERE u.id = ?";
     final static private String deleteUserQuery = "DELETE FROM users u WHERE u.id = ?";
 
     @Override
@@ -63,17 +63,16 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateUser(User user, int id) {
-        if(user.getId() == id) {
-            try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateUserQuery)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateUserQuery)) {
 
-                preparedStatement.setString(1, user.getLogin());
-                preparedStatement.setInt(2, id);
-                preparedStatement.executeUpdate();
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setInt(3, id);
+            preparedStatement.executeUpdate();
 
-            } catch (SQLException e) {
-                throw new RepositoryException("User update error", e);
-            }
-        } else throw new RepositoryException("No such user");
+        } catch (SQLException e) {
+            throw new RepositoryException("User update error", e);
+        }
     }
 
     @Override
