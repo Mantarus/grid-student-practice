@@ -5,7 +5,7 @@ Installation Docker and PostgreSQL
 
 First of all you need to install Docker on your computer. To be sure that you'll
 get the latest version you need to download this from official Docker repository.
-To do this y`ou need to add official Docker repository to APT.
+To do this you need to add official Docker repository to APT.
 
 Update existing package list:
 $ sudo apt Update
