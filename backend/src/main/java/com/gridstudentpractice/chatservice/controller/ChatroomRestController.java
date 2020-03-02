@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/chatrooms")
+@RequestMapping("/api/chatrooms")
 public class ChatroomRestController {
 
     @Autowired
