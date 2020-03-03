@@ -9,26 +9,23 @@ import org.springframework.context.annotation.Configuration;
 public class AppProperties {
 
     @Value(("${database.url}"))
-    private String url;
+    private String databaseUrl;
 
     @Value(("${database.username}"))
-    private String username;
+    private String databaseUsername;
 
     @Value(("${database.password}"))
-    private String password;
+    private String databasePassword;
 
     public String getDatabaseUrl() {
-        System.out.println(url);
-        return url;
+        return databaseUrl;
     }
 
     public String getDatabasePassword() {
-        System.out.println(password);
-        return password;
+        return databasePassword;
     }
 
     public String getDatabaseUser() {
-        System.out.println(username);
-        return username;
+        return databaseUsername;
     }
 }

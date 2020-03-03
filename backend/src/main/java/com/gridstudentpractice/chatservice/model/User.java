@@ -9,6 +9,7 @@ public class User {
     private String login;
     @NotBlank
     private String password;
+    private String role;
 
     public User() {}
 
@@ -25,9 +26,11 @@ public class User {
         return password;
     }
 
-    public long getID() {
+    public long getId() {
         return id;
     }
+
+    public String getRole() { return this.role; }
 
     public void setId(int id) {
         this.id = id;
@@ -39,5 +42,9 @@ public class User {
 
     public void setPass(String uPass) {
         this.password = uPass;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
