@@ -11,7 +11,7 @@ public interface ChatroomRepository {
     Chatroom getChatroomById(int chatroomId);
     List<Chatroom> getChatroomsByName(String chatroomName);
     void addUserToChatroom(User user, Chatroom chatroom);
-    void updateChatroom(Chatroom chatroom, int id);
-    void deleteChatroom(int id);
+    void updateChatroom(Chatroom chatroom);
+    void deleteChatroomById(int id);
 
 }

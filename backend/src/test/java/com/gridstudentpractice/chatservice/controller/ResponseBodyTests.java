@@ -38,17 +38,11 @@ class ResponseBodyTests {
 
 
     private Message invalidMessage () {
-        Message message = new Message();
-        message.setSender("");
-        message.setBody("");
-        return message;
+        return Message.builder().sender("").chatroom("").body("").build();
     }
 
     private Message validMessage() {
-        Message message = new Message();
-        message.setSender("Mock");
-        message.setBody("test");
-        return message;
+        return Message.builder().sender("Mock").chatroom("Test").body("Message").build();
     }
 
 //    @Test

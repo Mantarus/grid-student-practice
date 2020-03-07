@@ -22,18 +22,18 @@ public class MessageRestController {
         return messageService.getMessages();
     }
 
-    @PostMapping("/send-message")
+    @PostMapping
     public void sendMessage(@Valid @RequestBody Message message) {
         messageService.sendMessage(message);
     }
 
-    @PutMapping("/{id}/edit-message")
-    public void editMessage(@RequestBody Message message, @PathVariable int id) {
-        messageService.editMessage(message, id);
+    @PutMapping
+    public void editMessage(@RequestBody Message message) {
+        messageService.updateMessage(message);
     }
 
-    @DeleteMapping("/{id}/delete-message")
-    public void deleteMessage(@PathVariable int id) {
-        messageService.deleteMessage(id);
+    @DeleteMapping("/{id}")
+    public void deleteMessageById(@PathVariable int id) {
+        messageService.deleteMessageById(id);
     }
 }

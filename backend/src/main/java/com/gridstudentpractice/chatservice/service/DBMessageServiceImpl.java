@@ -24,13 +24,13 @@ import java.util.List;
     }
 
     @Override
-    public void editMessage(Message message, int id) {
-        messageRepository.updateMessage(message, id);
+    public void updateMessage(Message message) {
+        messageRepository.updateMessage(message);
     }
 
     @Override
-    public void deleteMessage(int id) {
-        messageRepository.deleteMessage(id);
+    public void deleteMessageById(int id) {
+        messageRepository.deleteMessageById(id);
     }
 }
 

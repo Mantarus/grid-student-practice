@@ -16,7 +16,7 @@ public class ChatroomRestController {
     @Autowired
     private ChatroomService chatroomService;
 
-    @PostMapping("/add-chatroom")
+    @PostMapping
     public void addChatroom(@Valid @RequestBody Chatroom chatroom) {
         chatroomService.createChatroom(chatroom);
     }
@@ -31,18 +31,18 @@ public class ChatroomRestController {
         return chatroomService.getChatroomById(id);
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("?name={name}")
     public List<Chatroom> getChatroomsNyName(@PathVariable String name) {
         return chatroomService.getChatroomsByName(name);
     }
 
-    @PutMapping("/{id}/edit-chatroom")
-    public void editChatroom(@Valid @RequestBody Chatroom chatroom, @PathVariable int id) {
-        chatroomService.editChatroom(chatroom, id);
+    @PutMapping
+    public void updateChatroom(@Valid @RequestBody Chatroom chatroom) {
+        chatroomService.updateChatroom(chatroom);
     }
 
-    @DeleteMapping("/{id}/delete-chatroom")
-    public void deleteChatroom(@PathVariable int id) {
-        chatroomService.deleteChatroom(id);
+    @DeleteMapping("/{id}")
+    public void deleteChatroomById(@PathVariable int id) {
+        chatroomService.deleteChatroomById(id);
     }
 }

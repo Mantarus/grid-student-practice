@@ -51,9 +51,13 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
                 List<Message> messages = new ArrayList<>();
                 while (rs.next()) {
 
-                    Message message = new Message(rs.getInt("id"), rs.getString("sender"),
-                            rs.getString("chatroom"), rs.getString("body"),
-                            rs.getTimestamp("time1").toLocalDateTime());
+                    Message message = Message.builder()
+                            .id(rs.getInt("id"))
+                            .sender(rs.getString("sender"))
+                            .chatroom(rs.getString("chatroom"))
+                            .body( rs.getString("body"))
+                            .timestamp(rs.getTimestamp("time1").toLocalDateTime())
+                            .build();
                     messages.add(message);
 
                 }
@@ -61,8 +65,6 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
 
             } catch (SQLException e) {
                 throw new RepositoryException("ResultSet error", e);
-            } finally {
-                statement.close();
             }
         } catch (SQLException e) {
             throw new RepositoryException("Message reading error", e);
@@ -70,11 +72,11 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public void updateMessage(Message message, int id) {
+    public void updateMessage(Message message) {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateMessage)) {
 
             preparedStatement.setString(1, message.getBody());
-            preparedStatement.setInt(2, id);
+            preparedStatement.setInt(2, message.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -83,7 +85,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public void deleteMessage(int id) {
+    public void deleteMessageById(int id) {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(deleteMessage)) {
 
             preparedStatement.setInt(1, id);

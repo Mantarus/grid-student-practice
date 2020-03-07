@@ -42,21 +42,16 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(getChatroomById)) {
             preparedStatement.setInt(1, chatroomId);
 
-            try (ResultSet rs1 = preparedStatement.executeQuery()) {
-                Chatroom chatroom = new Chatroom();
-                while (rs1.next()) {
-
-                    chatroom.setId(rs1.getInt("id"));
-                    chatroom.setName(rs1.getString("name"));
-                    chatroom.setDescription(rs1.getString("description"));
-                }
-                if (!(chatroom.getName() == null || chatroom.getDescription() == null)) {
-                    return chatroom;
-                } else return null;
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    return Chatroom.builder()
+                            .id(rs.getInt("id"))
+                            .name(rs.getString("name"))
+                            .description(rs.getString("description"))
+                            .build();
+                } else throw new RepositoryException("No such chatroom");
             } catch (SQLException e) {
                 throw new RepositoryException("ResultSet error", e);
-            } finally {
-                preparedStatement.close();
             }
         } catch (SQLException e) {
             throw new RepositoryException("Chatroom reading error", e);
@@ -68,21 +63,20 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(getChatroomByName)) {
             preparedStatement.setString(1, chatroomName);
 
-            try (ResultSet rs2 = preparedStatement.executeQuery()) {
+            try (ResultSet rs = preparedStatement.executeQuery()) {
                 List<Chatroom> chatrooms = new ArrayList<>();
-                while (rs2.next()) {
-                    Chatroom chatroom = new Chatroom(rs2.getInt("id"), rs2.getString("name"),
-                            rs2.getString("description"));
-                    if (!(chatroom.getName() == null || chatroom.getDescription() == null)) {
-                        chatrooms.add(chatroom);
-                    }
+                while (rs.next()) {
+                    Chatroom chatroom = Chatroom.builder()
+                            .id(rs.getInt("id"))
+                            .name(rs.getString("name"))
+                            .description(rs.getString("description"))
+                            .build();
+                    chatrooms.add(chatroom);
                 }
                 return chatrooms;
 
             } catch (SQLException e) {
                 throw new RepositoryException("ResultSet error", e);
-            } finally {
-                preparedStatement.close();
             }
         } catch (SQLException e) {
             throw new RepositoryException("Chatroom reading error", e);
@@ -90,12 +84,12 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
     }
 
     @Override
-    public void updateChatroom(Chatroom chatroom, int id) {
+    public void updateChatroom(Chatroom chatroom) {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateChatroom)) {
 
             preparedStatement.setString(1, chatroom.getName());
             preparedStatement.setString(2, chatroom.getDescription());
-            preparedStatement.setInt(3, id);
+            preparedStatement.setInt(3, chatroom.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -104,7 +98,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
     }
 
     @Override
-    public void deleteChatroom(int id) {
+    public void deleteChatroomById(int id) {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(deleteChatroom)) {
 
             preparedStatement.setInt(1, id);

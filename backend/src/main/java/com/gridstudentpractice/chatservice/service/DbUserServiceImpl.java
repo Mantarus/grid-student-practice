@@ -17,17 +17,17 @@ public class DbUserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(String userLogin) {
-        return  userRepository.getUser(userLogin);
+    public User getUserByLogin(String userLogin) {
+        return  userRepository.getUserByLogin(userLogin);
     }
 
     @Override
-    public void editUser(User user, int id) {
-        userRepository.updateUser(user, id);
+    public void updateUser(User user) {
+        userRepository.updateUser(user);
     }
 
     @Override
-    public void deleteUser(int id) {
-        userRepository.deleteUser(id);
+    public void deleteUserById(int id) {
+        userRepository.deleteUserById(id);
     }
 }

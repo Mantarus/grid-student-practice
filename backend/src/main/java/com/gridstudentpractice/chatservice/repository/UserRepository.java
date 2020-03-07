@@ -5,8 +5,8 @@ import com.gridstudentpractice.chatservice.model.User;
 public interface UserRepository {
 
     void createUser(User user);
-    User getUser(String userLogin);
-    void updateUser(User user, int id);
-    void deleteUser(int id);
+    User getUserByLogin(String userLogin);
+    void updateUser(User user);
+    void deleteUserById(int id);
 
 }

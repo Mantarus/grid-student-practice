@@ -8,7 +8,7 @@ public interface MessageService {
 
     void sendMessage(Message message);
     List<Message> getMessages();
-    void editMessage(Message message, int id);
-    void deleteMessage(int id);
+    void updateMessage(Message message);
+    void deleteMessageById(int id);
 
 }

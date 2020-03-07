@@ -31,30 +31,22 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User getUser(String userLogin) {
+    public User getUserByLogin(String userLogin) {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(checkUserSql)) {
 
             preparedStatement.setString(1, userLogin);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
-
-                User user = new User();
-
-                while (rs.next()) {
-
-                    user.setId(rs.getInt("id"));
-                    user.setLogin(rs.getString("login"));
-                    user.setPassword(rs.getString("password"));
-                }
-
-                if (!(user.getLogin() == null || user.getPassword() == null))
-                    return user;
-                else throw new RepositoryException("User login or password can't be null");
+                if (rs.next()) {
+                    return User.builder()
+                            .id(rs.getInt("id"))
+                            .login(rs.getString("login"))
+                            .password(rs.getString("password"))
+                            .build();
+                } else throw new RepositoryException("No such user") ;
 
             } catch (SQLException e) {
                 throw new RepositoryException("ResultSet error", e);
-            } finally {
-                preparedStatement.close();
             }
         } catch (SQLException e) {
             throw new RepositoryException("User reading error", e);
@@ -62,12 +54,12 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateUser(User user, int id) {
+    public void updateUser(User user) {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateUserQuery)) {
 
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3, id);
+            preparedStatement.setInt(3, user.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -76,7 +68,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void deleteUser(int id) {
+    public void deleteUserById(int id) {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(deleteUserQuery)) {
 
             preparedStatement.setInt(1, id);

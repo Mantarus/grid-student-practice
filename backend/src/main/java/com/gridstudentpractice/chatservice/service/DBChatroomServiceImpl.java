@@ -35,12 +35,12 @@ public class DBChatroomServiceImpl implements ChatroomService {
     }
 
     @Override
-    public void editChatroom(Chatroom chatroom, int id) {
-        chatroomRepository.updateChatroom(chatroom, id);
+    public void updateChatroom(Chatroom chatroom) {
+        chatroomRepository.updateChatroom(chatroom);
     }
 
     @Override
-    public void deleteChatroom(int id) {
-        chatroomRepository.deleteChatroom(id);
+    public void deleteChatroomById(int id) {
+        chatroomRepository.deleteChatroomById(id);
     }
 }
