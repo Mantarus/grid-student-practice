@@ -22,12 +22,12 @@ public class InMemoryMessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void editMessage(Message message, int id) {
+    public void updateMessage(Message message) {
 
     }
 
     @Override
-    public void deleteMessage(int id) {
+    public void deleteMessageById(int id) {
 
     }
 
