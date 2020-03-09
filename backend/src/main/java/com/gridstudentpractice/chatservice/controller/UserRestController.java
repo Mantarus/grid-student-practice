@@ -19,7 +19,7 @@ public class UserRestController {
         return userService.getUser(login);
     }
 
-    @PostMapping("/add-user")
+    @PostMapping
     public boolean addUser(@Valid @RequestBody User user) {
         return userService.addUser(user);
     }

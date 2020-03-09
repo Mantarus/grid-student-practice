@@ -22,7 +22,7 @@ public class MessageRestController {
         return messageService.getMessages();
     }
 
-    @PostMapping("/send-message")
+    @PostMapping
     public void sendMessage(@Valid @RequestBody Message message) {
         messageService.sendMessage(message);
     }
