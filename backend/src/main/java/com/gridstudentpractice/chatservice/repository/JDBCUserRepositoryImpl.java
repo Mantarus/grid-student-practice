@@ -14,8 +14,8 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     final static private String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)";
     final static private String checkUserSql = "SELECT * FROM users u WHERE u.login = ? ORDER BY u.id";
-    final static private String updateUserQuery = "UPDATE users u SET login = ?, password = ? WHERE u.id = ?";
-    final static private String deleteUserQuery = "DELETE FROM users u WHERE u.id = ?";
+    final static private String updateUserSql = "UPDATE users u SET login = ?, password = ? WHERE u.id = ?";
+    final static private String deleteUserSql = "DELETE FROM users u WHERE u.id = ?";
 
     @Override
     public void createUser(User user) {
@@ -55,7 +55,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateUser(User user) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateUserQuery)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(updateUserSql)) {
 
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
@@ -69,7 +69,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public void deleteUserById(int id) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(deleteUserQuery)) {
+        try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(deleteUserSql)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

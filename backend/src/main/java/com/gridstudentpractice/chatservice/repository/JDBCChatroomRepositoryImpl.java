@@ -112,11 +112,11 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     //TODO: not working yet
     @Override
-    public void addUserToChatroom(User user, Chatroom chatroom) {
+    public void addUserToChatroom(User uId, Chatroom cId) {
         try (PreparedStatement preparedStatement = DbUtil.getConnection().prepareStatement(createUserInChatroom)) {
 
-            preparedStatement.setInt(1, user.getId());
-            preparedStatement.setInt(2, chatroom.getId());
+            preparedStatement.setInt(1, uId.getId());
+            preparedStatement.setInt(2, cId.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {

@@ -22,8 +22,8 @@ public class ChatroomRestController {
     }
 
     @PostMapping("/add-user")
-    public void addUserToChatroom(@Valid @RequestBody User user, @Valid @RequestBody Chatroom chatroom) {
-        chatroomService.addUserToChatroom(user, chatroom);
+    public void addUserToChatroom(@Valid @RequestBody User uId, @Valid @RequestBody Chatroom cId) {
+        chatroomService.addUserToChatroom(uId, cId);
     }
 
     @GetMapping("/{id}")
