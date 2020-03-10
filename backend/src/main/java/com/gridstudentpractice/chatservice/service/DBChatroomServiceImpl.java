@@ -30,8 +30,8 @@ public class DBChatroomServiceImpl implements ChatroomService {
     }
 
     @Override
-    public void addUserToChatroom(User uId, Chatroom cId) {
-        chatroomRepository.addUserToChatroom(uId, cId);
+    public void addUserToChatroom(User user, Chatroom chatroom) {
+        chatroomRepository.addUserToChatroom(user.getId(), chatroom.getId());
     }
 
     @Override
