@@ -38,19 +38,11 @@ class ResponseBodyTests {
 
 
     private Message invalidMessage () {
-        Message message = new Message();
-        message.setSender("");
-        message.setBody("");
-        message.setTimestamp(LocalDateTime.now());
-        return message;
+        return Message.builder().sender("").chatroom("").body("").build();
     }
 
     private Message validMessage() {
-        Message message = new Message();
-        message.setSender("Mock");
-        message.setBody("test");
-        message.setTimestamp(LocalDateTime.now());
-        return message;
+        return Message.builder().sender("Mock").chatroom("Test").body("Message").build();
     }
 
 //    @Test
@@ -68,7 +60,7 @@ class ResponseBodyTests {
 //        MockHttpServletResponse response = mvcResult.getResponse();
 //        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 //    }
-//
+
 //    @Test
 //    public void whenMessageIsValid_thenReturnStatus200() throws Exception {
 //        Message message = validMessage();

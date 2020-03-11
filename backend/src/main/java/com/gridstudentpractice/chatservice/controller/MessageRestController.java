@@ -27,4 +27,13 @@ public class MessageRestController {
         messageService.sendMessage(message);
     }
 
+    @PutMapping
+    public void editMessage(@RequestBody Message message) {
+        messageService.updateMessage(message);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteMessageById(@PathVariable int id) {
+        messageService.deleteMessageById(id);
+    }
 }

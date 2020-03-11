@@ -14,13 +14,23 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{login}")
-    public User getUser(@PathVariable String login) {
-        return userService.getUser(login);
+    @GetMapping("/{userLogin}")
+    public User getUserByLogin(@PathVariable String userLogin) {
+        return userService.getUserByLogin(userLogin);
     }
 
     @PostMapping
-    public boolean addUser(@Valid @RequestBody User user) {
-        return userService.addUser(user);
+    public void addUser(@Valid @RequestBody User user) {
+        userService.addUser(user);
+    }
+
+    @PutMapping
+    public void updateUser(@Valid @RequestBody User user) {
+        userService.updateUser(user);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUserById(@PathVariable int id) {
+        userService.deleteUserById(id);
     }
 }
