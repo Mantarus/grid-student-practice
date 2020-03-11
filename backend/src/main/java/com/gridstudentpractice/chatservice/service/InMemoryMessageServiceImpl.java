@@ -12,14 +12,23 @@ public class InMemoryMessageServiceImpl implements MessageService {
     private List<Message> messages = new ArrayList<>();
 
     @Override
-    public Message sendMessage(Message message) {
+    public void sendMessage(Message message) {
         messages.add(message);
-        return message;
     }
 
     @Override
     public List<Message> getMessages() {
         return new ArrayList<>(messages);
+    }
+
+    @Override
+    public void updateMessage(Message message) {
+
+    }
+
+    @Override
+    public void deleteMessageById(int id) {
+
     }
 
 }

@@ -22,7 +22,7 @@ public class MessageController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String displayMessages(Model model) {
-        model.addAttribute("message", new Message());
+        model.addAttribute("message", Message.builder().build());
         return "page";
     }
 
