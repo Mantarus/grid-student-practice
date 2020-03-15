@@ -1,5 +1,7 @@
 package com.gridstudentpractice.chatservice;
 
+import com.gridstudentpractice.chatservice.config.AppProperties;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,7 +15,7 @@ public class DbUtil {
         if (connection == null) {
 
             try {
-                connection = DriverManager.getConnection(appProperties.getDatabaseUrl(), appProperties.getDatabaseUser(), appProperties.getDatabasePassword());
+                connection = DriverManager.getConnection(appProperties.getDatabaseUrl(), appProperties.getDatabaseUsername(), appProperties.getDatabasePassword());
 
             } catch (SQLException e) {
                 e.printStackTrace();

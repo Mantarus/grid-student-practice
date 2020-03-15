@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.repository;
 
-import com.gridstudentpractice.chatservice.AppProperties;
+import com.gridstudentpractice.chatservice.config.AppProperties;
 import com.gridstudentpractice.chatservice.DbUtil;
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.User;
