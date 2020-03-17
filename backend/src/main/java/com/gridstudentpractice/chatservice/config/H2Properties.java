@@ -4,19 +4,15 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
-@ConfigurationProperties(prefix = "database")
+@ConfigurationProperties(prefix = "h2")
 @Getter
-public class AppProperties {
+@Profile("test")
+public class H2Properties {
 
-    @Value(("${database.url}"))
-    private String databaseUrl;
-
-    @Value(("${database.username}"))
-    private String databaseUsername;
-
-    @Value(("${database.password}"))
-    private String databasePassword;
+    @Value(("${h2.url}"))
+    private String url;
 
 }

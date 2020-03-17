@@ -1,12 +1,11 @@
 package com.gridstudentpractice.chatservice.repository;
 
-import com.gridstudentpractice.chatservice.config.AppProperties;
-import com.gridstudentpractice.chatservice.DbUtil;
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +14,7 @@ import java.sql.SQLException;
 public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Autowired
-    AppProperties appProperties;
+    private Connection connection;
 
     final static private String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)";
     final static private String checkUserSql = "SELECT * FROM users u WHERE u.login = ? ORDER BY u.id";
@@ -24,7 +23,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public void createUser(User user) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(addUserSql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(addUserSql)) {
 
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
@@ -37,7 +36,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public User getUserByLogin(String userLogin) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(checkUserSql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(checkUserSql)) {
 
             preparedStatement.setString(1, userLogin);
 
@@ -60,7 +59,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateUser(User user) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(updateUserSql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateUserSql)) {
 
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
@@ -74,7 +73,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public void deleteUserById(int id) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(deleteUserSql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteUserSql)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
