@@ -4,12 +4,14 @@ import com.gridstudentpractice.chatservice.config.H2Properties;
 import com.gridstudentpractice.chatservice.config.PostgresProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Configuration
 public class DbUtil {
 
     private static Connection postgresConnection = null;
@@ -17,7 +19,7 @@ public class DbUtil {
 
     @Autowired
     private PostgresProperties postgresProperties;
-    @Autowired
+    @Autowired(required = false)
     private H2Properties h2Properties;
 
     @Bean

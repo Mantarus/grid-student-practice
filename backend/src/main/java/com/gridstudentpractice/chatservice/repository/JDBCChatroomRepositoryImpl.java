@@ -16,7 +16,7 @@ import java.util.List;
 public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Autowired
-    private static Connection connection;
+    private Connection connection;
 
     final static private String createChatroom = "INSERT INTO chatrooms (name, description) VALUES (?, ?)";
     final static private String getChatroomById = "SELECT c.* FROM chatrooms c WHERE c.id = ?";

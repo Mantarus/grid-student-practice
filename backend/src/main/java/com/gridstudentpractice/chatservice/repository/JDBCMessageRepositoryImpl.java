@@ -14,7 +14,7 @@ import java.util.List;
 public class JDBCMessageRepositoryImpl implements MessageRepository {
 
     @Autowired
-    private static Connection connection;
+    private Connection connection;
 
     final static private String insertTableSql = "INSERT INTO messages (sender, body, chatroom) VALUES (?::integer, ?, ?::integer)";
     final static private String selectTableSql = "SELECT m.id AS id, " +
