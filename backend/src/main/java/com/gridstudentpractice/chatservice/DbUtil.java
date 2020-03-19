@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import javax.annotation.PostConstruct;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,14 +18,24 @@ public class DbUtil {
     private static Connection postgresConnection = null;
     private static Connection h2Connection = null;
 
+    private static PostgresProperties postgresProperties;
+    private static H2Properties h2Properties;
+
     @Autowired
-    private PostgresProperties postgresProperties;
+    private PostgresProperties autowiredPostgresProperties;
     @Autowired(required = false)
-    private H2Properties h2Properties;
+    private H2Properties autowiredH2Properties;
+
+    @PostConstruct
+    public void init() {
+        DbUtil.postgresProperties = this.autowiredPostgresProperties;
+        DbUtil.h2Properties = this.autowiredH2Properties;
+
+    }
 
     @Bean
     @Profile("dev")
-    public Connection getPostgresConnection() {
+    public static Connection getPostgresConnection() {
 
         if (postgresConnection == null) {
 
@@ -49,7 +60,7 @@ public class DbUtil {
 
     @Bean
     @Profile("test")
-    public Connection getH2Connection() {
+    public static Connection getH2Connection() {
 
         if (h2Connection == null) {
 
