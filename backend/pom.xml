@@ -79,14 +79,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.200</version>
-			<scope>test</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -105,6 +97,13 @@
 			<version>1.18.12</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.bitbucket.radistao.test</groupId>
+			<artifactId>before-after-spring-test-runner</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

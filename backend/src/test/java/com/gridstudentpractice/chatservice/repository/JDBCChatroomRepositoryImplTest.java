@@ -1,16 +1,10 @@
-package com.gridstudentpractice.chatservice.chatroom;
+package com.gridstudentpractice.chatservice.repository;
 
 import com.gridstudentpractice.chatservice.model.Chatroom;
 
-import com.gridstudentpractice.chatservice.repository.ChatroomRepository;
-
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -65,13 +59,6 @@ public class JDBCChatroomRepositoryImplTest {
     public void afterAll() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(dropChatroomTableQuery);
-        statement.close();
-    }
-
-    @AfterEach
-    public void afterEach() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.executeQuery(clearChatroomTableQuery);
         statement.close();
     }
 
