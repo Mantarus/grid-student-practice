@@ -21,7 +21,7 @@ public class DbUtil {
     private static PostgresProperties postgresProperties;
     private static H2Properties h2Properties;
 
-    @Autowired(required = false)
+    @Autowired
     private PostgresProperties autowiredPostgresProperties;
     @Autowired(required = false)
     private H2Properties autowiredH2Properties;

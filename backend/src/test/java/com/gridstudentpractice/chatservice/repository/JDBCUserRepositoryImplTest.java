@@ -79,8 +79,10 @@ public class JDBCUserRepositoryImplTest {
         Statement statement1 = connection.createStatement();
         statement1.executeUpdate(insertUsersQuery);
         statement1.close();
+
         String userLogin = "foo3";
         User repoUser = userRepository.getUserByLogin(userLogin);
+
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectUsersQuery);
         List<User> users = new ArrayList<>();
@@ -93,6 +95,7 @@ public class JDBCUserRepositoryImplTest {
             users.add(user);
         }
         statement2.close();
+
         for (User user : users) {
             if (user.getLogin().equals(userLogin)) {
                 assertEquals(user.getId(), repoUser.getId());
@@ -104,13 +107,14 @@ public class JDBCUserRepositoryImplTest {
 
     @Test
     public void CreateUser() throws SQLException {
-
         User foo1 = User.builder()
                 .id(1)
                 .login("foo1")
                 .password("pass1")
                 .build();
+
         userRepository.createUser(foo1);
+
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(selectUsersQuery);
         if (rs.next()) {
@@ -119,21 +123,21 @@ public class JDBCUserRepositoryImplTest {
             assertEquals(foo1.getPassword(), rs.getString("password"));
         }
         statement.close();
-
     }
 
     @Test
     public void updateUser() throws SQLException {
-
         Statement statement1 = connection.createStatement();
         statement1.executeUpdate(insertUsersQuery);
         statement1.close();
+
         User foo1 = User.builder()
                 .id(1)
                 .login("foo01")
                 .password("pass01")
                 .build();
         userRepository.updateUser(foo1);
+
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectUsersQuery);
         List<User> users = new ArrayList<>();
@@ -146,20 +150,21 @@ public class JDBCUserRepositoryImplTest {
             users.add(user);
         }
         statement2.close();
+
         assertEquals(foo1.getId(), findUserById(foo1.getId(), users).getId());
         assertEquals(foo1.getLogin(), findUserById(foo1.getId(), users).getLogin());
         assertEquals(foo1.getPassword(), findUserById(foo1.getId(), users).getPassword());
-
     }
 
     @Test
     public void deleteUserById() throws SQLException {
-
         Statement statement1 = connection.createStatement();
         statement1.executeUpdate(insertUsersQuery);
         statement1.close();
+
         int userId = 2;
         userRepository.deleteUserById(userId);
+
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectUsersQuery);
         List<User> users = new ArrayList<>();
@@ -172,8 +177,8 @@ public class JDBCUserRepositoryImplTest {
             users.add(user);
         }
         statement2.close();
-        assertNull(findUserById(userId, users));
 
+        assertNull(findUserById(userId, users));
     }
 
 }
