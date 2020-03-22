@@ -55,7 +55,7 @@ public class JDBCMessageRepositoryImplTest {
             "CREATE TABLE chatrooms (id INT AUTO_INCREMENT, name TEXT NOT NULL, description TEXT, PRIMARY KEY (id)); " +
             "INSERT INTO users VALUES (1, 'foo1', 'pass1'), (2, 'foo2', 'pass2'), (3, 'foo3', 'pass3'); " +
             "INSERT INTO chatrooms VALUES (1, 'chat1', 'desc1'), (2, 'chat2', 'desc2'), (3, 'chat3', 'desc3');";
-    private static final String dropRequiredTablesQuery = "DROP TABLE users, chatroom;";
+    private static final String dropRequiredTablesQuery = "DROP TABLE users, chatrooms;";
     private static final String selectUsersQuery = "SELECT * FROM users;";
     private static final String selectChatroomsQuery = "SELECT * FROM chatrooms;";
 
@@ -170,6 +170,10 @@ public class JDBCMessageRepositoryImplTest {
             assertEquals(findChatroomById(Integer.parseInt(testMessages.get(i).getChatroom()), testChatrooms).getName(),
                     repoMessages.get(i).getChatroom());
         }
+
+        Statement statement6 = connection.createStatement();
+        statement6.executeUpdate(dropRequiredTablesQuery);
+        statement6.close();
     }
 
     @Test
