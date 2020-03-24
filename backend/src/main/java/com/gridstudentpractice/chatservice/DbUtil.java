@@ -1,5 +1,6 @@
 package com.gridstudentpractice.chatservice;
 
+import com.gridstudentpractice.chatservice.config.DbProperties;
 import com.gridstudentpractice.chatservice.config.H2Properties;
 import com.gridstudentpractice.chatservice.config.PostgresProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,14 @@ public class DbUtil {
     private static Connection postgresConnection = null;
     private static Connection h2Connection = null;
 
-    private static PostgresProperties postgresProperties;
-    private static H2Properties h2Properties;
+    private static DbProperties dbProperties;
 
     @Autowired
-    private PostgresProperties autowiredPostgresProperties;
-    @Autowired(required = false)
-    private H2Properties autowiredH2Properties;
+    private DbProperties autowiredDbProperties;
 
     @PostConstruct
     public void init() {
-        DbUtil.postgresProperties = this.autowiredPostgresProperties;
-        DbUtil.h2Properties = this.autowiredH2Properties;
+        DbUtil.dbProperties = this.autowiredDbProperties;
 
     }
 
@@ -40,8 +37,8 @@ public class DbUtil {
         if (postgresConnection == null) {
 
             try {
-                postgresConnection = DriverManager.getConnection(postgresProperties.getUrl(),
-                        postgresProperties.getUsername(), postgresProperties.getPassword());
+                postgresConnection = DriverManager.getConnection(dbProperties.getUrl(),
+                        dbProperties.getUsername(), dbProperties.getPassword());
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -65,7 +62,7 @@ public class DbUtil {
         if (h2Connection == null) {
 
             try {
-                h2Connection = DriverManager.getConnection(h2Properties.getUrl());
+                h2Connection = DriverManager.getConnection(dbProperties.getUrl());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

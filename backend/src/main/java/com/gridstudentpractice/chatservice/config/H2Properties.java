@@ -10,9 +10,14 @@ import org.springframework.context.annotation.Profile;
 @ConfigurationProperties(prefix = "h2")
 @Getter
 @Profile("test")
-public class H2Properties {
+public class H2Properties implements DbProperties {
 
     @Value(("${h2.url}"))
     private String url;
 
+    @Value(("${h2.username}"))
+    private String username;
+
+    @Value(("${h2.password}"))
+    private String password;
 }

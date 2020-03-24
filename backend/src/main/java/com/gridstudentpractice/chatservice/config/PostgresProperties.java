@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 @ConfigurationProperties(prefix = "postgres")
 @Getter
 @Profile("dev")
-public class PostgresProperties {
+public class PostgresProperties implements DbProperties {
 
     @Value(("${postgres.url}"))
     private String url;
