@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = MessageRestController.class)
-class ResponseBodyTests {
+class ResponseBodyTest {
 
     @Autowired
     private MockMvc mvc;
