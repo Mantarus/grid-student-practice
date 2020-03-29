@@ -1,8 +1,6 @@
 package com.gridstudentpractice.chatservice;
 
 import com.gridstudentpractice.chatservice.config.DbProperties;
-import com.gridstudentpractice.chatservice.config.H2Properties;
-import com.gridstudentpractice.chatservice.config.PostgresProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +14,7 @@ import java.sql.SQLException;
 @Configuration
 public class DbUtil {
 
-    private static Connection postgresConnection = null;
-    private static Connection h2Connection = null;
+    private static Connection connection = null;
 
     private static DbProperties dbProperties;
 
@@ -26,7 +23,7 @@ public class DbUtil {
 
     @PostConstruct
     public void init() {
-        DbUtil.dbProperties = this.autowiredDbProperties;
+        dbProperties = autowiredDbProperties;
 
     }
 
@@ -34,10 +31,10 @@ public class DbUtil {
     @Profile("dev")
     public static Connection getPostgresConnection() {
 
-        if (postgresConnection == null) {
+        if (connection == null) {
 
             try {
-                postgresConnection = DriverManager.getConnection(dbProperties.getUrl(),
+                connection = DriverManager.getConnection(dbProperties.getUrl(),
                         dbProperties.getUsername(), dbProperties.getPassword());
 
             } catch (SQLException e) {
@@ -45,36 +42,36 @@ public class DbUtil {
                 System.out.println("Connection Failed");
             }
 
-            if (postgresConnection != null) {
+            if (connection != null) {
                 System.out.println("You successfully connected to database now");
             } else {
                 System.out.println("Failed to make connection to database");
             }
 
         }
-        return postgresConnection;
+        return connection;
     }
 
     @Bean
     @Profile("test")
     public static Connection getH2Connection() {
 
-        if (h2Connection == null) {
+        if (connection == null) {
 
             try {
-                h2Connection = DriverManager.getConnection(dbProperties.getUrl());
+                connection = DriverManager.getConnection(dbProperties.getUrl());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
-            if (h2Connection != null) {
+            if (connection != null) {
                 System.out.println("You successfully connected to test database");
             } else {
                 System.out.println("Failed to make connection to test database");
             }
         }
 
-        return h2Connection;
+        return connection;
     }
     
 }

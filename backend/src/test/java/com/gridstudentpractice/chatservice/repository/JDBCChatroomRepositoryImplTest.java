@@ -1,18 +1,17 @@
 package com.gridstudentpractice.chatservice.repository;
 
-import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.Chatroom;
 
+import org.bitbucket.radistao.test.annotation.AfterAllMethods;
+import org.bitbucket.radistao.test.annotation.BeforeAllMethods;
+import org.bitbucket.radistao.test.runner.BeforeAfterSpringTestRunner;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,20 +19,13 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 
-@RunWith(SpringRunner.class)
+@RunWith(BeforeAfterSpringTestRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class JDBCChatroomRepositoryImplTest {
 
-    private static Connection connection;
-
     @Autowired
-    private Connection autowiredConnection;
-
-    @PostConstruct
-    public void init() {
-        JDBCChatroomRepositoryImplTest.connection = this.autowiredConnection;
-    }
+    private Connection connection;
 
     @Autowired
     private ChatroomRepository chatroomRepository;
@@ -59,8 +51,8 @@ public class JDBCChatroomRepositoryImplTest {
                                                             ");";
     private static final String getUserChatroom = "SELECT * FROM user_chatroom ";
 
-    @Before
-    public void before() throws SQLException {
+    @BeforeAllMethods
+    public void beforeAll() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(createChatroomTableQuery);
         statement.close();
@@ -68,6 +60,13 @@ public class JDBCChatroomRepositoryImplTest {
 
     @After
     public void after() throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(clearChatroomTableQuery);
+        statement.close();
+    }
+
+    @AfterAllMethods
+    public void afterAll() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(dropChatroomTableQuery);
         statement.close();
