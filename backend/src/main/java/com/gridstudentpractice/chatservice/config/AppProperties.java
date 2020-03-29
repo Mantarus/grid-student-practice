@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class AppProperties {
 
-    @Value(("${database.url}"))
+    @Value(("${database.jdbc-url}"))
     private String databaseUrl;
 
     @Value(("${database.username}"))

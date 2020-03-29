@@ -3,11 +3,13 @@ package com.gridstudentpractice.chatservice.service;
 import com.gridstudentpractice.chatservice.model.User;
 import com.gridstudentpractice.chatservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DbUserServiceImpl implements UserService {
 
+    @Qualifier("JDBCUserRepositoryImpl")
     @Autowired
     private UserRepository userRepository;
 

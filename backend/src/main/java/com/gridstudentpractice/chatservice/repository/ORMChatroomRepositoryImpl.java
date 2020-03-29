@@ -2,6 +2,7 @@ package com.gridstudentpractice.chatservice.repository;
 
 import com.gridstudentpractice.chatservice.model.Chatroom;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Repository
 public class ORMChatroomRepositoryImpl implements ChatroomRepository {
 
+    @Lazy
     @Autowired
     ORMChatroomRepository ormChatroomRepository;
 
