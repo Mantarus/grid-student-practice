@@ -38,7 +38,8 @@ public class JDBCChatroomRepositoryImplTest {
                                                             "PRIMARY KEY (id) " +
                                                             ");";
     private static final String dropChatroomTableQuery = "DROP TABLE chatrooms;";
-    private static final String clearChatroomTableQuery = "DELETE FROM chatrooms;";
+    private static final String clearChatroomTableQuery = "DELETE FROM chatrooms; " +
+                                                            "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1";
     private static final String insertChatroomQuery = "INSERT INTO chatrooms VALUES (1, 'chatroom', 'description1'), " +
                                                                             "(2, 'chatroom', 'description2'), " +
                                                                             "(3, 'chatroom3', 'description3');";
@@ -81,47 +82,39 @@ public class JDBCChatroomRepositoryImplTest {
         return null;
     }
 
-    @Test
-    public void createChatroom() throws SQLException {
-
-        Chatroom chatroom = Chatroom.builder()
-                            .description("Description1")
-                            .id(1)
-                            .name("chatroom1")
-                            .build();
-
-        chatroomRepository.createChatroom(chatroom);
-
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(getChatrooms);
-        if (rs.next()) {
-            assertEquals(chatroom.getId(), rs.getInt("id"));
-            assertEquals(chatroom.getDescription(), rs.getString("description"));
-            assertEquals(chatroom.getName(), rs.getString("name"));
-
-        }
-        statement.close();
-
-    }
 
     @Test
     public void getChatroomById() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(insertChatroomQuery);
-
-        Chatroom chatroom = chatroomRepository.getChatroomById(3);
-
-        assertEquals(chatroom.getId(), 3);
-        assertEquals(chatroom.getDescription(), "description3");
-        assertEquals(chatroom.getName(), "chatroom3");
-
         statement.close();
+
+        int chatroomId = 3;
+        Chatroom chatroom = chatroomRepository.getChatroomById(chatroomId);
+
+        Statement statement1 = connection.createStatement();
+        ResultSet rs = statement1.executeQuery(getChatrooms);
+        List<Chatroom> chatrooms = new ArrayList<>();
+        while (rs.next()) {
+            Chatroom chatroom1 = Chatroom.builder()
+                    .id(rs.getInt("id"))
+                    .name(rs.getString("name"))
+                    .description(rs.getString("description"))
+                    .build();
+            chatrooms.add(chatroom1);
+        }
+        statement1.close();
+
+        assertEquals(findChatroomById(chatroomId, chatrooms).getId(), chatroom.getId());
+        assertEquals(findChatroomById(chatroomId, chatrooms).getName(), chatroom.getName());
+        assertEquals(findChatroomById(chatroomId, chatrooms).getDescription(), chatroom.getDescription());
     }
 
     @Test
     public void getChatroomsByName() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(insertChatroomQuery);
+        statement.close();
 
         List<Chatroom> chatrooms = chatroomRepository.getChatroomsByName("chatroom");
 
@@ -132,8 +125,28 @@ public class JDBCChatroomRepositoryImplTest {
         assertEquals(chatrooms.get(1).getId(), 2);
         assertEquals(chatrooms.get(1).getName(), "chatroom");
         assertEquals(chatrooms.get(1).getDescription(), "description2");
+    }
 
+    @Test
+    public void createChatroom() throws SQLException {
+
+        Chatroom chatroom = Chatroom.builder()
+                .id(1)
+                .name("chatroom")
+                .description("Description1")
+                .build();
+
+        chatroomRepository.createChatroom(chatroom);
+
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(getChatrooms);
+        if (rs.next()) {
+            assertEquals(chatroom.getId(), rs.getInt("id"));
+            assertEquals(chatroom.getDescription(), rs.getString("description"));
+            assertEquals(chatroom.getName(), rs.getString("name"));
+        }
         statement.close();
+
     }
 
     @Test
@@ -153,13 +166,20 @@ public class JDBCChatroomRepositoryImplTest {
 
         Statement statement1 = connection.createStatement();
         ResultSet rs = statement1.executeQuery(getChatrooms);
-        if (rs.next()) {
-            assertEquals(chatroom.getId(), rs.getInt("id"));
-            assertEquals(chatroom.getDescription(), rs.getString("description"));
-            assertEquals(chatroom.getName(), rs.getString("name"));
-
+        List<Chatroom> chatrooms = new ArrayList<>();
+        while (rs.next()) {
+            Chatroom chatroom1 = Chatroom.builder()
+                    .id(rs.getInt("id"))
+                    .name(rs.getString("name"))
+                    .description(rs.getString("description"))
+                    .build();
+            chatrooms.add(chatroom1);
         }
         statement1.close();
+
+        assertEquals(chatroom.getId(), findChatroomById(chatroom.getId(), chatrooms).getId());
+        assertEquals(chatroom.getName(), findChatroomById(chatroom.getId(), chatrooms).getName());
+        assertEquals(chatroom.getDescription(), findChatroomById(chatroom.getId(), chatrooms).getDescription());
     }
 
     @Test
@@ -202,7 +222,6 @@ public class JDBCChatroomRepositoryImplTest {
             assertEquals(rs.getInt("user_id"), 1);
             assertEquals(rs.getInt("chatroom_id"), 1);
         }
-
         statement1.close();
     }
 }

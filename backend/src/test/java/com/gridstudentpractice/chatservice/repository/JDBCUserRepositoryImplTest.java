@@ -38,7 +38,8 @@ public class JDBCUserRepositoryImplTest {
                                                             "PRIMARY KEY (id) " +
                                                             ");";
     private static final String dropUserTableQuery = "DROP TABLE users;";
-    private static final String clearUserTableQuery = "DELETE FROM users;";
+    private static final String clearUserTableQuery = "DELETE FROM users; " +
+                                                        "ALTER TABLE users ALTER COLUMN id RESTART WITH 1;";
     private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +
                                                                                 "(2, 'foo2', 'pass2'), " +
                                                                                 "(3, 'foo3', 'pass3');";

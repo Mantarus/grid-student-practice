@@ -44,7 +44,8 @@ public class JDBCMessageRepositoryImplTest {
                                                         "PRIMARY KEY (id) " +
                                                         ");";
     private static final String dropMessageTableQuery = "DROP TABLE messages;";
-    private static final String clearMessageTableQuery = "DELETE FROM messages;";
+    private static final String clearMessageTableQuery = "DELETE FROM messages; " +
+                                                            "ALTER TABLE messages ALTER COLUMN id RESTART WITH 1;";
     private static final String insertMessagesQuery = "INSERT INTO messages(id, sender, body, chatroom) " +
                                                         "VALUES (1, 1, 'body1', 1), " +
                                                         "(2, 2, 'body2', 2), " +
