@@ -1,9 +1,10 @@
-package com.gridstudentpractice.chatservice.repository;
+package com.gridstudentpractice.chatservice.repository.jdbc;
 
 import com.gridstudentpractice.chatservice.config.AppProperties;
 import com.gridstudentpractice.chatservice.DbUtil;
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.Chatroom;
+import com.gridstudentpractice.chatservice.repository.ChatroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -20,7 +20,7 @@ public class MessageEntity {
     @GeneratedValue
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "sender")
     private UserEntity sender;
 
@@ -30,7 +30,7 @@ public class MessageEntity {
     @Column(name = "time1")
     private LocalDateTime timestamp;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "chatroom")
     private ChatroomEntity chatroom;
 

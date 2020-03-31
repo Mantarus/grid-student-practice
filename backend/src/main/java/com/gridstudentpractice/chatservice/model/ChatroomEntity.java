@@ -26,7 +26,7 @@ public class ChatroomEntity {
     @ManyToMany
     private List<UserEntity> userEntities;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MessageEntity> messageEntities;
 
 }

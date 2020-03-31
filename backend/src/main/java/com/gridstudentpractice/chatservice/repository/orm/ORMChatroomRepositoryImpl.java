@@ -1,6 +1,7 @@
-package com.gridstudentpractice.chatservice.repository;
+package com.gridstudentpractice.chatservice.repository.orm;
 
 import com.gridstudentpractice.chatservice.model.Chatroom;
+import com.gridstudentpractice.chatservice.repository.ChatroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
