@@ -1,7 +1,6 @@
 package com.gridstudentpractice.chatservice.repository.orm;
 
 import com.gridstudentpractice.chatservice.mapper.ChatroomMapper;
-import com.gridstudentpractice.chatservice.mapper.ChatroomMapperImpl;
 import com.gridstudentpractice.chatservice.model.Chatroom;
 import com.gridstudentpractice.chatservice.model.ChatroomEntity;
 import com.gridstudentpractice.chatservice.repository.ChatroomRepository;
@@ -17,10 +16,10 @@ public class ORMChatroomRepositoryImpl implements ChatroomRepository {
 
     @Lazy
     @Autowired
-    ORMChatroomRepository ormChatroomRepository;
+    private ORMChatroomRepository ormChatroomRepository;
 
     @Autowired
-    ChatroomMapper mapper;
+    private ChatroomMapper mapper;
 
     @Override
     public void createChatroom(Chatroom chatroom) {
@@ -54,6 +53,7 @@ public class ORMChatroomRepositoryImpl implements ChatroomRepository {
         ChatroomEntity chatroomEntity = ormChatroomRepository.findChatroomEntityById(chatroom.getId());
         chatroomEntity.setName(chatroom.getName());
         chatroomEntity.setDescription(chatroom.getDescription());
+        ormChatroomRepository.save(chatroomEntity);
     }
 
     @Override

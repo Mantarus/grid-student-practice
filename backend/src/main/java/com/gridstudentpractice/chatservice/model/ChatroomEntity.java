@@ -23,7 +23,7 @@ public class ChatroomEntity {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "chatroomEntities")
     private List<UserEntity> userEntities;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

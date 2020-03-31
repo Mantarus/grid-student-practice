@@ -31,7 +31,6 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
             "FROM messages m " +
             "JOIN users u ON u.id=m.sender " +
             "JOIN chatrooms ch ON  ch.id=m.chatroom";
-    final static private String selectUpdatableMessage = "SELECT m.* FROM messages m WHERE m.id = ?";
     final static private String updateMessage = "UPDATE messages m SET body = ? WHERE m.id = ?";
     final static private String deleteMessage = "DELETE FROM messages m WHERE m.id = ?";
 
