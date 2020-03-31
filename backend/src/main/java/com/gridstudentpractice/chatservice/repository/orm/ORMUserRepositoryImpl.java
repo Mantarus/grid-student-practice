@@ -12,11 +12,14 @@ public class ORMUserRepositoryImpl implements UserRepository {
 
     @Lazy
     @Autowired
-    ORMUserRepository ormUserRepository;
+    private ORMUserRepository ormUserRepository;
+
+    @Autowired
+    private UserMapper mapper;
 
     @Override
     public void createUser(User user) {
-        ormUserRepository.save(UserMapper.INSTANCE.toEntity(user));
+        ormUserRepository.save(mapper.toEntity(user));
     }
 
     @Override
