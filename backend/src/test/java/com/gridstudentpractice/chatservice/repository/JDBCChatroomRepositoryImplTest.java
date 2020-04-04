@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -28,6 +29,7 @@ public class JDBCChatroomRepositoryImplTest {
     private Connection connection;
 
     @Autowired
+    @Qualifier("JDBCChatroomRepositoryImpl")
     private ChatroomRepository chatroomRepository;
 
     private static final String createChatroomTableQuery = "CREATE TABLE chatrooms " +

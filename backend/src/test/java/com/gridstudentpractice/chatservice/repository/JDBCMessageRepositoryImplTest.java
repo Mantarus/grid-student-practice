@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import static org.junit.Assert.*;
@@ -32,6 +33,7 @@ public class JDBCMessageRepositoryImplTest {
     private Connection connection;
 
     @Autowired
+    @Qualifier("JDBCMessageRepositoryImpl")
     private MessageRepository messageRepository;
 
     private static final String createMessageTableQuery = "CREATE TABLE messages " +
