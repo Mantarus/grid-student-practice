@@ -14,8 +14,6 @@ import java.sql.SQLException;
 @Configuration
 public class DbUtil {
 
-    private static Connection connection = null;
-
     private static DbProperties dbProperties;
 
     @Autowired
@@ -31,24 +29,23 @@ public class DbUtil {
     @Profile("dev")
     public static Connection getPostgresConnection() {
 
-        if (connection == null) {
+        Connection connection = null;
 
-            try {
-                connection = DriverManager.getConnection(dbProperties.getUrl(),
-                        dbProperties.getUsername(), dbProperties.getPassword());
+        try {
+            connection = DriverManager.getConnection(dbProperties.getUrl(),
+                    dbProperties.getUsername(), dbProperties.getPassword());
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-                System.out.println("Connection Failed");
-            }
-
-            if (connection != null) {
-                System.out.println("You successfully connected to database now");
-            } else {
-                System.out.println("Failed to make connection to database");
-            }
-
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Connection Failed");
         }
+
+        if (connection != null) {
+            System.out.println("You successfully connected to database now");
+        } else {
+            System.out.println("Failed to make connection to database");
+        }
+
         return connection;
     }
 
@@ -56,19 +53,18 @@ public class DbUtil {
     @Profile("test")
     public static Connection getH2Connection() {
 
-        if (connection == null) {
+        Connection connection = null;
 
-            try {
-                connection = DriverManager.getConnection(dbProperties.getUrl());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        try {
+            connection = DriverManager.getConnection(dbProperties.getUrl());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-            if (connection != null) {
-                System.out.println("You successfully connected to test database");
-            } else {
-                System.out.println("Failed to make connection to test database");
-            }
+        if (connection != null) {
+            System.out.println("You successfully connected to test database");
+        } else {
+            System.out.println("Failed to make connection to test database");
         }
 
         return connection;
