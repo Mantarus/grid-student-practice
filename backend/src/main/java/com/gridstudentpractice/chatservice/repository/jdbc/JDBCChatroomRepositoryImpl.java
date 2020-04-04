@@ -1,13 +1,12 @@
 package com.gridstudentpractice.chatservice.repository.jdbc;
 
-import com.gridstudentpractice.chatservice.config.AppProperties;
-import com.gridstudentpractice.chatservice.DbUtil;
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.Chatroom;
 import com.gridstudentpractice.chatservice.repository.ChatroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +17,7 @@ import java.util.List;
 public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Autowired
-    AppProperties appProperties;
+    private Connection connection;
 
     final static private String createChatroom = "INSERT INTO chatrooms (name, description) VALUES (?, ?)";
     final static private String getChatroomById = "SELECT c.* FROM chatrooms c WHERE c.id = ?";
@@ -31,7 +30,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public void createChatroom(Chatroom chatroom) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(createChatroom)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(createChatroom)) {
 
             preparedStatement.setString(1, chatroom.getName());
             preparedStatement.setString(2, chatroom.getDescription());
@@ -44,7 +43,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public Chatroom getChatroomById(int chatroomId) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(getChatroomById)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(getChatroomById)) {
             preparedStatement.setInt(1, chatroomId);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -65,7 +64,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public List<Chatroom> getChatroomsByName(String chatroomName) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(getChatroomByName)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(getChatroomByName)) {
             preparedStatement.setString(1, chatroomName);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -90,7 +89,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public void updateChatroom(Chatroom chatroom) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(updateChatroom)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateChatroom)) {
 
             preparedStatement.setString(1, chatroom.getName());
             preparedStatement.setString(2, chatroom.getDescription());
@@ -104,7 +103,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public void deleteChatroomById(int id) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(deleteChatroom)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteChatroom)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
@@ -118,7 +117,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
     //TODO: not working yet
     @Override
     public void addUserToChatroom(int uId, int cId) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(createUserInChatroom)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(createUserInChatroom)) {
 
             preparedStatement.setInt(1, uId);
             preparedStatement.setInt(2, cId);
