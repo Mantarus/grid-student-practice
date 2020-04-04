@@ -1,17 +1,12 @@
 package com.gridstudentpractice.chatservice.repository;
 
-import com.gridstudentpractice.chatservice.config.AppProperties;
-import com.gridstudentpractice.chatservice.DbUtil;
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +14,7 @@ import java.util.List;
 public class JDBCMessageRepositoryImpl implements MessageRepository {
 
     @Autowired
-    AppProperties appProperties;
+    private Connection connection;
 
     final static private String insertTableSql = "INSERT INTO messages (sender, body, chatroom) VALUES (?::integer, ?, ?::integer)";
     final static private String selectTableSql = "SELECT m.id AS id, " +
@@ -30,14 +25,13 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
             "FROM messages m " +
             "JOIN users u ON u.id=m.sender " +
             "JOIN chatrooms ch ON  ch.id=m.chatroom";
-    final static private String selectUpdatableMessage = "SELECT m.* FROM messages m WHERE m.id = ?";
     final static private String updateMessage = "UPDATE messages m SET body = ? WHERE m.id = ?";
     final static private String deleteMessage = "DELETE FROM messages m WHERE m.id = ?";
 
     @Override
     public void createMessage(Message message) {
 
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(insertTableSql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertTableSql)) {
 
             preparedStatement.setString(1, message.getSender());
             preparedStatement.setString(2, message.getBody());
@@ -51,7 +45,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> getMessages() {
-        try (Statement statement = DbUtil.getConnection(appProperties).createStatement()) {
+        try (Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(selectTableSql)) {
                 List<Message> messages = new ArrayList<>();
                 while (rs.next()) {
@@ -78,7 +72,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
 
     @Override
     public void updateMessage(Message message) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(updateMessage)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateMessage)) {
 
             preparedStatement.setString(1, message.getBody());
             preparedStatement.setInt(2, message.getId());
@@ -91,7 +85,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
 
     @Override
     public void deleteMessageById(int id) {
-        try (PreparedStatement preparedStatement = DbUtil.getConnection(appProperties).prepareStatement(deleteMessage)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteMessage)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
