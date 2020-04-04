@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.NullValueCheckStrategy;
 
-@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ON_IMPLICIT_CONVERSION)
+@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface MessageMapper {
 
     @Mappings({

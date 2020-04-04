@@ -30,12 +30,12 @@ public class ORMUserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateUser(User user) {
-        if (ormUserRepository.findById(user.getId()).isPresent()) {
-            UserEntity userEntity = ormUserRepository.findById(user.getId()).get();
-            userEntity.setLogin(user.getLogin());
-            userEntity.setPassword(user.getPassword());
-            ormUserRepository.save(userEntity);
-        }
+        ormUserRepository.save(ormUserRepository.findById(user.getId())
+                .map(userEntity -> {
+                    userEntity.setLogin(user.getLogin());
+                    userEntity.setPassword(user.getPassword());
+                    return userEntity;
+                }).get());
     }
 
     @Override

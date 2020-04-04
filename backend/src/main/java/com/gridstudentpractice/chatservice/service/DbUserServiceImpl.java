@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DbUserServiceImpl implements UserService {
 
-    @Qualifier("JDBCUserRepositoryImpl")
+    @Qualifier("ORMUserRepositoryImpl")
     @Autowired
     private UserRepository userRepository;
 

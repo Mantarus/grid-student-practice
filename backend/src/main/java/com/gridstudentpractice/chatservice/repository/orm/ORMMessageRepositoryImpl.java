@@ -9,7 +9,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 public class ORMMessageRepositoryImpl implements MessageRepository {
@@ -28,21 +31,19 @@ public class ORMMessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> getMessages() {
-        List<Message> messages = new ArrayList<>();
         List<MessageEntity> messageEntities = ormMessageRepository.findAll();
-        for (MessageEntity messageEntity : messageEntities) {
-            messages.add(mapper.toDTO(messageEntity));
-        }
-        return messages;
+        return messageEntities.stream()
+                .map(messageEntity -> mapper.toDTO(messageEntity))
+                .collect(Collectors.toList());
     }
 
     @Override
     public void updateMessage(Message message) {
-        if (ormMessageRepository.findById(message.getId()).isPresent()) {
-            MessageEntity messageEntity = ormMessageRepository.findById(message.getId()).get();
-            messageEntity.setBody(message.getBody());
-            ormMessageRepository.save(messageEntity);
-        }
+        ormMessageRepository.save(ormMessageRepository.findById(message.getId())
+                .map(messageEntity -> {
+                   messageEntity.setBody(message.getBody());
+                   return messageEntity;
+                }).get());
     }
 
     @Override
