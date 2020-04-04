@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class ORMUserRepositoryImpl implements UserRepository {
 
@@ -30,12 +32,13 @@ public class ORMUserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateUser(User user) {
-        ormUserRepository.save(ormUserRepository.findById(user.getId())
-                .map(userEntity -> {
-                    userEntity.setLogin(user.getLogin());
-                    userEntity.setPassword(user.getPassword());
-                    return userEntity;
-                }).get());
+        Optional<UserEntity> optionalUserEntity = ormUserRepository.findById(user.getId());
+        if (optionalUserEntity.isPresent()) {
+            UserEntity userEntity = optionalUserEntity.get();
+            userEntity.setPassword(user.getPassword());
+            userEntity.setLogin(user.getLogin());
+            ormUserRepository.save(userEntity);
+        }
     }
 
     @Override
