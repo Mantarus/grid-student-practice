@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class DBChatroomServiceImpl implements ChatroomService {
 
-    @Qualifier("JDBCChatroomRepositoryImpl")
+    @Qualifier("ORMChatroomRepositoryImpl")
     @Autowired
     private ChatroomRepository chatroomRepository;
 

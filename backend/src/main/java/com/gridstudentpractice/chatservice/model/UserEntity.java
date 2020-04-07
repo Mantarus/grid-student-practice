@@ -23,12 +23,7 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_chatroom",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "chatroom_id")
-    )
+    @ManyToMany(mappedBy = "userEntities")
     private List<ChatroomEntity> chatroomEntities;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

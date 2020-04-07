@@ -18,6 +18,10 @@ public class ORMChatroomRepositoryImpl implements ChatroomRepository {
     @Autowired
     private ORMChatroomRepository ormChatroomRepository;
 
+    @Lazy
+    @Autowired
+    private ORMUserRepository ormUserRepository;
+
     @Autowired
     private ChatroomMapper mapper;
 
@@ -45,7 +49,10 @@ public class ORMChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public void addUserToChatroom(int uId, int cId) {
+        if (!ormChatroomRepository.findChatroomEntityById(cId).getUserEntities().contains(ormUserRepository.findUserEntityById(uId)))
+            ormChatroomRepository.findChatroomEntityById(cId).getUserEntities().add(ormUserRepository.findUserEntityById(uId));
 
+        System.out.println(ormChatroomRepository.findChatroomEntityById(cId).getUserEntities().get(0));
     }
 
     @Override
@@ -59,6 +66,5 @@ public class ORMChatroomRepositoryImpl implements ChatroomRepository {
     @Override
     public void deleteChatroomById(int id) {
         ormChatroomRepository.deleteById(id);
-
     }
 }

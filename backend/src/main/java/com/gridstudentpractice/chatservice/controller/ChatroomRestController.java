@@ -26,13 +26,13 @@ public class ChatroomRestController {
         chatroomService.addUserToChatroom(uId, cId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public Chatroom getChatroomById(@PathVariable int id) {
         return chatroomService.getChatroomById(id);
     }
 
-    @GetMapping("?name={name}")
-    public List<Chatroom> getChatroomsNyName(@PathVariable String name) {
+    @GetMapping("/name/{name}")
+    public List<Chatroom> getChatroomsByName(@PathVariable("name") String name) {
         return chatroomService.getChatroomsByName(name);
     }
 

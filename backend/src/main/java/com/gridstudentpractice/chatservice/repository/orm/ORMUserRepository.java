@@ -7,4 +7,6 @@ public interface ORMUserRepository extends JpaRepository<UserEntity, Integer> {
 
     UserEntity findByLogin(String login);
 
+    UserEntity findUserEntityById(int id);
+
 }
