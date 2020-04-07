@@ -3,6 +3,7 @@ package com.gridstudentpractice.chatservice.repository.orm;
 import com.gridstudentpractice.chatservice.mapper.ChatroomMapper;
 import com.gridstudentpractice.chatservice.model.Chatroom;
 import com.gridstudentpractice.chatservice.model.ChatroomEntity;
+import com.gridstudentpractice.chatservice.model.UserEntity;
 import com.gridstudentpractice.chatservice.repository.ChatroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -49,10 +50,11 @@ public class ORMChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public void addUserToChatroom(int uId, int cId) {
-        if (!ormChatroomRepository.findChatroomEntityById(cId).getUserEntities().contains(ormUserRepository.findUserEntityById(uId)))
-            ormChatroomRepository.findChatroomEntityById(cId).getUserEntities().add(ormUserRepository.findUserEntityById(uId));
+        ChatroomEntity chatroomEntity = ormChatroomRepository.findChatroomEntityById(cId);
+        UserEntity userEntity = ormUserRepository.findUserEntityById(uId);
 
-        System.out.println(ormChatroomRepository.findChatroomEntityById(cId).getUserEntities().get(0));
+        if (!chatroomEntity.getUserEntities().contains(userEntity))
+            chatroomEntity.getUserEntities().add(userEntity);
     }
 
     @Override
