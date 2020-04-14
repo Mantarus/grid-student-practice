@@ -1,0 +1,104 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-master.yaml
+  - changeSet:
+      id: 1
+      author: chatservice
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: login
+                  type: text
+                  constraints:
+                    unique: true
+              - column:
+                  name: password
+                  type: text
+              - column:
+                  name: role
+                  type: text
+
+  - changeSet:
+      id: 2
+      author: chatservice
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: body
+                  type: text
+              - column:
+                  name: sender
+                  type: integer
+                  constraints:
+                    foreignKeyName: messages_users_id_fk
+                    references: users(id)
+              - column:
+                  name: chatroom
+                  type: integer
+                  constraints:
+                    foreignKeyName: messages_chatrooms_id_fk
+                    references: chatrooms(id)
+              - column:
+                  name: time1
+                  type: timestamp
+
+  - changeSet:
+      id: 3
+      author: chatservice
+      changes:
+        - createTable:
+            tableName: chatrooms
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: text
+              - column:
+                  name: description
+                  type: text
+
+  - changeSet:
+      id: 4
+      author: chatservice
+      changes:
+        - createTable:
+            tableName: user_chatroom
+            columns:
+              - column:
+                  name: chatroom_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: user_chatroom_chatrooms_id_fk
+                    references: chatrooms(id)
+              - column:
+                  name: user_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: user_chatroom_users_id_fk
+                    references: users(id)
