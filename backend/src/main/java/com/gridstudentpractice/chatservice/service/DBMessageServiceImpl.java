@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.service;
 
-import com.gridstudentpractice.chatservice.model.Message;
+import com.gridstudentpractice.chatservice.model.MessageDto;
 import com.gridstudentpractice.chatservice.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,18 +16,18 @@ import java.util.List;
     private MessageRepository messageRepository;
 
     @Override
-    public void sendMessage(Message message) {
-        messageRepository.createMessage(message);
+    public void sendMessage(MessageDto messageDto) {
+        messageRepository.createMessage(messageDto);
     }
 
     @Override
-    public List<Message> getMessages() {
+    public List<MessageDto> getMessageDtos() {
         return messageRepository.getMessages();
     }
 
     @Override
-    public void updateMessage(Message message) {
-        messageRepository.updateMessage(message);
+    public void updateMessage(MessageDto messageDto) {
+        messageRepository.updateMessage(messageDto);
     }
 
     @Override

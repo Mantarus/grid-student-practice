@@ -1,7 +1,7 @@
 package com.gridstudentpractice.chatservice.repository.jdbc;
 
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
-import com.gridstudentpractice.chatservice.model.Chatroom;
+import com.gridstudentpractice.chatservice.model.ChatroomDto;
 import com.gridstudentpractice.chatservice.repository.ChatroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,26 +29,26 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
 
     @Override
-    public void createChatroom(Chatroom chatroom) {
+    public void createChatroom(ChatroomDto chatroomDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(createChatroom)) {
 
-            preparedStatement.setString(1, chatroom.getName());
-            preparedStatement.setString(2, chatroom.getDescription());
+            preparedStatement.setString(1, chatroomDto.getName());
+            preparedStatement.setString(2, chatroomDto.getDescription());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Chatroom creation error", e);
+            throw new RepositoryException("ChatroomDto creation error", e);
         }
     }
 
     @Override
-    public Chatroom getChatroomById(int chatroomId) {
+    public ChatroomDto getChatroomById(int chatroomId) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(getChatroomById)) {
             preparedStatement.setInt(1, chatroomId);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    return Chatroom.builder()
+                    return ChatroomDto.builder()
                             .id(rs.getInt("id"))
                             .name(rs.getString("name"))
                             .description(rs.getString("description"))
@@ -58,46 +58,46 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
                 throw new RepositoryException("ResultSet error", e);
             }
         } catch (SQLException e) {
-            throw new RepositoryException("Chatroom reading error", e);
+            throw new RepositoryException("ChatroomDto reading error", e);
         }
     }
 
     @Override
-    public List<Chatroom> getChatroomsByName(String chatroomName) {
+    public List<ChatroomDto> getChatroomsByName(String chatroomName) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(getChatroomByName)) {
             preparedStatement.setString(1, chatroomName);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
-                List<Chatroom> chatrooms = new ArrayList<>();
+                List<ChatroomDto> chatroomDtos = new ArrayList<>();
                 while (rs.next()) {
-                    Chatroom chatroom = Chatroom.builder()
+                    ChatroomDto chatroomDto = ChatroomDto.builder()
                             .id(rs.getInt("id"))
                             .name(rs.getString("name"))
                             .description(rs.getString("description"))
                             .build();
-                    chatrooms.add(chatroom);
+                    chatroomDtos.add(chatroomDto);
                 }
-                return chatrooms;
+                return chatroomDtos;
 
             } catch (SQLException e) {
                 throw new RepositoryException("ResultSet error", e);
             }
         } catch (SQLException e) {
-            throw new RepositoryException("Chatroom reading error", e);
+            throw new RepositoryException("ChatroomDto reading error", e);
         }
     }
 
     @Override
-    public void updateChatroom(Chatroom chatroom) {
+    public void updateChatroom(ChatroomDto chatroomDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateChatroom)) {
 
-            preparedStatement.setString(1, chatroom.getName());
-            preparedStatement.setString(2, chatroom.getDescription());
-            preparedStatement.setInt(3, chatroom.getId());
+            preparedStatement.setString(1, chatroomDto.getName());
+            preparedStatement.setString(2, chatroomDto.getDescription());
+            preparedStatement.setInt(3, chatroomDto.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Chatroom update error", e);
+            throw new RepositoryException("ChatroomDto update error", e);
         }
     }
 
@@ -109,7 +109,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Chatroom delete error", e);
+            throw new RepositoryException("ChatroomDto delete error", e);
         }
     }
 
@@ -124,7 +124,7 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Chatroom creation error", e);
+            throw new RepositoryException("ChatroomDto creation error", e);
         }
     }
 

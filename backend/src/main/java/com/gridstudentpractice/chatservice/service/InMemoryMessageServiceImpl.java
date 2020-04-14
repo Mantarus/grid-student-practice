@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.service;
 
-import com.gridstudentpractice.chatservice.model.Message;
+import com.gridstudentpractice.chatservice.model.MessageDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,20 +9,20 @@ import java.util.List;
 @Service
 public class InMemoryMessageServiceImpl implements MessageService {
 
-    private List<Message> messages = new ArrayList<>();
+    private List<MessageDto> messageDtos = new ArrayList<>();
 
     @Override
-    public void sendMessage(Message message) {
-        messages.add(message);
+    public void sendMessage(MessageDto messageDto) {
+        messageDtos.add(messageDto);
     }
 
     @Override
-    public List<Message> getMessages() {
-        return new ArrayList<>(messages);
+    public List<MessageDto> getMessageDtos() {
+        return new ArrayList<>(messageDtos);
     }
 
     @Override
-    public void updateMessage(Message message) {
+    public void updateMessage(MessageDto messageDto) {
 
     }
 

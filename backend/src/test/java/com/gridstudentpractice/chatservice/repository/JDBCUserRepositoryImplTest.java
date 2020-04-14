@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.repository;
 
-import com.gridstudentpractice.chatservice.model.User;
+import com.gridstudentpractice.chatservice.model.UserDto;
 import org.bitbucket.radistao.test.annotation.AfterAllMethods;
 import org.bitbucket.radistao.test.annotation.BeforeAllMethods;
 import org.bitbucket.radistao.test.runner.BeforeAfterSpringTestRunner;
@@ -68,10 +68,10 @@ public class JDBCUserRepositoryImplTest {
         statement.close();
     }
 
-    private User findUserById (int id, List<User> users) {
-        for (User user : users) {
-            if (user.getId() == id) {
-                return user;
+    private UserDto findUserById (int id, List<UserDto> userDtos) {
+        for (UserDto userDto : userDtos) {
+            if (userDto.getId() == id) {
+                return userDto;
             }
         }
         return null;
@@ -84,33 +84,33 @@ public class JDBCUserRepositoryImplTest {
         statement1.close();
 
         String userLogin = "foo3";
-        User repoUser = userRepository.getUserByLogin(userLogin);
+        UserDto repoUserDto = userRepository.getUserByLogin(userLogin);
 
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectUsersQuery);
-        List<User> users = new ArrayList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         while (rs.next()) {
-            User user = User.builder()
+            UserDto userDto = UserDto.builder()
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
                     .build();
-            users.add(user);
+            userDtos.add(userDto);
         }
         statement2.close();
 
-        for (User user : users) {
-            if (user.getLogin().equals(userLogin)) {
-                assertEquals(user.getId(), repoUser.getId());
-                assertEquals(user.getLogin(), repoUser.getLogin());
-                assertEquals(user.getPassword(), repoUser.getPassword());
+        for (UserDto userDto : userDtos) {
+            if (userDto.getLogin().equals(userLogin)) {
+                assertEquals(userDto.getId(), repoUserDto.getId());
+                assertEquals(userDto.getLogin(), repoUserDto.getLogin());
+                assertEquals(userDto.getPassword(), repoUserDto.getPassword());
             }
         }
     }
 
     @Test
     public void CreateUser() throws SQLException {
-        User foo1 = User.builder()
+        UserDto foo1 = UserDto.builder()
                 .id(1)
                 .login("foo1")
                 .password("pass1")
@@ -134,7 +134,7 @@ public class JDBCUserRepositoryImplTest {
         statement1.executeUpdate(insertUsersQuery);
         statement1.close();
 
-        User foo1 = User.builder()
+        UserDto foo1 = UserDto.builder()
                 .id(1)
                 .login("foo01")
                 .password("pass01")
@@ -143,20 +143,20 @@ public class JDBCUserRepositoryImplTest {
 
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectUsersQuery);
-        List<User> users = new ArrayList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         while (rs.next()) {
-            User user = User.builder()
+            UserDto userDto = UserDto.builder()
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
                     .build();
-            users.add(user);
+            userDtos.add(userDto);
         }
         statement2.close();
 
-        assertEquals(foo1.getId(), findUserById(foo1.getId(), users).getId());
-        assertEquals(foo1.getLogin(), findUserById(foo1.getId(), users).getLogin());
-        assertEquals(foo1.getPassword(), findUserById(foo1.getId(), users).getPassword());
+        assertEquals(foo1.getId(), findUserById(foo1.getId(), userDtos).getId());
+        assertEquals(foo1.getLogin(), findUserById(foo1.getId(), userDtos).getLogin());
+        assertEquals(foo1.getPassword(), findUserById(foo1.getId(), userDtos).getPassword());
     }
 
     @Test
@@ -170,18 +170,18 @@ public class JDBCUserRepositoryImplTest {
 
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectUsersQuery);
-        List<User> users = new ArrayList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         while (rs.next()) {
-            User user = User.builder()
+            UserDto userDto = UserDto.builder()
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
                     .build();
-            users.add(user);
+            userDtos.add(userDto);
         }
         statement2.close();
 
-        assertNull(findUserById(userId, users));
+        assertNull(findUserById(userId, userDtos));
     }
 
 }

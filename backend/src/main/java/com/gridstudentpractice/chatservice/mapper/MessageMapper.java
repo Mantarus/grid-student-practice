@@ -10,20 +10,20 @@ import org.mapstruct.NullValueCheckStrategy;
 public interface MessageMapper {
 
     @Mappings({
-            @Mapping(target = "id", source = "messageEntity.id"),
-            @Mapping(target = "sender", source = "messageEntity.sender.login"),
-            @Mapping(target = "body", source = "messageEntity.body"),
-            @Mapping(target = "timestamp", source = "messageEntity.timestamp"),
-            @Mapping(target = "chatroom", source = "messageEntity.chatroom.name")
-    })
-    Message toDTO(MessageEntity messageEntity);
-
-    @Mappings({
             @Mapping(target = "id", source = "message.id"),
-            @Mapping(target = "sender.id", source = "message.sender"),
+            @Mapping(target = "sender", source = "message.sender.login"),
             @Mapping(target = "body", source = "message.body"),
             @Mapping(target = "timestamp", source = "message.timestamp"),
-            @Mapping(target = "chatroom.id", source = "message.chatroom")
+            @Mapping(target = "chatroom", source = "message.chatroom.name")
     })
-    MessageEntity toEntity(Message message);
+    MessageDto toDTO(Message message);
+
+    @Mappings({
+            @Mapping(target = "id", source = "messageDto.id"),
+            @Mapping(target = "sender.id", source = "messageDto.sender"),
+            @Mapping(target = "body", source = "messageDto.body"),
+            @Mapping(target = "timestamp", source = "messageDto.timestamp"),
+            @Mapping(target = "chatroom.id", source = "messageDto.chatroom")
+    })
+    Message toEntity(MessageDto messageDto);
 }

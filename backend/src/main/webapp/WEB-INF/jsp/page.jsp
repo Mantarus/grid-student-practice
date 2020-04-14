@@ -9,23 +9,23 @@
 <body>
 <h3> Messenger </h3>
     <table>
-        <c:forEach var="message" items="${messages}">
+        <c:forEach var="messageDto" items="${messageDtos}">
             <tr>
                 <td>
-                    <c:out value="${message.MSender}"/>:
+                    <c:out value="${messageDto.MSender}"/>:
                 </td>
                 <td>
-                   <strong><c:out value="${message.MBody}"/></strong>
+                   <strong><c:out value="${messageDto.MBody}"/></strong>
                 </td>
                 <td>
-                    <c:out value="${message.MTimestamp}"/>
+                    <c:out value="${messageDto.MTimestamp}"/>
                 </td>
             </tr>
         </c:forEach>
     </table>
 
     <br>
-    <form:form action="/chat" method="POST" modelAttribute="message">
+    <form:form action="/chat" method="POST" modelAttribute="messageDto">
     <pre>
 Sender       <form:input path="mSender"/>
 Message body <form:input path="mBody"/>

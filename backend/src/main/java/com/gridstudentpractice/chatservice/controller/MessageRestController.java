@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.controller;
 
-import com.gridstudentpractice.chatservice.model.Message;
+import com.gridstudentpractice.chatservice.model.MessageDto;
 import com.gridstudentpractice.chatservice.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,18 +18,18 @@ public class MessageRestController {
     private MessageService messageService;
 
     @GetMapping
-    public List<Message> getAllMessages() {
-        return messageService.getMessages();
+    public List<MessageDto> getAllMessages() {
+        return messageService.getMessageDtos();
     }
 
     @PostMapping
-    public void sendMessage(@Valid @RequestBody Message message) {
-        messageService.sendMessage(message);
+    public void sendMessage(@Valid @RequestBody MessageDto messageDto) {
+        messageService.sendMessage(messageDto);
     }
 
     @PutMapping
-    public void editMessage(@RequestBody Message message) {
-        messageService.updateMessage(message);
+    public void editMessage(@RequestBody MessageDto messageDto) {
+        messageService.updateMessage(messageDto);
     }
 
     @DeleteMapping("/{id}")

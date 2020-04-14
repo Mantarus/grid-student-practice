@@ -1,7 +1,7 @@
 package com.gridstudentpractice.chatservice.repository.jdbc;
 
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
-import com.gridstudentpractice.chatservice.model.Message;
+import com.gridstudentpractice.chatservice.model.MessageDto;
 import com.gridstudentpractice.chatservice.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -30,57 +30,57 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
     final static private String deleteMessage = "DELETE FROM messages m WHERE m.id = ?";
 
     @Override
-    public void createMessage(Message message) {
+    public void createMessage(MessageDto messageDto) {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertTableSql)) {
 
-            preparedStatement.setString(1, message.getSender());
-            preparedStatement.setString(2, message.getBody());
-            preparedStatement.setString(3, message.getChatroom());
+            preparedStatement.setString(1, messageDto.getSender());
+            preparedStatement.setString(2, messageDto.getBody());
+            preparedStatement.setString(3, messageDto.getChatroom());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Message creation error", e);
+            throw new RepositoryException("MessageDto creation error", e);
         }
     }
 
     @Override
-    public List<Message> getMessages() {
+    public List<MessageDto> getMessages() {
         try (Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(selectTableSql)) {
-                List<Message> messages = new ArrayList<>();
+                List<MessageDto> messageDtos = new ArrayList<>();
                 while (rs.next()) {
 
-                    Message message = Message.builder()
+                    MessageDto messageDto = MessageDto.builder()
                             .id(rs.getInt("id"))
                             .sender(rs.getString("sender"))
                             .chatroom(rs.getString("chatroom"))
                             .body( rs.getString("body"))
                             .timestamp(rs.getTimestamp("time1").toLocalDateTime())
                             .build();
-                    messages.add(message);
+                    messageDtos.add(messageDto);
 
                 }
-                return messages;
+                return messageDtos;
 
             } catch (SQLException e) {
                 throw new RepositoryException("ResultSet error", e);
             }
         } catch (SQLException e) {
-            throw new RepositoryException("Message reading error", e);
+            throw new RepositoryException("MessageDto reading error", e);
         }
     }
 
     @Override
-    public void updateMessage(Message message) {
+    public void updateMessage(MessageDto messageDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateMessage)) {
 
-            preparedStatement.setString(1, message.getBody());
-            preparedStatement.setInt(2, message.getId());
+            preparedStatement.setString(1, messageDto.getBody());
+            preparedStatement.setInt(2, messageDto.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Message update error", e);
+            throw new RepositoryException("MessageDto update error", e);
         }
     }
 
@@ -92,7 +92,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Message delete error", e);
+            throw new RepositoryException("MessageDto delete error", e);
         }
     }
 }

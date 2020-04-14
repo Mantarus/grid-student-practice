@@ -1,7 +1,6 @@
 package com.gridstudentpractice.chatservice.service;
 
-import com.gridstudentpractice.chatservice.model.Chatroom;
-import com.gridstudentpractice.chatservice.model.User;
+import com.gridstudentpractice.chatservice.model.ChatroomDto;
 import com.gridstudentpractice.chatservice.repository.ChatroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,28 +16,28 @@ public class DBChatroomServiceImpl implements ChatroomService {
     private ChatroomRepository chatroomRepository;
 
     @Override
-    public void createChatroom(Chatroom chatroom) {
-        chatroomRepository.createChatroom(chatroom);
+    public void createChatroom(ChatroomDto chatroomDto) {
+        chatroomRepository.createChatroom(chatroomDto);
     }
 
     @Override
-    public Chatroom getChatroomById(int chatroomId) {
+    public ChatroomDto getChatroomById(int chatroomId) {
         return chatroomRepository.getChatroomById(chatroomId);
     }
 
     @Override
-    public List<Chatroom> getChatroomsByName(String chatroomName) {
+    public List<ChatroomDto> getChatroomsByName(String chatroomName) {
         return chatroomRepository.getChatroomsByName(chatroomName);
     }
 
     @Override
-    public void addUserToChatroom(int uId, int cId) {
-        chatroomRepository.addUserToChatroom(uId, cId);
+    public void addUserToChatroom(int userId, int chatroomId) {
+        chatroomRepository.addUserToChatroom(userId, chatroomId);
     }
 
     @Override
-    public void updateChatroom(Chatroom chatroom) {
-        chatroomRepository.updateChatroom(chatroom);
+    public void updateChatroom(ChatroomDto chatroomDto) {
+        chatroomRepository.updateChatroom(chatroomDto);
     }
 
     @Override
