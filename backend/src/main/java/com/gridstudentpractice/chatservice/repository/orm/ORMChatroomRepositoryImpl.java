@@ -1,5 +1,6 @@
 package com.gridstudentpractice.chatservice.repository.orm;
 
+import com.gridstudentpractice.chatservice.exception.NoEntityException;
 import com.gridstudentpractice.chatservice.mapper.ChatroomMapper;
 import com.gridstudentpractice.chatservice.model.Chatroom;
 import com.gridstudentpractice.chatservice.model.ChatroomDto;
@@ -33,7 +34,8 @@ public class ORMChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public ChatroomDto getChatroomById(int chatroomId) {
-        return mapper.toDTO(ormChatroomRepository.findChatroomEntityById(chatroomId));
+        return mapper.toDTO(ormChatroomRepository.findById(chatroomId).orElseThrow(()
+                -> new NoEntityException("No chatroom with id" + chatroomId)));
     }
 
     @Override
@@ -50,8 +52,10 @@ public class ORMChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public void addUserToChatroom(int userId, int chatroomId) {
-        Chatroom chatroom = ormChatroomRepository.findChatroomEntityById(chatroomId);
-        User user = ormUserRepository.findUserEntityById(userId);
+        Chatroom chatroom = ormChatroomRepository.findById(chatroomId).orElseThrow(()
+                -> new NoEntityException("No chatroom with id " + chatroomId));
+        User user = ormUserRepository.findById(userId).orElseThrow(()
+                -> new NoEntityException("No user with id " + userId));
 
         if (!chatroom.getUserEntities().contains(user)) {
             chatroom.getUserEntities().add(user);

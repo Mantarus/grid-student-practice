@@ -6,7 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ORMUserRepository extends JpaRepository<User, Integer> {
 
     User findByLogin(String login);
-
-    User findUserEntityById(int id);
-
 }

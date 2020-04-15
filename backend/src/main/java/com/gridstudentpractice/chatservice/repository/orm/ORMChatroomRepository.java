@@ -8,7 +8,4 @@ import java.util.List;
 public interface ORMChatroomRepository extends JpaRepository<Chatroom, Integer> {
 
     List<Chatroom> findAllByName(String name);
-
-    Chatroom findChatroomEntityById(Integer id);
-
 }
