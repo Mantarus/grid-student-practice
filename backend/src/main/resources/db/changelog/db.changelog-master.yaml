@@ -3,6 +3,11 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: users
       changes:
         - createTable:
             tableName: users
@@ -30,6 +35,11 @@ databaseChangeLog:
   - changeSet:
       id: 2
       author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: messages
       changes:
         - createTable:
             tableName: messages
@@ -64,6 +74,11 @@ databaseChangeLog:
   - changeSet:
       id: 3
       author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: chatrooms
       changes:
         - createTable:
             tableName: chatrooms
@@ -86,6 +101,11 @@ databaseChangeLog:
   - changeSet:
       id: 4
       author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: user_chatroom
       changes:
         - createTable:
             tableName: user_chatroom
