@@ -53,8 +53,11 @@ public class ORMChatroomRepositoryImpl implements ChatroomRepository {
         Chatroom chatroom = ormChatroomRepository.findChatroomEntityById(chatroomId);
         User user = ormUserRepository.findUserEntityById(userId);
 
-        if (!chatroom.getUserEntities().contains(user))
+        if (!chatroom.getUserEntities().contains(user)) {
             chatroom.getUserEntities().add(user);
+            ormChatroomRepository.save(chatroom);
+        }
+
     }
 
     @Override
