@@ -6,10 +6,12 @@ import com.gridstudentpractice.chatservice.model.User;
 import com.gridstudentpractice.chatservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Profile("orm")
 @Repository
 public class ORMUserRepositoryImpl implements UserRepository {
 

@@ -18,6 +18,7 @@ public class Message {
 
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

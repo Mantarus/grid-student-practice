@@ -15,6 +15,7 @@ public class Chatroom {
 
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "name")
@@ -23,15 +24,20 @@ public class Chatroom {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_chatroom",
-            joinColumns = @JoinColumn(name = "chatroom_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            joinColumns = {
+                    @JoinColumn(name = "chatroom_id", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "id")
+            }
     )
     private List<User> userEntities;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+            mappedBy = "chatroom", orphanRemoval = true)
     private List<Message> messageEntities;
 
 }

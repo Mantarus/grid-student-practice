@@ -4,6 +4,7 @@ import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.ChatroomDto;
 import com.gridstudentpractice.chatservice.repository.ChatroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Profile("jdbc")
 @Repository
 public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 

@@ -22,14 +22,13 @@ import static org.junit.Assert.*;
 
 @RunWith(BeforeAfterSpringTestRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles({"test","jdbc"})
 public class JDBCChatroomRepositoryImplTest {
 
     @Autowired
     private Connection connection;
 
     @Autowired
-    @Qualifier("JDBCChatroomRepositoryImpl")
     private ChatroomRepository chatroomRepository;
 
     private static final String createChatroomTableQuery = "CREATE TABLE chatrooms " +

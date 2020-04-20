@@ -5,7 +5,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.NullValueCheckStrategy;
+import org.springframework.context.annotation.Profile;
 
+@Profile("orm")
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface MessageMapper {
 

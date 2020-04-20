@@ -5,7 +5,9 @@ import com.gridstudentpractice.chatservice.model.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.springframework.context.annotation.Profile;
 
+@Profile("orm")
 @Mapper
 public interface UserMapper {
 

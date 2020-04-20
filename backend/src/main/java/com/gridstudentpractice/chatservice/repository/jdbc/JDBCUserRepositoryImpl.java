@@ -4,6 +4,7 @@ import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.UserDto;
 import com.gridstudentpractice.chatservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Profile("jdbc")
 @Repository
 public class JDBCUserRepositoryImpl implements UserRepository {
 

@@ -4,6 +4,7 @@ import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.model.MessageDto;
 import com.gridstudentpractice.chatservice.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 
@@ -11,6 +12,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Profile("jdbc")
 @Repository
 public class JDBCMessageRepositoryImpl implements MessageRepository {
 

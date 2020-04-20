@@ -7,13 +7,14 @@ import com.gridstudentpractice.chatservice.model.Message;
 import com.gridstudentpractice.chatservice.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
+@Profile("orm")
 @Repository
 public class ORMMessageRepositoryImpl implements MessageRepository {
 

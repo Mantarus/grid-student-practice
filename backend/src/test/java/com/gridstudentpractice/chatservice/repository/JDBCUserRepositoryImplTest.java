@@ -7,7 +7,6 @@ import org.bitbucket.radistao.test.runner.BeforeAfterSpringTestRunner;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import static org.junit.Assert.*;
@@ -22,14 +21,13 @@ import java.util.List;
 
 @RunWith(BeforeAfterSpringTestRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles({"test","orm"})
 public class JDBCUserRepositoryImplTest {
 
     @Autowired
     private Connection connection;
 
     @Autowired
-    @Qualifier("JDBCUserRepositoryImpl")
     private UserRepository userRepository;
 
     private static final String createUserTableQuery = "CREATE TABLE users " +
