@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 @RunWith(BeforeAfterSpringTestRunner.class)
 @SpringBootTest
 @ActiveProfiles({"test","jdbc"})
-public class JDBCChatroomRepositoryImplTest {
+public class ChatroomRepositoryImplTest {
 
     @Autowired
     private Connection connection;

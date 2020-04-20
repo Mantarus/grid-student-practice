@@ -19,7 +19,6 @@ public class User {
     @Column(name = "id")
     private Integer id;
 
-    @NaturalId
     @Column(name = "login", unique = true)
     private String login;
 

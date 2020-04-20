@@ -26,7 +26,7 @@ import java.util.List;
 @RunWith(BeforeAfterSpringTestRunner.class)
 @SpringBootTest
 @ActiveProfiles({"test","jdbc"})
-public class JDBCMessageRepositoryImplTest {
+public class MessageRepositoryImplTest {
 
     @Autowired
     private Connection connection;

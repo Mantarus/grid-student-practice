@@ -21,8 +21,8 @@ import java.util.List;
 
 @RunWith(BeforeAfterSpringTestRunner.class)
 @SpringBootTest
-@ActiveProfiles({"test","orm"})
-public class JDBCUserRepositoryImplTest {
+@ActiveProfiles({"test","jdbc"})
+public class UserRepositoryImplTest {
 
     @Autowired
     private Connection connection;
@@ -30,25 +30,42 @@ public class JDBCUserRepositoryImplTest {
     @Autowired
     private UserRepository userRepository;
 
-    private static final String createUserTableQuery = "CREATE TABLE users " +
+    private static final String createUserTablesQuery = "CREATE TABLE users " +
                                                             "( " +
                                                             "id INT NOT NULL AUTO_INCREMENT, " +
                                                             "login TEXT NOT NULL, " +
                                                             "password TEXT NOT NULL," +
                                                             "PRIMARY KEY (id) " +
+                                                            "); " +
+                                                        "CREATE TABLE chatrooms " +
+                                                            "( " +
+                                                            "id INT NOT NULL AUTO_INCREMENT, " +
+                                                            "name TEXT NOT NULL , " +
+                                                            "description TEXT ," +
+                                                            "PRIMARY KEY (id) " +
+                                                            "); " +
+                                                        "CREATE TABLE user_chatroom " +
+                                                            "( " +
+                                                            "user_id INT NOT NULL , " +
+                                                            "chatroom_id INT NOT NULL  " +
                                                             ");";
-    private static final String dropUserTableQuery = "DROP TABLE users;";
+    private static final String dropUserTablesQuery = "DROP TABLE users; " +
+                                                      "DROP TABLE chatrooms; " +
+                                                      "DROP TABLE user_chatroom;";
     private static final String clearUserTableQuery = "DELETE FROM users; " +
-                                                        "ALTER TABLE users ALTER COLUMN id RESTART WITH 1;";
+                                                        "DELETE FROM chatrooms; " +
+                                                        "DELETE FROM user_chatroom; " +
+                                                        "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
+                                                        "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1;";
     private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +
-                                                                                "(2, 'foo2', 'pass2'), " +
-                                                                                "(3, 'foo3', 'pass3');";
+                                                                            "(2, 'foo2', 'pass2'), " +
+                                                                            "(3, 'foo3', 'pass3');";
     private static final String selectUsersQuery = "SELECT * FROM users;";
 
     @BeforeAllMethods
     public void beforeAll() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(createUserTableQuery);
+        statement.executeUpdate(createUserTablesQuery);
         statement.close();
     }
 
@@ -62,7 +79,7 @@ public class JDBCUserRepositoryImplTest {
     @AfterAllMethods
     public void afterAll() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(dropUserTableQuery);
+        statement.executeUpdate(dropUserTablesQuery);
         statement.close();
     }
 

@@ -37,7 +37,7 @@ public class Chatroom {
     private List<User> userEntities;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-            mappedBy = "chatroom", orphanRemoval = true)
+            mappedBy = "chatroom")
     private List<Message> messageEntities;
 
 }
