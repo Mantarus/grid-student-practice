@@ -1,7 +1,7 @@
 databaseChangeLog:
   - logicalFilePath: db/changelog/db.changelog-master.yaml
   - changeSet:
-      id: 1
+      id: createUsersTable
       author: chatservice
       preConditions:
         onFail: MARK_RAN
@@ -22,57 +22,17 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: login
-                  type: text
+                  type: varchar(30)
                   constraints:
                     unique: true
               - column:
                   name: password
-                  type: text
+                  type: varchar(30)
               - column:
                   name: role
-                  type: text
-
+                  type: varchar(30)
   - changeSet:
-      id: 2
-      author: chatservice
-      preConditions:
-        onFail: MARK_RAN
-        not:
-          tableExists:
-            tableName: messages
-      changes:
-        - createTable:
-            tableName: messages
-            columns:
-              - column:
-                  name: id
-                  type: integer
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-                    unique: true
-              - column:
-                  name: body
-                  type: text
-              - column:
-                  name: sender
-                  type: integer
-                  constraints:
-                    foreignKeyName: messages_users_id_fk
-                    references: users(id)
-              - column:
-                  name: chatroom
-                  type: integer
-                  constraints:
-                    foreignKeyName: messages_chatrooms_id_fk
-                    references: chatrooms(id)
-              - column:
-                  name: time1
-                  type: timestamp
-
-  - changeSet:
-      id: 3
+      id: createChatroomsTable
       author: chatservice
       preConditions:
         onFail: MARK_RAN
@@ -93,13 +53,52 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: name
-                  type: text
+                  type: varchar(30)
               - column:
                   name: description
-                  type: text
+                  type: varchar(30)
 
   - changeSet:
-      id: 4
+      id: createMessagesTable
+      author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: messages
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: body
+                  type: varchar(30)
+              - column:
+                  name: sender
+                  type: integer
+                  constraints:
+                    foreignKeyName: messages_users_id_fk
+                    references: users(id)
+              - column:
+                  name: chatroom
+                  type: integer
+                  constraints:
+                    foreignKeyName: messages_chatrooms_id_fk
+                    references: chatrooms(id)
+              - column:
+                  name: time1
+                  type: timestamp
+
+  - changeSet:
+      id: createUserChatroomTable
       author: chatservice
       preConditions:
         onFail: MARK_RAN
