@@ -43,18 +43,11 @@ public class UserRepositoryImplTest {
                                                             "name TEXT NOT NULL , " +
                                                             "description TEXT ," +
                                                             "PRIMARY KEY (id) " +
-                                                            "); " +
-                                                        "CREATE TABLE user_chatroom " +
-                                                            "( " +
-                                                            "user_id INT NOT NULL , " +
-                                                            "chatroom_id INT NOT NULL  " +
-                                                            ");";
+                                                            "); ";
     private static final String dropUserTablesQuery = "DROP TABLE users; " +
-                                                      "DROP TABLE chatrooms; " +
-                                                      "DROP TABLE user_chatroom;";
+                                                      "DROP TABLE chatrooms; ";
     private static final String clearUserTableQuery = "DELETE FROM users; " +
                                                         "DELETE FROM chatrooms; " +
-                                                        "DELETE FROM user_chatroom; " +
                                                         "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
                                                         "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1;";
     private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +

@@ -10,42 +10,27 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@Profile("orm")
+@Profile("test")
 @Configuration
-public class DataSourceConfig {
+public class H2DataSourceConfig {
 
     @Autowired
     private DbProperties dbProperties;
 
-    @Profile("dev")
-    private DataSourceProperties getPostgresProperties() {
-        DataSourceProperties dataSourceProperties = new DataSourceProperties();
-        dataSourceProperties.setUrl(dbProperties.getUrl());
-        dataSourceProperties.setUsername(dbProperties.getUsername());
-        dataSourceProperties.setPassword(dbProperties.getPassword());
-        return dataSourceProperties;
-    }
-
-    @Profile("dev")
-    @Bean
-    public DataSource getPostgresDatasource() {
-        return getPostgresProperties().initializeDataSourceBuilder().build();
-    }
-
-    @Profile("test")
+    @Profile("orm")
     private DataSourceProperties getH2Properties() {
         DataSourceProperties properties = new DataSourceProperties();
         properties.setUrl(dbProperties.getUrl());
         return properties;
     }
 
-    @Profile("test")
+    @Profile("orm")
     @Bean
     public DataSource getH2DataSource() {
         return getH2Properties().initializeDataSourceBuilder().build();
     }
 
-    @Profile("test")
+    @Profile("orm")
     @Bean
     public Connection getH2Connection() {
         Connection connection = null;

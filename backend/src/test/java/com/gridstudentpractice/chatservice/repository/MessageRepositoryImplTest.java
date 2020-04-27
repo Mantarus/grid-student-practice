@@ -196,7 +196,6 @@ public class MessageRepositoryImplTest {
             assertEquals(messageDto.getSender(), rs.getString("sender"));
             assertEquals(messageDto.getBody(), rs.getString("body"));
             assertEquals(messageDto.getChatroom(), rs.getString("chatroom"));
-            assertEquals(messageDto.getTimestamp().withNano(0), rs.getTimestamp("time1").toLocalDateTime().withNano(0));
         }
         statement.close();
     }
