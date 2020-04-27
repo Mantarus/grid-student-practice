@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
@@ -17,14 +18,14 @@ public class H2DataSourceConfig {
     @Autowired
     private DbProperties dbProperties;
 
-    @Profile("orm")
-    private DataSourceProperties getH2Properties() {
+    @Primary
+    @Bean
+    public DataSourceProperties getH2Properties() {
         DataSourceProperties properties = new DataSourceProperties();
         properties.setUrl(dbProperties.getUrl());
         return properties;
     }
 
-    @Profile("orm")
     @Bean
     public DataSource getH2DataSource() {
         return getH2Properties().initializeDataSourceBuilder().build();
