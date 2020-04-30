@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
@@ -16,9 +15,7 @@ public class PostgresDataSourceConfig {
     @Autowired
     private DbProperties dbProperties;
 
-    @Primary
-    @Bean
-    public DataSourceProperties getPostgresProperties() {
+    private DataSourceProperties getPostgresProperties() {
         DataSourceProperties dataSourceProperties = new DataSourceProperties();
         dataSourceProperties.setUrl(dbProperties.getUrl());
         dataSourceProperties.setUsername(dbProperties.getUsername());
