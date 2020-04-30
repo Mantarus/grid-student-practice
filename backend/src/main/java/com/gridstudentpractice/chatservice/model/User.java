@@ -1,19 +1,35 @@
 package com.gridstudentpractice.chatservice.model;
 
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
+import java.util.List;
 
+@Entity
+@Table(name = "users")
 @Getter
-@Builder
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
-    @NotNull
-    private int id;
-    @NotBlank
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Integer id;
+
+    @Column(name = "login", unique = true)
     private String login;
-    @NotBlank
+
+    @Column(name = "password")
     private String password;
+
+    @ManyToMany(mappedBy = "userEntities",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Chatroom> chatroomEntities;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "sender")
+    private List<Message> messageEntities;
 
 }

@@ -1,8 +1,10 @@
-package com.gridstudentpractice.chatservice.repository;
+package com.gridstudentpractice.chatservice.repository.jdbc;
 
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
-import com.gridstudentpractice.chatservice.model.User;
+import com.gridstudentpractice.chatservice.model.UserDto;
+import com.gridstudentpractice.chatservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -10,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Profile("jdbc")
 @Repository
 public class JDBCUserRepositoryImpl implements UserRepository {
 
@@ -22,27 +25,27 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     final static private String deleteUserSql = "DELETE FROM users u WHERE u.id = ?";
 
     @Override
-    public void createUser(User user) {
+    public void createUser(UserDto userDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(addUserSql)) {
 
-            preparedStatement.setString(1, user.getLogin());
-            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(1, userDto.getLogin());
+            preparedStatement.setString(2, userDto.getPassword());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("User creation error", e);
+            throw new RepositoryException("UserDto creation error", e);
         }
     }
 
     @Override
-    public User getUserByLogin(String userLogin) {
+    public UserDto getUserByLogin(String userLogin) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(checkUserSql)) {
 
             preparedStatement.setString(1, userLogin);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    return User.builder()
+                    return UserDto.builder()
                             .id(rs.getInt("id"))
                             .login(rs.getString("login"))
                             .password(rs.getString("password"))
@@ -53,21 +56,21 @@ public class JDBCUserRepositoryImpl implements UserRepository {
                 throw new RepositoryException("ResultSet error", e);
             }
         } catch (SQLException e) {
-            throw new RepositoryException("User reading error", e);
+            throw new RepositoryException("UserDto reading error", e);
         }
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(UserDto userDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateUserSql)) {
 
-            preparedStatement.setString(1, user.getLogin());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3, user.getId());
+            preparedStatement.setString(1, userDto.getLogin());
+            preparedStatement.setString(2, userDto.getPassword());
+            preparedStatement.setInt(3, userDto.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("User update error", e);
+            throw new RepositoryException("UserDto update error", e);
         }
     }
 
@@ -79,7 +82,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("User delete error", e);
+            throw new RepositoryException("UserDto delete error", e);
         }
     }
 }

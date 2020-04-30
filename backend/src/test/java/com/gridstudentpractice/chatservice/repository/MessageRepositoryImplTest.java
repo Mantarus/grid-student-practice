@@ -1,9 +1,9 @@
 package com.gridstudentpractice.chatservice.repository;
 
 
-import com.gridstudentpractice.chatservice.model.Chatroom;
-import com.gridstudentpractice.chatservice.model.Message;
-import com.gridstudentpractice.chatservice.model.User;
+import com.gridstudentpractice.chatservice.model.ChatroomDto;
+import com.gridstudentpractice.chatservice.model.MessageDto;
+import com.gridstudentpractice.chatservice.model.UserDto;
 import org.bitbucket.radistao.test.annotation.AfterAllMethods;
 import org.bitbucket.radistao.test.annotation.BeforeAllMethods;
 import org.bitbucket.radistao.test.runner.BeforeAfterSpringTestRunner;
@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
 import static org.junit.Assert.*;
 
 import java.sql.Connection;
@@ -25,8 +26,8 @@ import java.util.List;
 
 @RunWith(BeforeAfterSpringTestRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
-public class JDBCMessageRepositoryImplTest {
+@ActiveProfiles({"test","jdbc"})
+public class MessageRepositoryImplTest {
 
     @Autowired
     private Connection connection;
@@ -81,28 +82,28 @@ public class JDBCMessageRepositoryImplTest {
         statement.close();
     }
 
-    private Message findMessageById(int id, List<Message> messages) {
-        for (Message message : messages) {
-            if (message.getId() == id) {
-                return message;
+    private MessageDto findMessageById(int id, List<MessageDto> messageDtos) {
+        for (MessageDto messageDto : messageDtos) {
+            if (messageDto.getId() == id) {
+                return messageDto;
             }
         }
         return null;
     }
 
-    private User findUserById(int id, List<User> users) {
-        for (User user : users) {
-            if (user.getId() == id) {
-                return user;
+    private UserDto findUserById(int id, List<UserDto> userDtos) {
+        for (UserDto userDto : userDtos) {
+            if (userDto.getId() == id) {
+                return userDto;
             }
         }
         return null;
     }
 
-    private Chatroom findChatroomById(int id, List<Chatroom> chatrooms) {
-        for (Chatroom chatroom : chatrooms) {
-            if (chatroom.getId() == id) {
-                return chatroom;
+    private ChatroomDto findChatroomById(int id, List<ChatroomDto> chatroomDtos) {
+        for (ChatroomDto chatroomDto : chatroomDtos) {
+            if (chatroomDto.getId() == id) {
+                return chatroomDto;
             }
         }
         return null;
@@ -117,59 +118,59 @@ public class JDBCMessageRepositoryImplTest {
         statement2.executeUpdate(createRequiredTablesQuery);
         statement2.close();
 
-        List<Message> repoMessages = messageRepository.getMessages();
+        List<MessageDto> repoMessageDtos = messageRepository.getMessages();
 
         Statement statement3 = connection.createStatement();
         ResultSet rs1 = statement3.executeQuery(selectMessagesQuery);
-        List<Message> testMessages = new ArrayList<>();
+        List<MessageDto> testMessageDtos = new ArrayList<>();
         while (rs1.next()) {
-            Message message = Message.builder()
+            MessageDto messageDto = MessageDto.builder()
                     .id(rs1.getInt("id"))
                     .sender(rs1.getString("sender"))
                     .body(rs1.getString("body"))
                     .timestamp(rs1.getTimestamp("time1").toLocalDateTime())
                     .chatroom(rs1.getString("chatroom"))
                     .build();
-            testMessages.add(message);
+            testMessageDtos.add(messageDto);
         }
         statement3.close();
 
-        assertEquals(testMessages.size(), repoMessages.size());
+        assertEquals(testMessageDtos.size(), repoMessageDtos.size());
 
         Statement statement4 = connection.createStatement();
         ResultSet rs2 = statement4.executeQuery(selectUsersQuery);
-        List<User> testUsers = new ArrayList<>();
+        List<UserDto> testUserDtos = new ArrayList<>();
         while (rs2.next()) {
-            User user = User.builder()
+            UserDto userDto = UserDto.builder()
                     .id(rs2.getInt("id"))
                     .login(rs2.getString("login"))
                     .password(rs2.getString("password"))
                     .build();
-            testUsers.add(user);
+            testUserDtos.add(userDto);
         }
         statement4.close();
 
         Statement statement5 = connection.createStatement();
         ResultSet rs3 = statement5.executeQuery(selectChatroomsQuery);
-        List<Chatroom> testChatrooms = new ArrayList<>();
+        List<ChatroomDto> testChatroomDtos = new ArrayList<>();
         while (rs3.next()) {
-            Chatroom chatroom = Chatroom.builder()
+            ChatroomDto chatroomDto = ChatroomDto.builder()
                     .id(rs3.getInt("id"))
                     .name(rs3.getString("name"))
                     .description(rs3.getString("description"))
                     .build();
-            testChatrooms.add(chatroom);
+            testChatroomDtos.add(chatroomDto);
         }
         statement5.close();
 
-        for (int i = 0; i < repoMessages.size(); i++) {
-            assertEquals(testMessages.get(i).getId(), repoMessages.get(i).getId());
-            assertEquals(findUserById(Integer.parseInt(testMessages.get(i).getSender()), testUsers).getLogin(),
-                    repoMessages.get(i).getSender());
-            assertEquals(testMessages.get(i).getBody(), repoMessages.get(i).getBody());
-            assertEquals(testMessages.get(i).getTimestamp().withNano(0), repoMessages.get(i).getTimestamp().withNano(0));
-            assertEquals(findChatroomById(Integer.parseInt(testMessages.get(i).getChatroom()), testChatrooms).getName(),
-                    repoMessages.get(i).getChatroom());
+        for (int i = 0; i < repoMessageDtos.size(); i++) {
+            assertEquals(testMessageDtos.get(i).getId(), repoMessageDtos.get(i).getId());
+            assertEquals(findUserById(Integer.parseInt(testMessageDtos.get(i).getSender()), testUserDtos).getLogin(),
+                    repoMessageDtos.get(i).getSender());
+            assertEquals(testMessageDtos.get(i).getBody(), repoMessageDtos.get(i).getBody());
+            assertEquals(testMessageDtos.get(i).getTimestamp().withNano(0), repoMessageDtos.get(i).getTimestamp().withNano(0));
+            assertEquals(findChatroomById(Integer.parseInt(testMessageDtos.get(i).getChatroom()), testChatroomDtos).getName(),
+                    repoMessageDtos.get(i).getChatroom());
         }
 
         Statement statement6 = connection.createStatement();
@@ -179,7 +180,7 @@ public class JDBCMessageRepositoryImplTest {
 
     @Test
     public void createMessage() throws SQLException {
-        Message message = Message.builder()
+        MessageDto messageDto = MessageDto.builder()
                 .id(1)
                 .sender("1")
                 .body("body")
@@ -187,16 +188,15 @@ public class JDBCMessageRepositoryImplTest {
                 .chatroom("1")
                 .build();
 
-        messageRepository.createMessage(message);
+        messageRepository.createMessage(messageDto);
 
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(selectMessagesQuery);
         if (rs.next()) {
-            assertEquals(message.getId(), rs.getInt("id"));
-            assertEquals(message.getSender(), rs.getString("sender"));
-            assertEquals(message.getBody(), rs.getString("body"));
-            assertEquals(message.getChatroom(), rs.getString("chatroom"));
-            assertEquals(message.getTimestamp().withNano(0), rs.getTimestamp("time1").toLocalDateTime().withNano(0));
+            assertEquals(messageDto.getId(), rs.getInt("id"));
+            assertEquals(messageDto.getSender(), rs.getString("sender"));
+            assertEquals(messageDto.getBody(), rs.getString("body"));
+            assertEquals(messageDto.getChatroom(), rs.getString("chatroom"));
         }
         statement.close();
     }
@@ -207,7 +207,7 @@ public class JDBCMessageRepositoryImplTest {
         statement1.executeUpdate(insertMessagesQuery);
         statement1.close();
 
-        Message foo = Message.builder()
+        MessageDto foo = MessageDto.builder()
                 .id(1)
                 .sender("1")
                 .body("fooBody")
@@ -219,24 +219,24 @@ public class JDBCMessageRepositoryImplTest {
 
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectMessagesQuery);
-        List<Message> messages = new ArrayList<>();
+        List<MessageDto> messageDtos = new ArrayList<>();
         while (rs.next()) {
-            Message message = Message.builder()
+            MessageDto messageDto = MessageDto.builder()
                     .id(rs.getInt("id"))
                     .sender(rs.getString("sender"))
                     .body(rs.getString("body"))
                     .timestamp(rs.getTimestamp("time1").toLocalDateTime())
                     .chatroom(rs.getString("chatroom"))
                     .build();
-            messages.add(message);
+            messageDtos.add(messageDto);
         }
         statement2.close();
 
-        assertEquals(foo.getId(), findMessageById(foo.getId(), messages).getId());
-        assertEquals(foo.getSender(), findMessageById(foo.getId(), messages).getSender());
-        assertEquals(foo.getBody(), findMessageById(foo.getId(), messages).getBody());
-        assertEquals(foo.getTimestamp().withNano(0), findMessageById(foo.getId(), messages).getTimestamp().withNano(0));
-        assertEquals(foo.getChatroom(), findMessageById(foo.getId(), messages).getChatroom());
+        assertEquals(foo.getId(), findMessageById(foo.getId(), messageDtos).getId());
+        assertEquals(foo.getSender(), findMessageById(foo.getId(), messageDtos).getSender());
+        assertEquals(foo.getBody(), findMessageById(foo.getId(), messageDtos).getBody());
+        assertEquals(foo.getTimestamp().withNano(0), findMessageById(foo.getId(), messageDtos).getTimestamp().withNano(0));
+        assertEquals(foo.getChatroom(), findMessageById(foo.getId(), messageDtos).getChatroom());
     }
 
     @Test
@@ -250,20 +250,20 @@ public class JDBCMessageRepositoryImplTest {
 
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectMessagesQuery);
-        List<Message> messages = new ArrayList<>();
+        List<MessageDto> messageDtos = new ArrayList<>();
         while (rs.next()) {
-            Message message = Message.builder()
+            MessageDto messageDto = MessageDto.builder()
                     .id(rs.getInt("id"))
                     .sender(rs.getString("sender"))
                     .body(rs.getString("body"))
                     .timestamp(rs.getTimestamp("time1").toLocalDateTime())
                     .chatroom(rs.getString("chatroom"))
                     .build();
-            messages.add(message);
+            messageDtos.add(messageDto);
         }
         statement2.close();
 
-        assertNull(findMessageById(messageId, messages));
+        assertNull(findMessageById(messageId, messageDtos));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.repository;
 
-import com.gridstudentpractice.chatservice.model.Chatroom;
+import com.gridstudentpractice.chatservice.model.ChatroomDto;
 
 import org.bitbucket.radistao.test.annotation.AfterAllMethods;
 import org.bitbucket.radistao.test.annotation.BeforeAllMethods;
@@ -18,11 +18,10 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-
 @RunWith(BeforeAfterSpringTestRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
-public class JDBCChatroomRepositoryImplTest {
+@ActiveProfiles({"test","jdbc"})
+public class ChatroomRepositoryImplTest {
 
     @Autowired
     private Connection connection;
@@ -73,10 +72,10 @@ public class JDBCChatroomRepositoryImplTest {
         statement.close();
     }
 
-    private Chatroom findChatroomById(int id, List<Chatroom> chatrooms) {
-        for (Chatroom chatroom : chatrooms) {
-            if (chatroom.getId() == id) {
-                return chatroom;
+    private ChatroomDto findChatroomById(int id, List<ChatroomDto> chatroomDtos) {
+        for (ChatroomDto chatroomDto : chatroomDtos) {
+            if (chatroomDto.getId() == id) {
+                return chatroomDto;
             }
         }
         return null;
@@ -90,24 +89,24 @@ public class JDBCChatroomRepositoryImplTest {
         statement.close();
 
         int chatroomId = 3;
-        Chatroom chatroom = chatroomRepository.getChatroomById(chatroomId);
+        ChatroomDto chatroomDto = chatroomRepository.getChatroomById(chatroomId);
 
         Statement statement1 = connection.createStatement();
         ResultSet rs = statement1.executeQuery(getChatrooms);
-        List<Chatroom> chatrooms = new ArrayList<>();
+        List<ChatroomDto> chatroomDtos = new ArrayList<>();
         while (rs.next()) {
-            Chatroom chatroom1 = Chatroom.builder()
+            ChatroomDto chatroomDto1 = ChatroomDto.builder()
                     .id(rs.getInt("id"))
                     .name(rs.getString("name"))
                     .description(rs.getString("description"))
                     .build();
-            chatrooms.add(chatroom1);
+            chatroomDtos.add(chatroomDto1);
         }
         statement1.close();
 
-        assertEquals(findChatroomById(chatroomId, chatrooms).getId(), chatroom.getId());
-        assertEquals(findChatroomById(chatroomId, chatrooms).getName(), chatroom.getName());
-        assertEquals(findChatroomById(chatroomId, chatrooms).getDescription(), chatroom.getDescription());
+        assertEquals(findChatroomById(chatroomId, chatroomDtos).getId(), chatroomDto.getId());
+        assertEquals(findChatroomById(chatroomId, chatroomDtos).getName(), chatroomDto.getName());
+        assertEquals(findChatroomById(chatroomId, chatroomDtos).getDescription(), chatroomDto.getDescription());
     }
 
     @Test
@@ -116,34 +115,34 @@ public class JDBCChatroomRepositoryImplTest {
         statement.executeUpdate(insertChatroomQuery);
         statement.close();
 
-        List<Chatroom> chatrooms = chatroomRepository.getChatroomsByName("chatroom");
+        List<ChatroomDto> chatroomDtos = chatroomRepository.getChatroomsByName("chatroom");
 
-        assertEquals(chatrooms.get(0).getId(), 1);
-        assertEquals(chatrooms.get(0).getName(), "chatroom");
-        assertEquals(chatrooms.get(0).getDescription(), "description1");
+        assertEquals(chatroomDtos.get(0).getId(), 1);
+        assertEquals(chatroomDtos.get(0).getName(), "chatroom");
+        assertEquals(chatroomDtos.get(0).getDescription(), "description1");
 
-        assertEquals(chatrooms.get(1).getId(), 2);
-        assertEquals(chatrooms.get(1).getName(), "chatroom");
-        assertEquals(chatrooms.get(1).getDescription(), "description2");
+        assertEquals(chatroomDtos.get(1).getId(), 2);
+        assertEquals(chatroomDtos.get(1).getName(), "chatroom");
+        assertEquals(chatroomDtos.get(1).getDescription(), "description2");
     }
 
     @Test
     public void createChatroom() throws SQLException {
 
-        Chatroom chatroom = Chatroom.builder()
+        ChatroomDto chatroomDto = ChatroomDto.builder()
                 .id(1)
-                .name("chatroom")
+                .name("chatroomDto")
                 .description("Description1")
                 .build();
 
-        chatroomRepository.createChatroom(chatroom);
+        chatroomRepository.createChatroom(chatroomDto);
 
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(getChatrooms);
         if (rs.next()) {
-            assertEquals(chatroom.getId(), rs.getInt("id"));
-            assertEquals(chatroom.getDescription(), rs.getString("description"));
-            assertEquals(chatroom.getName(), rs.getString("name"));
+            assertEquals(chatroomDto.getId(), rs.getInt("id"));
+            assertEquals(chatroomDto.getDescription(), rs.getString("description"));
+            assertEquals(chatroomDto.getName(), rs.getString("name"));
         }
         statement.close();
 
@@ -156,30 +155,30 @@ public class JDBCChatroomRepositoryImplTest {
         statement.executeUpdate(insertOneChatroomQuery);
         statement.close();
 
-        Chatroom chatroom = Chatroom.builder()
+        ChatroomDto chatroomDto = ChatroomDto.builder()
                 .description("updatedDescription")
                 .id(1)
                 .name("updatedChatroom")
                 .build();
 
-        chatroomRepository.updateChatroom(chatroom);
+        chatroomRepository.updateChatroom(chatroomDto);
 
         Statement statement1 = connection.createStatement();
         ResultSet rs = statement1.executeQuery(getChatrooms);
-        List<Chatroom> chatrooms = new ArrayList<>();
+        List<ChatroomDto> chatroomDtos = new ArrayList<>();
         while (rs.next()) {
-            Chatroom chatroom1 = Chatroom.builder()
+            ChatroomDto chatroomDto1 = ChatroomDto.builder()
                     .id(rs.getInt("id"))
                     .name(rs.getString("name"))
                     .description(rs.getString("description"))
                     .build();
-            chatrooms.add(chatroom1);
+            chatroomDtos.add(chatroomDto1);
         }
         statement1.close();
 
-        assertEquals(chatroom.getId(), findChatroomById(chatroom.getId(), chatrooms).getId());
-        assertEquals(chatroom.getName(), findChatroomById(chatroom.getId(), chatrooms).getName());
-        assertEquals(chatroom.getDescription(), findChatroomById(chatroom.getId(), chatrooms).getDescription());
+        assertEquals(chatroomDto.getId(), findChatroomById(chatroomDto.getId(), chatroomDtos).getId());
+        assertEquals(chatroomDto.getName(), findChatroomById(chatroomDto.getId(), chatroomDtos).getName());
+        assertEquals(chatroomDto.getDescription(), findChatroomById(chatroomDto.getId(), chatroomDtos).getDescription());
     }
 
     @Test
@@ -193,18 +192,18 @@ public class JDBCChatroomRepositoryImplTest {
         Statement statement1 = connection.createStatement();
         ResultSet rs = statement1.executeQuery(getChatrooms);
 
-        List<Chatroom> chatrooms = new ArrayList<>();
+        List<ChatroomDto> chatroomDtos = new ArrayList<>();
         while (rs.next()) {
-            Chatroom chatroom = Chatroom.builder()
+            ChatroomDto chatroomDto = ChatroomDto.builder()
                     .id(rs.getInt("id"))
                     .name(rs.getString("name"))
                     .description(rs.getString("description"))
                     .build();
-            chatrooms.add(chatroom);
+            chatroomDtos.add(chatroomDto);
         }
         statement1.close();
 
-        assertNull(findChatroomById(1,chatrooms));
+        assertNull(findChatroomById(1, chatroomDtos));
 
     }
 

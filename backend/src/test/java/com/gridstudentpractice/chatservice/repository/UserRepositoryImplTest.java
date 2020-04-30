@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.repository;
 
-import com.gridstudentpractice.chatservice.model.User;
+import com.gridstudentpractice.chatservice.model.UserDto;
 import org.bitbucket.radistao.test.annotation.AfterAllMethods;
 import org.bitbucket.radistao.test.annotation.BeforeAllMethods;
 import org.bitbucket.radistao.test.runner.BeforeAfterSpringTestRunner;
@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
 import static org.junit.Assert.*;
 
 
@@ -21,8 +22,8 @@ import java.util.List;
 
 @RunWith(BeforeAfterSpringTestRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
-public class JDBCUserRepositoryImplTest {
+@ActiveProfiles({"test","jdbc"})
+public class UserRepositoryImplTest {
 
     @Autowired
     private Connection connection;
@@ -30,25 +31,35 @@ public class JDBCUserRepositoryImplTest {
     @Autowired
     private UserRepository userRepository;
 
-    private static final String createUserTableQuery = "CREATE TABLE users " +
+    private static final String createUserTablesQuery = "CREATE TABLE users " +
                                                             "( " +
                                                             "id INT NOT NULL AUTO_INCREMENT, " +
                                                             "login TEXT NOT NULL, " +
                                                             "password TEXT NOT NULL," +
                                                             "PRIMARY KEY (id) " +
-                                                            ");";
-    private static final String dropUserTableQuery = "DROP TABLE users;";
+                                                            "); " +
+                                                        "CREATE TABLE chatrooms " +
+                                                            "( " +
+                                                            "id INT NOT NULL AUTO_INCREMENT, " +
+                                                            "name TEXT NOT NULL , " +
+                                                            "description TEXT ," +
+                                                            "PRIMARY KEY (id) " +
+                                                            "); ";
+    private static final String dropUserTablesQuery = "DROP TABLE users; " +
+                                                      "DROP TABLE chatrooms; ";
     private static final String clearUserTableQuery = "DELETE FROM users; " +
-                                                        "ALTER TABLE users ALTER COLUMN id RESTART WITH 1;";
+                                                        "DELETE FROM chatrooms; " +
+                                                        "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
+                                                        "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1;";
     private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +
-                                                                                "(2, 'foo2', 'pass2'), " +
-                                                                                "(3, 'foo3', 'pass3');";
+                                                                            "(2, 'foo2', 'pass2'), " +
+                                                                            "(3, 'foo3', 'pass3');";
     private static final String selectUsersQuery = "SELECT * FROM users;";
 
     @BeforeAllMethods
     public void beforeAll() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(createUserTableQuery);
+        statement.executeUpdate(createUserTablesQuery);
         statement.close();
     }
 
@@ -62,14 +73,14 @@ public class JDBCUserRepositoryImplTest {
     @AfterAllMethods
     public void afterAll() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(dropUserTableQuery);
+        statement.executeUpdate(dropUserTablesQuery);
         statement.close();
     }
 
-    private User findUserById (int id, List<User> users) {
-        for (User user : users) {
-            if (user.getId() == id) {
-                return user;
+    private UserDto findUserById (int id, List<UserDto> userDtos) {
+        for (UserDto userDto : userDtos) {
+            if (userDto.getId() == id) {
+                return userDto;
             }
         }
         return null;
@@ -82,33 +93,33 @@ public class JDBCUserRepositoryImplTest {
         statement1.close();
 
         String userLogin = "foo3";
-        User repoUser = userRepository.getUserByLogin(userLogin);
+        UserDto repoUserDto = userRepository.getUserByLogin(userLogin);
 
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectUsersQuery);
-        List<User> users = new ArrayList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         while (rs.next()) {
-            User user = User.builder()
+            UserDto userDto = UserDto.builder()
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
                     .build();
-            users.add(user);
+            userDtos.add(userDto);
         }
         statement2.close();
 
-        for (User user : users) {
-            if (user.getLogin().equals(userLogin)) {
-                assertEquals(user.getId(), repoUser.getId());
-                assertEquals(user.getLogin(), repoUser.getLogin());
-                assertEquals(user.getPassword(), repoUser.getPassword());
+        for (UserDto userDto : userDtos) {
+            if (userDto.getLogin().equals(userLogin)) {
+                assertEquals(userDto.getId(), repoUserDto.getId());
+                assertEquals(userDto.getLogin(), repoUserDto.getLogin());
+                assertEquals(userDto.getPassword(), repoUserDto.getPassword());
             }
         }
     }
 
     @Test
     public void CreateUser() throws SQLException {
-        User foo1 = User.builder()
+        UserDto foo1 = UserDto.builder()
                 .id(1)
                 .login("foo1")
                 .password("pass1")
@@ -132,7 +143,7 @@ public class JDBCUserRepositoryImplTest {
         statement1.executeUpdate(insertUsersQuery);
         statement1.close();
 
-        User foo1 = User.builder()
+        UserDto foo1 = UserDto.builder()
                 .id(1)
                 .login("foo01")
                 .password("pass01")
@@ -141,20 +152,20 @@ public class JDBCUserRepositoryImplTest {
 
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectUsersQuery);
-        List<User> users = new ArrayList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         while (rs.next()) {
-            User user = User.builder()
+            UserDto userDto = UserDto.builder()
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
                     .build();
-            users.add(user);
+            userDtos.add(userDto);
         }
         statement2.close();
 
-        assertEquals(foo1.getId(), findUserById(foo1.getId(), users).getId());
-        assertEquals(foo1.getLogin(), findUserById(foo1.getId(), users).getLogin());
-        assertEquals(foo1.getPassword(), findUserById(foo1.getId(), users).getPassword());
+        assertEquals(foo1.getId(), findUserById(foo1.getId(), userDtos).getId());
+        assertEquals(foo1.getLogin(), findUserById(foo1.getId(), userDtos).getLogin());
+        assertEquals(foo1.getPassword(), findUserById(foo1.getId(), userDtos).getPassword());
     }
 
     @Test
@@ -168,18 +179,18 @@ public class JDBCUserRepositoryImplTest {
 
         Statement statement2 = connection.createStatement();
         ResultSet rs = statement2.executeQuery(selectUsersQuery);
-        List<User> users = new ArrayList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         while (rs.next()) {
-            User user = User.builder()
+            UserDto userDto = UserDto.builder()
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
                     .build();
-            users.add(user);
+            userDtos.add(userDto);
         }
         statement2.close();
 
-        assertNull(findUserById(userId, users));
+        assertNull(findUserById(userId, userDtos));
     }
 
 }
