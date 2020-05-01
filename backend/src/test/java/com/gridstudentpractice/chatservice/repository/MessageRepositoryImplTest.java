@@ -4,7 +4,6 @@ package com.gridstudentpractice.chatservice.repository;
 import com.gridstudentpractice.chatservice.model.ChatroomDto;
 import com.gridstudentpractice.chatservice.model.MessageDto;
 import com.gridstudentpractice.chatservice.model.UserDto;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +24,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"test","orm"})
+//@ActiveProfiles({"test","orm"})
 public class MessageRepositoryImplTest {
 
     @Autowired
@@ -51,14 +50,8 @@ public class MessageRepositoryImplTest {
     @Before
     public void before() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(insertIntoRequiredTablesQuery);
-        statement.close();
-    }
-
-    @After
-    public void after() throws SQLException {
-        Statement statement = connection.createStatement();
         statement.executeUpdate(clearTablesQuery);
+        statement.executeUpdate(insertIntoRequiredTablesQuery);
         statement.close();
     }
 

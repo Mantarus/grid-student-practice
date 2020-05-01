@@ -3,6 +3,7 @@ package com.gridstudentpractice.chatservice.repository;
 import com.gridstudentpractice.chatservice.model.ChatroomDto;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"test","orm"})
+//@ActiveProfiles({"test","orm"})
 public class ChatroomRepositoryImplTest {
 
     @Autowired
@@ -27,8 +28,13 @@ public class ChatroomRepositoryImplTest {
     @Autowired
     private ChatroomRepository chatroomRepository;
 
-    private static final String clearChatroomTableQuery = "DELETE FROM chatrooms; " +
-                                                            "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1";
+    private static final String clearChatroomTableQuery = "DELETE FROM messages; " +
+                                                            "ALTER TABLE messages ALTER COLUMN id RESTART WITH 1; " +
+                                                            "DELETE FROM users; " +
+                                                            "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
+                                                            "DELETE FROM chatrooms; " +
+                                                            "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1;";
+
     private static final String insertChatroomQuery = "INSERT INTO chatrooms VALUES (1, 'chatroom', 'description1'), " +
                                                                             "(2, 'chatroom', 'description2'), " +
                                                                             "(3, 'chatroom3', 'description3');";
@@ -38,8 +44,8 @@ public class ChatroomRepositoryImplTest {
     private static final String getUserChatroom = "SELECT * FROM user_chatroom ";
     private static final String clearUserChatroomQuery = "DELETE FROM user_chatroom CASCADE";
 
-    @After
-    public void after() throws SQLException {
+    @Before
+    public void before() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(clearChatroomTableQuery);
         statement.close();

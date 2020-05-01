@@ -29,17 +29,20 @@ public class UserRepositoryImplTest {
     @Autowired
     private UserRepository userRepository;
 
-    private static final String clearUserTableQuery = "DELETE FROM users; " +
-                                                        "DELETE FROM chatrooms; " +
+    private static final String clearUserTableQuery = "DELETE FROM messages; " +
+                                                        "ALTER TABLE messages ALTER COLUMN id RESTART WITH 1; " +
+                                                        "DELETE FROM users; " +
                                                         "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
+                                                        "DELETE FROM chatrooms; " +
                                                         "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1;";
+
     private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +
                                                                             "(2, 'foo2', 'pass2'), " +
                                                                             "(3, 'foo3', 'pass3');";
     private static final String selectUsersQuery = "SELECT * FROM users;";
 
-    @After
-    public void after() throws SQLException {
+    @Before
+    public void before() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(clearUserTableQuery);
         statement.close();
@@ -137,7 +140,7 @@ public class UserRepositoryImplTest {
         Statement statement = connection.createStatement();
         statement.executeUpdate(insertUsersQuery);
 
-        int userId = 2;
+        int userId = 1;
         userRepository.deleteUserById(userId);
 
         ResultSet rs = statement.executeQuery(selectUsersQuery);

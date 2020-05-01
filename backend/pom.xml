@@ -177,6 +177,9 @@
 	<profiles>
 		<profile>
 			<id>pair</id>
+			<properties>
+				<spring.profiles.active>${active.profiles}</spring.profiles.active>
+			</properties>
 			<activation>
 				<property>
 					<name>active.profiles</name>
