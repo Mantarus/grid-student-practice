@@ -4,15 +4,14 @@ package com.gridstudentpractice.chatservice.repository;
 import com.gridstudentpractice.chatservice.model.ChatroomDto;
 import com.gridstudentpractice.chatservice.model.MessageDto;
 import com.gridstudentpractice.chatservice.model.UserDto;
-import org.bitbucket.radistao.test.annotation.AfterAllMethods;
-import org.bitbucket.radistao.test.annotation.BeforeAllMethods;
-import org.bitbucket.radistao.test.runner.BeforeAfterSpringTestRunner;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
@@ -24,9 +23,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(BeforeAfterSpringTestRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"test","jdbc"})
+@ActiveProfiles({"test","orm"})
 public class MessageRepositoryImplTest {
 
     @Autowired
@@ -35,50 +34,31 @@ public class MessageRepositoryImplTest {
     @Autowired
     private MessageRepository messageRepository;
 
-    private static final String createMessageTableQuery = "CREATE TABLE messages " +
-                                                        "( " +
-                                                        "id INT NOT NULL AUTO_INCREMENT," +
-                                                        "sender INT NOT NULL, " +
-                                                        "body TEXT NOT NULL, " +
-                                                        "time1 TIMESTAMP DEFAULT NOW(), " +
-                                                        "chatroom INT NOT NULL, " +
-                                                        "PRIMARY KEY (id) " +
-                                                        ");";
-    private static final String dropMessageTableQuery = "DROP TABLE messages;";
-    private static final String clearMessageTableQuery = "DELETE FROM messages; " +
-                                                            "ALTER TABLE messages ALTER COLUMN id RESTART WITH 1;";
-    private static final String insertMessagesQuery = "INSERT INTO messages(id, sender, body, chatroom) " +
-                                                        "VALUES (1, 1, 'body1', 1), " +
-                                                        "(2, 2, 'body2', 2), " +
-                                                        "(3, 3, 'body3', 3);";
+    private static final String clearTablesQuery = "DELETE FROM messages; " +
+            "ALTER TABLE messages ALTER COLUMN id RESTART WITH 1; " +
+            "DELETE FROM users; " +
+            "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
+            "DELETE FROM chatrooms; " +
+            "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1; ";
+    private static final String insertMessagesQuery = "INSERT INTO messages (id, sender, body, time1, chatroom) " +
+            "VALUES (1, 1, 'body1', now(), 1), (2, 2, 'body2', now(), 2), (3, 3, 'body3', now(), 3);";
     private static final String selectMessagesQuery = "SELECT * FROM messages;";
-    private static final String createRequiredTablesQuery = "CREATE TABLE users (id INT AUTO_INCREMENT, login TEXT NOT NULL, " +
-            "password TEXT NOT NULL, PRIMARY KEY (id)); " +
-            "CREATE TABLE chatrooms (id INT AUTO_INCREMENT, name TEXT NOT NULL, description TEXT, PRIMARY KEY (id)); " +
-            "INSERT INTO users VALUES (1, 'foo1', 'pass1'), (2, 'foo2', 'pass2'), (3, 'foo3', 'pass3'); " +
+    private static final String insertIntoRequiredTablesQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), (2, 'foo2', 'pass2'), (3, 'foo3', 'pass3'); " +
             "INSERT INTO chatrooms VALUES (1, 'chat1', 'desc1'), (2, 'chat2', 'desc2'), (3, 'chat3', 'desc3');";
-    private static final String dropRequiredTablesQuery = "DROP TABLE users, chatrooms;";
     private static final String selectUsersQuery = "SELECT * FROM users;";
     private static final String selectChatroomsQuery = "SELECT * FROM chatrooms;";
 
-    @BeforeAllMethods
-    public void beforeAll() throws SQLException {
+    @Before
+    public void before() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(createMessageTableQuery);
+        statement.executeUpdate(insertIntoRequiredTablesQuery);
         statement.close();
     }
 
     @After
     public void after() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(clearMessageTableQuery);
-        statement.close();
-    }
-
-    @AfterAllMethods
-    public void afterAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(dropMessageTableQuery);
+        statement.executeUpdate(clearTablesQuery);
         statement.close();
     }
 
@@ -111,17 +91,12 @@ public class MessageRepositoryImplTest {
 
     @Test
     public void getAllMessages() throws SQLException {
-        Statement statement1 = connection.createStatement();
-        statement1.executeUpdate(insertMessagesQuery);
-        statement1.close();
-        Statement statement2 = connection.createStatement();
-        statement2.executeUpdate(createRequiredTablesQuery);
-        statement2.close();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(insertMessagesQuery);
 
         List<MessageDto> repoMessageDtos = messageRepository.getMessages();
 
-        Statement statement3 = connection.createStatement();
-        ResultSet rs1 = statement3.executeQuery(selectMessagesQuery);
+        ResultSet rs1 = statement.executeQuery(selectMessagesQuery);
         List<MessageDto> testMessageDtos = new ArrayList<>();
         while (rs1.next()) {
             MessageDto messageDto = MessageDto.builder()
@@ -133,12 +108,10 @@ public class MessageRepositoryImplTest {
                     .build();
             testMessageDtos.add(messageDto);
         }
-        statement3.close();
 
         assertEquals(testMessageDtos.size(), repoMessageDtos.size());
 
-        Statement statement4 = connection.createStatement();
-        ResultSet rs2 = statement4.executeQuery(selectUsersQuery);
+        ResultSet rs2 = statement.executeQuery(selectUsersQuery);
         List<UserDto> testUserDtos = new ArrayList<>();
         while (rs2.next()) {
             UserDto userDto = UserDto.builder()
@@ -148,10 +121,8 @@ public class MessageRepositoryImplTest {
                     .build();
             testUserDtos.add(userDto);
         }
-        statement4.close();
 
-        Statement statement5 = connection.createStatement();
-        ResultSet rs3 = statement5.executeQuery(selectChatroomsQuery);
+        ResultSet rs3 = statement.executeQuery(selectChatroomsQuery);
         List<ChatroomDto> testChatroomDtos = new ArrayList<>();
         while (rs3.next()) {
             ChatroomDto chatroomDto = ChatroomDto.builder()
@@ -161,7 +132,7 @@ public class MessageRepositoryImplTest {
                     .build();
             testChatroomDtos.add(chatroomDto);
         }
-        statement5.close();
+        statement.close();
 
         for (int i = 0; i < repoMessageDtos.size(); i++) {
             assertEquals(testMessageDtos.get(i).getId(), repoMessageDtos.get(i).getId());
@@ -172,14 +143,12 @@ public class MessageRepositoryImplTest {
             assertEquals(findChatroomById(Integer.parseInt(testMessageDtos.get(i).getChatroom()), testChatroomDtos).getName(),
                     repoMessageDtos.get(i).getChatroom());
         }
-
-        Statement statement6 = connection.createStatement();
-        statement6.executeUpdate(dropRequiredTablesQuery);
-        statement6.close();
     }
 
     @Test
     public void createMessage() throws SQLException {
+        Statement statement = connection.createStatement();
+
         MessageDto messageDto = MessageDto.builder()
                 .id(1)
                 .sender("1")
@@ -190,7 +159,6 @@ public class MessageRepositoryImplTest {
 
         messageRepository.createMessage(messageDto);
 
-        Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(selectMessagesQuery);
         if (rs.next()) {
             assertEquals(messageDto.getId(), rs.getInt("id"));
@@ -203,9 +171,8 @@ public class MessageRepositoryImplTest {
 
     @Test
     public void updateMessage() throws SQLException {
-        Statement statement1 = connection.createStatement();
-        statement1.executeUpdate(insertMessagesQuery);
-        statement1.close();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(insertMessagesQuery);
 
         MessageDto foo = MessageDto.builder()
                 .id(1)
@@ -217,8 +184,7 @@ public class MessageRepositoryImplTest {
 
         messageRepository.updateMessage(foo);
 
-        Statement statement2 = connection.createStatement();
-        ResultSet rs = statement2.executeQuery(selectMessagesQuery);
+        ResultSet rs = statement.executeQuery(selectMessagesQuery);
         List<MessageDto> messageDtos = new ArrayList<>();
         while (rs.next()) {
             MessageDto messageDto = MessageDto.builder()
@@ -230,7 +196,6 @@ public class MessageRepositoryImplTest {
                     .build();
             messageDtos.add(messageDto);
         }
-        statement2.close();
 
         assertEquals(foo.getId(), findMessageById(foo.getId(), messageDtos).getId());
         assertEquals(foo.getSender(), findMessageById(foo.getId(), messageDtos).getSender());
@@ -240,16 +205,14 @@ public class MessageRepositoryImplTest {
     }
 
     @Test
-    public void deleteUser() throws SQLException {
-        Statement statement1 = connection.createStatement();
-        statement1.executeUpdate(insertMessagesQuery);
-        statement1.close();
+    public void deleteMessage() throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(insertMessagesQuery);
 
         int messageId = 1;
         messageRepository.deleteMessageById(messageId);
 
-        Statement statement2 = connection.createStatement();
-        ResultSet rs = statement2.executeQuery(selectMessagesQuery);
+        ResultSet rs = statement.executeQuery(selectMessagesQuery);
         List<MessageDto> messageDtos = new ArrayList<>();
         while (rs.next()) {
             MessageDto messageDto = MessageDto.builder()
@@ -261,7 +224,7 @@ public class MessageRepositoryImplTest {
                     .build();
             messageDtos.add(messageDto);
         }
-        statement2.close();
+        statement.close();
 
         assertNull(findMessageById(messageId, messageDtos));
     }

@@ -18,4 +18,4 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: mvn -B package --file backend/pom.xml -D active.profiles=test,jdbc
-
+      run: mvn -B package --file backend/pom.xml -D active.profiles=test,orm

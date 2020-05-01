@@ -15,7 +15,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -25,7 +25,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(mappedBy = "userEntities",
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userEntities",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Chatroom> chatroomEntities;
 
