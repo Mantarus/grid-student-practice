@@ -14,6 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,12 +37,6 @@ public class MessageRepositoryImplTest {
     @Autowired
     private MessageRepository messageRepository;
 
-    private static final String clearTablesQuery = "DELETE FROM messages; " +
-            "ALTER TABLE messages ALTER COLUMN id RESTART WITH 1; " +
-            "DELETE FROM users; " +
-            "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
-            "DELETE FROM chatrooms; " +
-            "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1; ";
     private static final String insertMessagesQuery = "INSERT INTO messages (id, sender, body, time1, chatroom) " +
             "VALUES (1, 1, 'body1', now(), 1), (2, 2, 'body2', now(), 2), (3, 3, 'body3', now(), 3);";
     private static final String selectMessagesQuery = "SELECT * FROM messages;";
@@ -48,9 +46,16 @@ public class MessageRepositoryImplTest {
     private static final String selectChatroomsQuery = "SELECT * FROM chatrooms;";
 
     @Before
-    public void before() throws SQLException {
+    public void before() throws SQLException, IOException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(clearTablesQuery);
+        BufferedReader in = new BufferedReader(new FileReader("src/main/resources/clearH2Tables.sql"));
+        String str;
+        StringBuilder sb = new StringBuilder();
+        while ((str = in.readLine()) != null) {
+            sb.append(str).append("\n");
+        }
+        in.close();
+        statement.executeUpdate(sb.toString());
         statement.executeUpdate(insertIntoRequiredTablesQuery);
         statement.close();
     }

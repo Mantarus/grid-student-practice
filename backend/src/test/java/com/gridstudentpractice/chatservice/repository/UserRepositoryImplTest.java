@@ -11,6 +11,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.Assert.*;
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,22 +32,22 @@ public class UserRepositoryImplTest {
     @Autowired
     private UserRepository userRepository;
 
-    private static final String clearUserTableQuery = "DELETE FROM messages; " +
-                                                        "ALTER TABLE messages ALTER COLUMN id RESTART WITH 1; " +
-                                                        "DELETE FROM users; " +
-                                                        "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
-                                                        "DELETE FROM chatrooms; " +
-                                                        "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1;";
-
     private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +
                                                                             "(2, 'foo2', 'pass2'), " +
                                                                             "(3, 'foo3', 'pass3');";
     private static final String selectUsersQuery = "SELECT * FROM users;";
 
     @Before
-    public void before() throws SQLException {
+    public void before() throws SQLException, IOException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(clearUserTableQuery);
+        BufferedReader in = new BufferedReader(new FileReader("src/main/resources/clearH2Tables.sql"));
+        String str;
+        StringBuilder sb = new StringBuilder();
+        while ((str = in.readLine()) != null) {
+            sb.append(str).append("\n");
+        }
+        in.close();
+        statement.executeUpdate(sb.toString());
         statement.close();
     }
 

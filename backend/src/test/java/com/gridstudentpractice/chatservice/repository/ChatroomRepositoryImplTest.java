@@ -11,6 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +32,6 @@ public class ChatroomRepositoryImplTest {
     @Autowired
     private ChatroomRepository chatroomRepository;
 
-    private static final String clearChatroomTableQuery = "DELETE FROM messages; " +
-                                                            "ALTER TABLE messages ALTER COLUMN id RESTART WITH 1; " +
-                                                            "DELETE FROM users; " +
-                                                            "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
-                                                            "DELETE FROM chatrooms; " +
-                                                            "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1;";
-
     private static final String insertChatroomQuery = "INSERT INTO chatrooms VALUES (1, 'chatroom', 'description1'), " +
                                                                             "(2, 'chatroom', 'description2'), " +
                                                                             "(3, 'chatroom3', 'description3');";
@@ -45,9 +42,16 @@ public class ChatroomRepositoryImplTest {
     private static final String clearUserChatroomQuery = "DELETE FROM user_chatroom CASCADE";
 
     @Before
-    public void before() throws SQLException {
+    public void before() throws SQLException, IOException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(clearChatroomTableQuery);
+        BufferedReader in = new BufferedReader(new FileReader("src/main/resources/clearH2Tables.sql"));
+        String str;
+        StringBuilder sb = new StringBuilder();
+        while ((str = in.readLine()) != null) {
+            sb.append(str).append("\n");
+        }
+        in.close();
+        statement.executeUpdate(sb.toString());
         statement.close();
     }
 
