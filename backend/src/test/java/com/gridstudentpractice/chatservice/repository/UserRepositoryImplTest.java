@@ -20,7 +20,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"test","orm"})
+//@ActiveProfiles({"test","orm"})
 public class UserRepositoryImplTest {
 
     @Autowired
