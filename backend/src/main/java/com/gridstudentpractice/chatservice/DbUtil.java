@@ -4,9 +4,9 @@ import com.gridstudentpractice.chatservice.config.DbProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 
-import javax.annotation.PostConstruct;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,21 +19,25 @@ public class DbUtil {
     @Autowired
     private DbProperties autowiredDbProperties;
 
-    @PostConstruct
+    @Bean("dbProperties")
     public void init() {
         dbProperties = autowiredDbProperties;
-
+        System.out.println("bean dbproperties here!");
+        System.out.println("DB-url = " + dbProperties.getUrl());
+        System.out.println("DB-pass = " + dbProperties.getPassword());
+        System.out.println("DB-username = " + dbProperties.getUsername());
     }
 
     @Bean
     @Profile("dev")
+    @DependsOn("dbProperties")
     public static Connection getPostgresConnection() {
 
         Connection connection = null;
 
         try {
             connection = DriverManager.getConnection(dbProperties.getUrl(),
-                    dbProperties.getUsername(), dbProperties.getPassword());
+                   dbProperties.getUsername(), dbProperties.getPassword());
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,6 +55,7 @@ public class DbUtil {
 
     @Bean
     @Profile("test")
+    @DependsOn("dbProperties")
     public static Connection getH2Connection() {
 
         Connection connection = null;
