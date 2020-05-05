@@ -1,6 +1,6 @@
 package com.gridstudentpractice.chatservice.controller;
 
-import com.gridstudentpractice.chatservice.model.Message;
+import com.gridstudentpractice.chatservice.model.MessageDto;
 import com.gridstudentpractice.chatservice.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,14 +22,14 @@ public class MessageController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String displayMessages(Model model) {
-        model.addAttribute("message", Message.builder().build());
+        model.addAttribute("message", MessageDto.builder().build());
         return "page";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String sendMessage(@Valid @ModelAttribute("message") Message message, Model model) {
-        messageService.sendMessage(message);
-        model.addAttribute("messages", messageService.getMessages());
+    public String sendMessage(@Valid @ModelAttribute("message") MessageDto messageDto, Model model) {
+        messageService.sendMessage(messageDto);
+        model.addAttribute("messages", messageService.getMessageDtos());
         return "page";
     }
 

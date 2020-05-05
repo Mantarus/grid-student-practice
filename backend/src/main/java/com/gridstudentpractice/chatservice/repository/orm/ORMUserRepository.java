@@ -1,12 +1,13 @@
 package com.gridstudentpractice.chatservice.repository.orm;
 
-import com.gridstudentpractice.chatservice.model.UserEntity;
+import com.gridstudentpractice.chatservice.model.User;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ORMUserRepository extends JpaRepository<UserEntity, Integer> {
+@Profile("orm")
+@Repository
+public interface ORMUserRepository extends JpaRepository<User, Integer> {
 
-    UserEntity findByLogin(String login);
-
-    UserEntity findUserEntityById(int id);
-
+    User findByLogin(String login);
 }

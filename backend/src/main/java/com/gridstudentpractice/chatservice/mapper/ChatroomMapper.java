@@ -1,29 +1,29 @@
 package com.gridstudentpractice.chatservice.mapper;
 
 import com.gridstudentpractice.chatservice.model.Chatroom;
-import com.gridstudentpractice.chatservice.model.ChatroomEntity;
-import com.gridstudentpractice.chatservice.model.User;
-import com.gridstudentpractice.chatservice.model.UserEntity;
+import com.gridstudentpractice.chatservice.model.ChatroomDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.springframework.context.annotation.Profile;
 
+@Profile("orm")
 @Mapper
 public interface ChatroomMapper {
 
     @Mappings({
-            @Mapping(target = "id", source = "chatroomEntity.id"),
-            @Mapping(target = "name", source = "chatroomEntity.name"),
-            @Mapping(target = "description", source = "chatroomEntity.description")
-    })
-    Chatroom toDTO(ChatroomEntity chatroomEntity);
-
-    @Mappings({
             @Mapping(target = "id", source = "chatroom.id"),
             @Mapping(target = "name", source = "chatroom.name"),
-            @Mapping(target = "description", source = "chatroom.description"),
+            @Mapping(target = "description", source = "chatroom.description")
+    })
+    ChatroomDto toDTO(Chatroom chatroom);
+
+    @Mappings({
+            @Mapping(target = "id", source = "chatroomDto.id"),
+            @Mapping(target = "name", source = "chatroomDto.name"),
+            @Mapping(target = "description", source = "chatroomDto.description"),
             @Mapping(target = "userEntities", ignore = true),
             @Mapping(target = "messageEntities", ignore = true)
     })
-    ChatroomEntity toEntity(Chatroom chatroom);
+    Chatroom toEntity(ChatroomDto chatroomDto);
 }

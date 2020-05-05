@@ -1,15 +1,15 @@
 package com.gridstudentpractice.chatservice.repository.orm;
 
-import com.gridstudentpractice.chatservice.model.ChatroomEntity;
-import io.swagger.models.auth.In;
+import com.gridstudentpractice.chatservice.model.Chatroom;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ORMChatroomRepository extends JpaRepository<ChatroomEntity, Integer> {
+@Profile("orm")
+@Repository
+public interface ORMChatroomRepository extends JpaRepository<Chatroom, Integer> {
 
-    List<ChatroomEntity> findAllByName(String name);
-
-    ChatroomEntity findChatroomEntityById(Integer id);
-
+    List<Chatroom> findAllByName(String name);
 }

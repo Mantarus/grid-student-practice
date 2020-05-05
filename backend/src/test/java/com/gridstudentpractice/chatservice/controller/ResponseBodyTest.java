@@ -1,26 +1,16 @@
 package com.gridstudentpractice.chatservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gridstudentpractice.chatservice.model.Message;
+import com.gridstudentpractice.chatservice.model.MessageDto;
 import com.gridstudentpractice.chatservice.service.MessageService;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.time.LocalDateTime;
-
 
 
 @RunWith(SpringRunner.class)
@@ -37,19 +27,19 @@ class ResponseBodyTest {
     private MessageService messageService;
 
 
-    private Message invalidMessage () {
-        return Message.builder().sender("").chatroom("").body("").build();
+    private MessageDto invalidMessage () {
+        return MessageDto.builder().sender("").chatroom("").body("").build();
     }
 
-    private Message validMessage() {
-        return Message.builder().sender("Mock").chatroom("Test").body("Message").build();
+    private MessageDto validMessage() {
+        return MessageDto.builder().sender("Mock").chatroom("Test").body("MessageDto").build();
     }
 
 //    @Test
 //    public void whenMessageIsInvalid_thenReturnStatus400() throws Exception {
-//        Message message = invalidMessage();
+//        MessageDto message = invalidMessage();
 //        String body = objectMapper.writeValueAsString(message);
-//        Mockito.when(messageService.sendMessage(Mockito.any(Message.class)))
+//        Mockito.when(messageService.sendMessage(Mockito.any(MessageDto.class)))
 //                .thenReturn(message);
 //        RequestBuilder requestBuilder = MockMvcRequestBuilders
 //                .post("/restChat")
@@ -63,9 +53,9 @@ class ResponseBodyTest {
 
 //    @Test
 //    public void whenMessageIsValid_thenReturnStatus200() throws Exception {
-//        Message message = validMessage();
+//        MessageDto message = validMessage();
 //        String body = objectMapper.writeValueAsString(message);
-//        Mockito.when(messageService.sendMessage(Mockito.any(Message.class)))
+//        Mockito.when(messageService.sendMessage(Mockito.any(MessageDto.class)))
 //                .thenReturn(message);
 //        RequestBuilder requestBuilder = MockMvcRequestBuilders
 //                .post("/restChat")

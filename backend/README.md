@@ -36,6 +36,13 @@ Where -d means run it in the background
 -v mount volume/directory
 last word "postgres" indicates the name of installing container. Also you can write postgres:11.4 to get specific version. By default, the latest version will be installed.
 
+Running the Application
+----------------------------------
+
+To run the application enter mvn spring-boot:run -D active.profiles=dev,jdbc or mvn spring-boot:run -D active.profiles=dev,orm.
+
+To test the application enter mvn package --file pom.xml -D active.profiles=test,jdbc or mvn package --file pom.xml -D active.profiles=test,orm.
+
 Swagger documentation browsing
 ----------------------------------
 

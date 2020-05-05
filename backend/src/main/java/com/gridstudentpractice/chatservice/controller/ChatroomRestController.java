@@ -1,7 +1,6 @@
 package com.gridstudentpractice.chatservice.controller;
 
-import com.gridstudentpractice.chatservice.model.Chatroom;
-import com.gridstudentpractice.chatservice.model.User;
+import com.gridstudentpractice.chatservice.model.ChatroomDto;
 import com.gridstudentpractice.chatservice.service.ChatroomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,28 +16,28 @@ public class ChatroomRestController {
     private ChatroomService chatroomService;
 
     @PostMapping
-    public void addChatroom(@Valid @RequestBody Chatroom chatroom) {
-        chatroomService.createChatroom(chatroom);
+    public void addChatroom(@Valid @RequestBody ChatroomDto chatroomDto) {
+        chatroomService.createChatroom(chatroomDto);
     }
 
-    @PostMapping("/add-user/{uId}/{cId}")
-    public void addUserToChatroom(@PathVariable("uId") int uId, @PathVariable("cId") int cId) {
-        chatroomService.addUserToChatroom(uId, cId);
+    @PostMapping("/add-user/{userId}/{chatroomId}")
+    public void addUserToChatroom(@PathVariable("userId") int userId, @PathVariable("chatroomId") int chatroomId) {
+        chatroomService.addUserToChatroom(userId, chatroomId);
     }
 
     @GetMapping("/id/{id}")
-    public Chatroom getChatroomById(@PathVariable int id) {
+    public ChatroomDto getChatroomById(@PathVariable int id) {
         return chatroomService.getChatroomById(id);
     }
 
     @GetMapping("/name/{name}")
-    public List<Chatroom> getChatroomsByName(@PathVariable("name") String name) {
+    public List<ChatroomDto> getChatroomsByName(@PathVariable("name") String name) {
         return chatroomService.getChatroomsByName(name);
     }
 
     @PutMapping
-    public void updateChatroom(@Valid @RequestBody Chatroom chatroom) {
-        chatroomService.updateChatroom(chatroom);
+    public void updateChatroom(@Valid @RequestBody ChatroomDto chatroomDto) {
+        chatroomService.updateChatroom(chatroomDto);
     }
 
     @DeleteMapping("/{id}")

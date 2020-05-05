@@ -1,14 +1,14 @@
 package com.gridstudentpractice.chatservice.repository;
 
-import com.gridstudentpractice.chatservice.model.Message;
+import com.gridstudentpractice.chatservice.model.MessageDto;
 
 import java.util.List;
 
 public interface MessageRepository {
 
-    void createMessage(Message message);
-    List<Message> getMessages();
-    void updateMessage(Message message);
+    void createMessage(MessageDto messageDto);
+    List<MessageDto> getMessages();
+    void updateMessage(MessageDto messageDto);
     void deleteMessageById(int id);
 
 }
