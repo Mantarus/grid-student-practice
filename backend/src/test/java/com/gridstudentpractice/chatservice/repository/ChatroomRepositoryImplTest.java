@@ -2,25 +2,30 @@ package com.gridstudentpractice.chatservice.repository;
 
 import com.gridstudentpractice.chatservice.model.ChatroomDto;
 
-import org.bitbucket.radistao.test.annotation.AfterAllMethods;
-import org.bitbucket.radistao.test.annotation.BeforeAllMethods;
-import org.bitbucket.radistao.test.runner.BeforeAfterSpringTestRunner;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-@RunWith(BeforeAfterSpringTestRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"test","jdbc"})
+//@ActiveProfiles({"test","orm"})
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class ChatroomRepositoryImplTest {
 
     @Autowired
@@ -29,46 +34,26 @@ public class ChatroomRepositoryImplTest {
     @Autowired
     private ChatroomRepository chatroomRepository;
 
-    private static final String createChatroomTableQuery = "CREATE TABLE chatrooms " +
-                                                            "( " +
-                                                            "id INT NOT NULL AUTO_INCREMENT, " +
-                                                            "name TEXT NOT NULL , " +
-                                                            "description TEXT ," +
-                                                            "PRIMARY KEY (id) " +
-                                                            ");";
-    private static final String dropChatroomTableQuery = "DROP TABLE chatrooms;";
-    private static final String clearChatroomTableQuery = "DELETE FROM chatrooms; " +
-                                                            "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1";
     private static final String insertChatroomQuery = "INSERT INTO chatrooms VALUES (1, 'chatroom', 'description1'), " +
                                                                             "(2, 'chatroom', 'description2'), " +
                                                                             "(3, 'chatroom3', 'description3');";
     private static final String getChatrooms = "SELECT * FROM chatrooms ";
-    private static final String insertOneChatroomQuery = "INSERT INTO chatrooms VALUES (1, 'chatroom', 'description1')";
-    private static final String createUserChatroomTableQuery = "CREATE TABLE user_chatroom " +
-                                                            "( " +
-                                                            "user_id INT NOT NULL , " +
-                                                            "chatroom_id INT NOT NULL  " +
-                                                            ");";
+    private static final String insertOneChatroomQuery = "INSERT INTO chatrooms VALUES (1, 'chatroom', 'description1'); ";
+    private static final String insertOneUserQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'); ";
     private static final String getUserChatroom = "SELECT * FROM user_chatroom ";
+    private static final String clearUserChatroomQuery = "DELETE FROM user_chatroom CASCADE";
 
-    @BeforeAllMethods
-    public void beforeAll() throws SQLException {
+    @Before
+    public void before() throws SQLException, IOException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(createChatroomTableQuery);
-        statement.close();
-    }
-
-    @After
-    public void after() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(clearChatroomTableQuery);
-        statement.close();
-    }
-
-    @AfterAllMethods
-    public void afterAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(dropChatroomTableQuery);
+        BufferedReader in = new BufferedReader(new FileReader("src/main/resources/clearH2Tables.sql"));
+        String str;
+        StringBuilder sb = new StringBuilder();
+        while ((str = in.readLine()) != null) {
+            sb.append(str).append("\n");
+        }
+        in.close();
+        statement.executeUpdate(sb.toString());
         statement.close();
     }
 
@@ -86,13 +71,10 @@ public class ChatroomRepositoryImplTest {
     public void getChatroomById() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(insertChatroomQuery);
-        statement.close();
-
         int chatroomId = 3;
         ChatroomDto chatroomDto = chatroomRepository.getChatroomById(chatroomId);
 
-        Statement statement1 = connection.createStatement();
-        ResultSet rs = statement1.executeQuery(getChatrooms);
+        ResultSet rs = statement.executeQuery(getChatrooms);
         List<ChatroomDto> chatroomDtos = new ArrayList<>();
         while (rs.next()) {
             ChatroomDto chatroomDto1 = ChatroomDto.builder()
@@ -102,7 +84,7 @@ public class ChatroomRepositoryImplTest {
                     .build();
             chatroomDtos.add(chatroomDto1);
         }
-        statement1.close();
+        statement.close();
 
         assertEquals(findChatroomById(chatroomId, chatroomDtos).getId(), chatroomDto.getId());
         assertEquals(findChatroomById(chatroomId, chatroomDtos).getName(), chatroomDto.getName());
@@ -153,7 +135,6 @@ public class ChatroomRepositoryImplTest {
 
         Statement statement = connection.createStatement();
         statement.executeUpdate(insertOneChatroomQuery);
-        statement.close();
 
         ChatroomDto chatroomDto = ChatroomDto.builder()
                 .description("updatedDescription")
@@ -163,8 +144,7 @@ public class ChatroomRepositoryImplTest {
 
         chatroomRepository.updateChatroom(chatroomDto);
 
-        Statement statement1 = connection.createStatement();
-        ResultSet rs = statement1.executeQuery(getChatrooms);
+        ResultSet rs = statement.executeQuery(getChatrooms);
         List<ChatroomDto> chatroomDtos = new ArrayList<>();
         while (rs.next()) {
             ChatroomDto chatroomDto1 = ChatroomDto.builder()
@@ -174,7 +154,7 @@ public class ChatroomRepositoryImplTest {
                     .build();
             chatroomDtos.add(chatroomDto1);
         }
-        statement1.close();
+        statement.close();
 
         assertEquals(chatroomDto.getId(), findChatroomById(chatroomDto.getId(), chatroomDtos).getId());
         assertEquals(chatroomDto.getName(), findChatroomById(chatroomDto.getId(), chatroomDtos).getName());
@@ -185,12 +165,10 @@ public class ChatroomRepositoryImplTest {
     public void deleteChatroomById() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(insertChatroomQuery);
-        statement.close();
 
         chatroomRepository.deleteChatroomById(1);
 
-        Statement statement1 = connection.createStatement();
-        ResultSet rs = statement1.executeQuery(getChatrooms);
+        ResultSet rs = statement.executeQuery(getChatrooms);
 
         List<ChatroomDto> chatroomDtos = new ArrayList<>();
         while (rs.next()) {
@@ -201,7 +179,7 @@ public class ChatroomRepositoryImplTest {
                     .build();
             chatroomDtos.add(chatroomDto);
         }
-        statement1.close();
+        statement.close();
 
         assertNull(findChatroomById(1, chatroomDtos));
 
@@ -210,17 +188,17 @@ public class ChatroomRepositoryImplTest {
     @Test
     public void addUserToChatroom() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(createUserChatroomTableQuery);
-        statement.close();
+        statement.executeUpdate(insertOneChatroomQuery);
+        statement.executeUpdate(insertOneUserQuery);
 
         chatroomRepository.addUserToChatroom(1,1);
 
-        Statement statement1 = connection.createStatement();
-        ResultSet rs = statement1.executeQuery(getUserChatroom);
+        ResultSet rs = statement.executeQuery(getUserChatroom);
         if(rs.next()) {
             assertEquals(rs.getInt("user_id"), 1);
             assertEquals(rs.getInt("chatroom_id"), 1);
         }
-        statement1.close();
+        statement.executeUpdate(clearUserChatroomQuery);
+        statement.close();
     }
 }

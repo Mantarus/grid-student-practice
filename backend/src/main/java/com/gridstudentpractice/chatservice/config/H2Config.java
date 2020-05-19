@@ -12,32 +12,39 @@ import java.sql.SQLException;
 
 @Profile("test")
 @Configuration
-public class H2DataSourceConfig {
+public class H2Config {
 
     @Autowired
     private DbProperties dbProperties;
 
-    private DataSourceProperties getH2Properties() {
+    private DataSourceProperties getProperties() {
         DataSourceProperties properties = new DataSourceProperties();
         properties.setUrl(dbProperties.getUrl());
         return properties;
     }
 
     @Bean
-    public DataSource getH2DataSource() {
-        return getH2Properties().initializeDataSourceBuilder().build();
+    public DataSource getDataSource() {
+        return getProperties().initializeDataSourceBuilder().build();
     }
 
-    @Profile("orm")
     @Bean
-    public Connection getH2Connection() {
+    public Connection getConnection() {
         Connection connection = null;
+
         try {
-            connection = getH2DataSource().getConnection();
+            connection = getDataSource().getConnection();
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Connection Failed");
         }
+
+        if (connection != null) {
+            System.out.println("You successfully connected to test database");
+        } else {
+            System.out.println("Failed to make connection to database");
+        }
+
         return connection;
     }
-
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public class Chatroom {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -24,7 +24,7 @@ public class Chatroom {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_chatroom",
             joinColumns = {

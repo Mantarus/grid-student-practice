@@ -1,18 +1,20 @@
 package com.gridstudentpractice.chatservice.repository;
 
 import com.gridstudentpractice.chatservice.model.UserDto;
-import org.bitbucket.radistao.test.annotation.AfterAllMethods;
-import org.bitbucket.radistao.test.annotation.BeforeAllMethods;
-import org.bitbucket.radistao.test.runner.BeforeAfterSpringTestRunner;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +22,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(BeforeAfterSpringTestRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"test","jdbc"})
+//@ActiveProfiles({"test","orm"})
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class UserRepositoryImplTest {
 
     @Autowired
@@ -31,49 +34,22 @@ public class UserRepositoryImplTest {
     @Autowired
     private UserRepository userRepository;
 
-    private static final String createUserTablesQuery = "CREATE TABLE users " +
-                                                            "( " +
-                                                            "id INT NOT NULL AUTO_INCREMENT, " +
-                                                            "login TEXT NOT NULL, " +
-                                                            "password TEXT NOT NULL," +
-                                                            "PRIMARY KEY (id) " +
-                                                            "); " +
-                                                        "CREATE TABLE chatrooms " +
-                                                            "( " +
-                                                            "id INT NOT NULL AUTO_INCREMENT, " +
-                                                            "name TEXT NOT NULL , " +
-                                                            "description TEXT ," +
-                                                            "PRIMARY KEY (id) " +
-                                                            "); ";
-    private static final String dropUserTablesQuery = "DROP TABLE users; " +
-                                                      "DROP TABLE chatrooms; ";
-    private static final String clearUserTableQuery = "DELETE FROM users; " +
-                                                        "DELETE FROM chatrooms; " +
-                                                        "ALTER TABLE users ALTER COLUMN id RESTART WITH 1; " +
-                                                        "ALTER TABLE chatrooms ALTER COLUMN id RESTART WITH 1;";
     private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +
                                                                             "(2, 'foo2', 'pass2'), " +
                                                                             "(3, 'foo3', 'pass3');";
     private static final String selectUsersQuery = "SELECT * FROM users;";
 
-    @BeforeAllMethods
-    public void beforeAll() throws SQLException {
+    @Before
+    public void before() throws SQLException, IOException {
         Statement statement = connection.createStatement();
-        statement.executeUpdate(createUserTablesQuery);
-        statement.close();
-    }
-
-    @After
-    public void after() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(clearUserTableQuery);
-        statement.close();
-    }
-
-    @AfterAllMethods
-    public void afterAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(dropUserTablesQuery);
+        BufferedReader in = new BufferedReader(new FileReader("src/main/resources/clearH2Tables.sql"));
+        String str;
+        StringBuilder sb = new StringBuilder();
+        while ((str = in.readLine()) != null) {
+            sb.append(str).append("\n");
+        }
+        in.close();
+        statement.executeUpdate(sb.toString());
         statement.close();
     }
 
@@ -88,15 +64,13 @@ public class UserRepositoryImplTest {
 
     @Test
     public void getUserByLogin() throws SQLException {
-        Statement statement1 = connection.createStatement();
-        statement1.executeUpdate(insertUsersQuery);
-        statement1.close();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(insertUsersQuery);
 
         String userLogin = "foo3";
         UserDto repoUserDto = userRepository.getUserByLogin(userLogin);
 
-        Statement statement2 = connection.createStatement();
-        ResultSet rs = statement2.executeQuery(selectUsersQuery);
+        ResultSet rs = statement.executeQuery(selectUsersQuery);
         List<UserDto> userDtos = new ArrayList<>();
         while (rs.next()) {
             UserDto userDto = UserDto.builder()
@@ -106,7 +80,7 @@ public class UserRepositoryImplTest {
                     .build();
             userDtos.add(userDto);
         }
-        statement2.close();
+        statement.close();
 
         for (UserDto userDto : userDtos) {
             if (userDto.getLogin().equals(userLogin)) {
@@ -139,9 +113,8 @@ public class UserRepositoryImplTest {
 
     @Test
     public void updateUser() throws SQLException {
-        Statement statement1 = connection.createStatement();
-        statement1.executeUpdate(insertUsersQuery);
-        statement1.close();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(insertUsersQuery);
 
         UserDto foo1 = UserDto.builder()
                 .id(1)
@@ -150,8 +123,7 @@ public class UserRepositoryImplTest {
                 .build();
         userRepository.updateUser(foo1);
 
-        Statement statement2 = connection.createStatement();
-        ResultSet rs = statement2.executeQuery(selectUsersQuery);
+        ResultSet rs = statement.executeQuery(selectUsersQuery);
         List<UserDto> userDtos = new ArrayList<>();
         while (rs.next()) {
             UserDto userDto = UserDto.builder()
@@ -161,7 +133,7 @@ public class UserRepositoryImplTest {
                     .build();
             userDtos.add(userDto);
         }
-        statement2.close();
+        statement.close();
 
         assertEquals(foo1.getId(), findUserById(foo1.getId(), userDtos).getId());
         assertEquals(foo1.getLogin(), findUserById(foo1.getId(), userDtos).getLogin());
@@ -170,15 +142,13 @@ public class UserRepositoryImplTest {
 
     @Test
     public void deleteUserById() throws SQLException {
-        Statement statement1 = connection.createStatement();
-        statement1.executeUpdate(insertUsersQuery);
-        statement1.close();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(insertUsersQuery);
 
-        int userId = 2;
+        int userId = 1;
         userRepository.deleteUserById(userId);
 
-        Statement statement2 = connection.createStatement();
-        ResultSet rs = statement2.executeQuery(selectUsersQuery);
+        ResultSet rs = statement.executeQuery(selectUsersQuery);
         List<UserDto> userDtos = new ArrayList<>();
         while (rs.next()) {
             UserDto userDto = UserDto.builder()
@@ -188,7 +158,7 @@ public class UserRepositoryImplTest {
                     .build();
             userDtos.add(userDto);
         }
-        statement2.close();
+        statement.close();
 
         assertNull(findUserById(userId, userDtos));
     }

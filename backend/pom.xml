@@ -116,11 +116,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.bitbucket.radistao.test</groupId>
-			<artifactId>before-after-spring-test-runner</artifactId>
-			<version>0.1.0</version>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>3.8.9</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -172,6 +171,9 @@
 	<profiles>
 		<profile>
 			<id>pair</id>
+			<properties>
+				<spring.profiles.active>${active.profiles}</spring.profiles.active>
+			</properties>
 			<activation>
 				<property>
 					<name>active.profiles</name>
