@@ -172,11 +172,11 @@
 		<profile>
 			<id>pair</id>
 			<properties>
-				<spring.profiles.active>${active.profiles}</spring.profiles.active>
+				<spring.profiles.active>${active.profile}</spring.profiles.active>
 			</properties>
 			<activation>
 				<property>
-					<name>active.profiles</name>
+					<name>active.profile</name>
 				</property>
 			</activation>
 			<build>
@@ -186,7 +186,7 @@
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<configuration>
 							<profiles>
-								<profile>${active.profiles}</profile>
+								<profile>${active.profile}</profile>
 							</profiles>
 						</configuration>
 					</plugin>
