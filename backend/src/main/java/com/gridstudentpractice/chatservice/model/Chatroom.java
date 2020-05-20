@@ -11,6 +11,18 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph (
+        name = "chatroom-entity-graph",
+        attributeNodes = {
+                @NamedAttributeNode(value = "userEntities", subgraph = "user-entity-subgraph")
+        },
+        subgraphs = @NamedSubgraph(
+                name = "user-entity-subgraph",
+                attributeNodes = @NamedAttributeNode(
+                        value = "id"
+                )
+        )
+)
 public class Chatroom {
 
     @Id
@@ -24,7 +36,7 @@ public class Chatroom {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_chatroom",
             joinColumns = {
