@@ -13,7 +13,9 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     restart: always
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: app
     ports: 
       - 8080:8080
