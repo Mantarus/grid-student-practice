@@ -14,6 +14,27 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph(
+        name = "message-entity-graph",
+        attributeNodes = {
+                @NamedAttributeNode(value = "sender", subgraph = "user-entity-subgraph"),
+                @NamedAttributeNode(value = "chatroom", subgraph = "chatroom-entity-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "user-entity-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("login")
+                        }
+                ),
+                @NamedSubgraph(
+                        name = "chatroom-entity-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("name")
+                        }
+                )
+        }
+)
 public class Message {
 
     @Id
@@ -21,7 +42,7 @@ public class Message {
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "sender")
     private User sender;
 
@@ -31,7 +52,7 @@ public class Message {
     @Column(name = "time1")
     private LocalDateTime timestamp;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "chatroom")
     private Chatroom chatroom;
 

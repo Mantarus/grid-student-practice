@@ -16,7 +16,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Build with Maven test and jdbc
-      run: mvn -B package --file backend/pom.xml -D active.profiles=test,jdbc
-    - name: Build with Maven test and orm
-      run: mvn -B package --file backend/pom.xml -D active.profiles=test,orm
+    - name: Build with Maven jdbc
+      run: mvn -B package --file backend/pom.xml -D active.profile=jdbc
+    - name: Build with Maven orm
+      run: mvn -B package --file backend/pom.xml -D active.profile=orm

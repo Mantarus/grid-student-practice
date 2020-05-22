@@ -32,7 +32,7 @@ public class ORMMessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<MessageDto> getMessages() {
-        List<Message> messageEntities = ormMessageRepository.findAll();
+        List<Message> messageEntities = ormMessageRepository.findMessages();
         return messageEntities.stream()
                 .map(messageEntity -> mapper.toDTO(messageEntity))
                 .collect(Collectors.toList());
