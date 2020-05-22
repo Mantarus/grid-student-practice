@@ -1,10 +1,10 @@
-package com.gridstudentpractice.chatservice.service;
+package com.gridstudentpractice.chatservice.repository;
 
 import com.gridstudentpractice.chatservice.model.UserDto;
 
-public interface UserService {
+public interface UserRepository {
 
-    void addUser(UserDto userDto);
+    void createUser(UserDto userDto);
     UserDto getUserByLogin(String userLogin);
     void updateUser(UserDto userDto);
     void deleteUserById(int id);

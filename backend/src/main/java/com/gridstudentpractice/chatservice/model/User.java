@@ -1,50 +1,35 @@
 package com.gridstudentpractice.chatservice.model;
 
-import javax.validation.constraints.NotBlank;
+import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
-    private int id;
-    @NotBlank
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+
+    @Column(name = "login", unique = true)
     private String login;
-    @NotBlank
+
+    @Column(name = "password")
     private String password;
-    private String role;
 
-    public User() {}
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userEntities",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Chatroom> chatroomEntities;
 
-    public User(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "sender")
+    private List<Message> messageEntities;
 
-    public String getLogin() {
-        return login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getRole() { return this.role; }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setLogin(String uLogin) {
-        this.login = uLogin;
-    }
-
-    public void setPass(String uPass) {
-        this.password = uPass;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }

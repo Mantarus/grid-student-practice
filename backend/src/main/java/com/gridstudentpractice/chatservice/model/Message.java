@@ -1,55 +1,38 @@
 package com.gridstudentpractice.chatservice.model;
 
-import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "messages")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Message {
 
-    private int id;
-    @NotBlank
-    private String sender;
-    @NotBlank
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "sender")
+    private User sender;
+
+    @Column(name = "body")
     private String body;
-    private LocalDateTime timestamp = LocalDateTime.now();
 
-    public Message() {}
+    @Column(name = "time1")
+    private LocalDateTime timestamp;
 
-    public Message(String sender, String body, LocalDateTime timestamp) {
-        this.sender = sender;
-        this.body = body;
-        this.timestamp = timestamp;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "chatroom")
+    private Chatroom chatroom;
 
 }
