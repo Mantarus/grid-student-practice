@@ -12,9 +12,6 @@ public class DbUserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private AppProperties appProperties;
-
     @Override
     public void addUser(UserDto userDto) {
         userRepository.createUser(userDto);

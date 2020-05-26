@@ -14,11 +14,7 @@ import java.util.List;
     @Autowired
     private MessageRepository messageRepository;
 
-    @Autowired
-    private AppProperties appProperties;
-
     @Override
-
     public void sendMessage(MessageDto messageDto) {
         messageRepository.createMessage(messageDto);
     }

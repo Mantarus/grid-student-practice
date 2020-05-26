@@ -25,6 +25,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "roles")
+    private String roles;
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userEntities",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Chatroom> chatroomEntities;

@@ -29,6 +29,9 @@ databaseChangeLog:
               - column:
                   name: password
                   type: varchar(30)
+              - column:
+                  name: roles
+                  type: varchar(30)
   - changeSet:
       id: createChatroomsTable
       author: chatservice
