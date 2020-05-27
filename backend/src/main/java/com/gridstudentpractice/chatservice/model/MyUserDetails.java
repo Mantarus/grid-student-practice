@@ -15,26 +15,27 @@ public class MyUserDetails implements UserDetails {
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public MyUserDetails(User user) {
+    public MyUserDetails(UserDto user) {
         this.userName = user.getLogin();
         this.password = user.getPassword();
-        this.authorities = Arrays.stream(user.getRoles().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        this.authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
     public String getPassword() {
+        System.out.println(password);
         return password;
     }
 
     @Override
     public String getUsername() {
+        System.out.println(userName);
         return userName;
     }
 

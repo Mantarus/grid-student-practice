@@ -3,7 +3,7 @@ databaseChangeLog:
   - changeSet:
       id: createUsersTable
       author: chatservice
-      validCheckSum: 8:58694c5e4cdde97cdaad106991639402
+
       preConditions:
         onFail: MARK_RAN
         not:

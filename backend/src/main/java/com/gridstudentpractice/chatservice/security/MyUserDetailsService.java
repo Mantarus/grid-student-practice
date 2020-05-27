@@ -1,5 +1,7 @@
 package com.gridstudentpractice.chatservice.security;
 
+import com.gridstudentpractice.chatservice.model.UserDto;
+import com.gridstudentpractice.chatservice.repository.UserRepository;
 import com.gridstudentpractice.chatservice.repository.orm.ORMUserRepository;
 import com.gridstudentpractice.chatservice.model.MyUserDetails;
 
@@ -16,15 +18,20 @@ import java.util.Optional;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    ORMUserRepository userRepository;
+    UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Optional<User> user = Optional.of(userRepository.findByLogin(userName));
 
+        UserDto userDto = userRepository.getUserByLogin(userName);
+        Optional<UserDto> optionalUserDto;
 
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + userName));
+        if (userDto.getLogin() != null) {
+            optionalUserDto = Optional.of(userDto);
+        } else {
+            throw new UsernameNotFoundException("Not found: " + userName);
+        }
 
-        return user.map(MyUserDetails::new).get();
+        return optionalUserDto.map(MyUserDetails::new).get();
     }
 }

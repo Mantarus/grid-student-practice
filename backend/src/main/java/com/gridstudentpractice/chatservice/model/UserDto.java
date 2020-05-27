@@ -15,5 +15,7 @@ public class UserDto {
     private String login;
     @NotBlank
     private String password;
+    @NotBlank
+    private String roles;
 
 }
