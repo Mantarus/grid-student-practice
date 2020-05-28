@@ -1,7 +1,6 @@
 package com.gridstudentpractice.chatservice.model;
 
 import lombok.*;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.List;

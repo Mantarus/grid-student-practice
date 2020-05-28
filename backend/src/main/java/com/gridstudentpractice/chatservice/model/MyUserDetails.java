@@ -18,24 +18,21 @@ public class MyUserDetails implements UserDetails {
     public MyUserDetails(UserDto user) {
         this.userName = user.getLogin();
         this.password = user.getPassword();
-        this.authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        this.authorities = Arrays.asList(new SimpleGrantedAuthority(user.getRoles()));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        System.out.println(password);
         return password;
     }
 
     @Override
     public String getUsername() {
-        System.out.println(userName);
         return userName;
     }
 

@@ -49,6 +49,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
                             .id(rs.getInt("id"))
                             .login(rs.getString("login"))
                             .password(rs.getString("password"))
+                            .roles(rs.getString("roles"))
                             .build();
                 } else throw new RepositoryException("No such user") ;
 

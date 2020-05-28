@@ -32,6 +32,8 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Not found: " + userName);
         }
 
+        System.out.printf("username = %s%nuserPass = %s%nuserRole = %s", userDto.getLogin(), userDto.getPassword(), userDto.getRoles());
+
         return optionalUserDto.map(MyUserDetails::new).get();
     }
 }
