@@ -28,6 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/springSecurity/admin").hasRole("ADMIN")
                 .antMatchers("/springSecurity/user").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/**").permitAll()
                 .and().formLogin()
                 .and().csrf().disable();
