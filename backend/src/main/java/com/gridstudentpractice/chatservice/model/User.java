@@ -11,6 +11,20 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph(
+        name = "user-entity-graph",
+        attributeNodes = {
+                @NamedAttributeNode(value = "role", subgraph = "role-entity-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "role-entity-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("name")
+                        }
+                )
+        }
+)
 public class User {
 
     @Id
@@ -24,8 +38,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "roles")
-    private String roles;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "role")
+    private Role role;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userEntities",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})

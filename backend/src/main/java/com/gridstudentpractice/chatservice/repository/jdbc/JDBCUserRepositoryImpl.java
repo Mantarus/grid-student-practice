@@ -19,9 +19,11 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     @Autowired
     private Connection connection;
 
-    final static private String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?)";
-    final static private String checkUserSql = "SELECT * FROM users u WHERE u.login = ? ORDER BY u.id";
-    final static private String updateUserSql = "UPDATE users u SET login = ?, password = ? WHERE u.id = ?";
+    final static private String addUserSql = "INSERT INTO users (login, password, role) VALUES (?, ?, ?::integer)";
+    final static private String checkUserSql = "SELECT u.id, u.login, u.password, r.name FROM users u " +
+                                                "JOIN roles r on u.role = r.id " +
+                                                "WHERE u.login = ? ORDER BY u.id";
+    final static private String updateUserSql = "UPDATE users u SET login = ?, password = ?, role = ? WHERE u.id = ?";
     final static private String deleteUserSql = "DELETE FROM users u WHERE u.id = ?";
 
     @Override
@@ -30,6 +32,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
             preparedStatement.setString(1, userDto.getLogin());
             preparedStatement.setString(2, userDto.getPassword());
+            preparedStatement.setString(3, userDto.getRole());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -49,7 +52,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
                             .id(rs.getInt("id"))
                             .login(rs.getString("login"))
                             .password(rs.getString("password"))
-                            .roles(rs.getString("roles"))
+                            .role(rs.getString("role"))
                             .build();
                 } else throw new RepositoryException("No such user") ;
 
@@ -67,7 +70,8 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
             preparedStatement.setString(1, userDto.getLogin());
             preparedStatement.setString(2, userDto.getPassword());
-            preparedStatement.setInt(3, userDto.getId());
+            preparedStatement.setString(3, userDto.getRole());
+            preparedStatement.setInt(4, userDto.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {

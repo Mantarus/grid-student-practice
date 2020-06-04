@@ -1,21 +1,18 @@
 package com.gridstudentpractice.chatservice.model;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Builder
-public class UserDto {
+public class RoleDto {
 
     @NotNull
     private int id;
     @NotBlank
-    private String login;
-    @NotBlank
-    private String password;
-    @NotBlank
-    private String role;
+    private String name;
 
 }

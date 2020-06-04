@@ -15,7 +15,7 @@ public interface UserMapper {
             @Mapping(target = "id", source = "user.id"),
             @Mapping(target = "login", source = "user.login"),
             @Mapping(target = "password", source = "user.password"),
-            @Mapping(target = "roles", source = "user.roles")
+            @Mapping(target = "role", source = "user.role.name")
     })
     UserDto toDTO(User user);
 
@@ -23,7 +23,7 @@ public interface UserMapper {
             @Mapping(target = "id", source = "userDto.id"),
             @Mapping(target = "login", source = "userDto.login"),
             @Mapping(target = "password", source = "userDto.password"),
-            @Mapping(target = "roles", source = "userDto.roles"),
+            @Mapping(target = "role.id", source = "userDto.role"),
             @Mapping(target = "chatroomEntities", ignore = true),
             @Mapping(target = "messageEntities", ignore = true)
     })
