@@ -23,8 +23,13 @@ public class DbUserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UserDto userDto) {
-        userRepository.updateUser(userDto);
+    public void updateUserLoginAndPassword(UserDto userDto) {
+        userRepository.updateUserLoginAndPassword(userDto);
+    }
+
+    @Override
+    public void updateUserRole(UserDto userDto) {
+        userRepository.updateUserRole(userDto);
     }
 
     @Override

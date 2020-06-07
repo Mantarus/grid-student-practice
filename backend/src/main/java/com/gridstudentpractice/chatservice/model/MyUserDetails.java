@@ -18,7 +18,7 @@ public class MyUserDetails implements UserDetails {
     public MyUserDetails(UserDto user) {
         this.userName = user.getLogin();
         this.password = user.getPassword();
-        this.authorities = Arrays.asList(new SimpleGrantedAuthority(user.getRoles()));
+        this.authorities = Arrays.asList(new SimpleGrantedAuthority(user.getRole()));
     }
 
     @Override

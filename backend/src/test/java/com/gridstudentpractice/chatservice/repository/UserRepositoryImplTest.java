@@ -1,5 +1,6 @@
 package com.gridstudentpractice.chatservice.repository;
 
+import com.gridstudentpractice.chatservice.model.RoleDto;
 import com.gridstudentpractice.chatservice.model.UserDto;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -34,10 +35,12 @@ public class UserRepositoryImplTest {
     @Autowired
     private UserRepository userRepository;
 
-    private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +
-                                                                            "(2, 'foo2', 'pass2'), " +
-                                                                            "(3, 'foo3', 'pass3');";
+    private static final String insertRolesQuery = "INSERT INTO roles VALUES (1, 'foo_role1'), (2, 'foo_role2');";
+    private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1', 1), " +
+                                                                            "(2, 'foo2', 'pass2', 1), " +
+                                                                            "(3, 'foo3', 'pass3', 2);";
     private static final String selectUsersQuery = "SELECT * FROM users;";
+    private static final String selectRolesQuery = "SELECT * FROM roles;";
 
     @Before
     public void before() throws SQLException, IOException {
@@ -62,21 +65,42 @@ public class UserRepositoryImplTest {
         return null;
     }
 
+    private RoleDto findRoleById(int id, List<RoleDto> roleDtos) {
+        for (RoleDto roleDto : roleDtos) {
+            if (roleDto.getId() == id) {
+                return roleDto;
+            }
+        }
+        return null;
+    }
+
     @Test
     public void getUserByLogin() throws SQLException {
         Statement statement = connection.createStatement();
+        statement.executeUpdate(insertRolesQuery);
         statement.executeUpdate(insertUsersQuery);
 
         String userLogin = "foo3";
         UserDto repoUserDto = userRepository.getUserByLogin(userLogin);
 
-        ResultSet rs = statement.executeQuery(selectUsersQuery);
+        ResultSet rs1 = statement.executeQuery(selectRolesQuery);
+        List<RoleDto> roleDtos = new ArrayList<>();
+        while (rs1.next()) {
+            RoleDto roleDto = RoleDto.builder()
+                    .id(rs1.getInt("id"))
+                    .name(rs1.getString("name"))
+                    .build();
+            roleDtos.add(roleDto);
+        }
+
+        ResultSet rs2 = statement.executeQuery(selectUsersQuery);
         List<UserDto> userDtos = new ArrayList<>();
-        while (rs.next()) {
+        while (rs2.next()) {
             UserDto userDto = UserDto.builder()
-                    .id(rs.getInt("id"))
-                    .login(rs.getString("login"))
-                    .password(rs.getString("password"))
+                    .id(rs2.getInt("id"))
+                    .login(rs2.getString("login"))
+                    .password(rs2.getString("password"))
+                    .role(rs2.getString("role"))
                     .build();
             userDtos.add(userDto);
         }
@@ -87,21 +111,24 @@ public class UserRepositoryImplTest {
                 assertEquals(userDto.getId(), repoUserDto.getId());
                 assertEquals(userDto.getLogin(), repoUserDto.getLogin());
                 assertEquals(userDto.getPassword(), repoUserDto.getPassword());
+                assertEquals(findRoleById(Integer.parseInt(userDto.getRole()), roleDtos).getName(), repoUserDto.getRole());
             }
         }
     }
 
     @Test
     public void CreateUser() throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(insertRolesQuery);
         UserDto foo1 = UserDto.builder()
                 .id(1)
                 .login("foo1")
                 .password("pass1")
+                .role("2")
                 .build();
 
         userRepository.createUser(foo1);
 
-        Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(selectUsersQuery);
         if (rs.next()) {
             assertEquals(foo1.getId(), rs.getInt("id"));
@@ -114,14 +141,17 @@ public class UserRepositoryImplTest {
     @Test
     public void updateUser() throws SQLException {
         Statement statement = connection.createStatement();
+        statement.executeUpdate(insertRolesQuery);
         statement.executeUpdate(insertUsersQuery);
 
         UserDto foo1 = UserDto.builder()
                 .id(1)
                 .login("foo01")
                 .password("pass01")
+                .role("2")
                 .build();
-        userRepository.updateUser(foo1);
+        userRepository.updateUserLoginAndPassword(foo1);
+        userRepository.updateUserRole(foo1);
 
         ResultSet rs = statement.executeQuery(selectUsersQuery);
         List<UserDto> userDtos = new ArrayList<>();
@@ -130,6 +160,7 @@ public class UserRepositoryImplTest {
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
+                    .role(rs.getString("role"))
                     .build();
             userDtos.add(userDto);
         }
@@ -138,11 +169,13 @@ public class UserRepositoryImplTest {
         assertEquals(foo1.getId(), findUserById(foo1.getId(), userDtos).getId());
         assertEquals(foo1.getLogin(), findUserById(foo1.getId(), userDtos).getLogin());
         assertEquals(foo1.getPassword(), findUserById(foo1.getId(), userDtos).getPassword());
+        assertEquals(foo1.getRole(), findUserById(foo1.getId(), userDtos).getRole());
     }
 
     @Test
     public void deleteUserById() throws SQLException {
         Statement statement = connection.createStatement();
+        statement.executeUpdate(insertRolesQuery);
         statement.executeUpdate(insertUsersQuery);
 
         int userId = 1;
@@ -155,6 +188,7 @@ public class UserRepositoryImplTest {
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
+                    .role(rs.getString("role"))
                     .build();
             userDtos.add(userDto);
         }

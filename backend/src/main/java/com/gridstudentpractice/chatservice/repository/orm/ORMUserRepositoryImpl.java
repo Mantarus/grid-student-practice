@@ -1,6 +1,9 @@
 package com.gridstudentpractice.chatservice.repository.orm;
 
+import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.mapper.UserMapper;
+import com.gridstudentpractice.chatservice.model.Role;
+import com.gridstudentpractice.chatservice.model.User;
 import com.gridstudentpractice.chatservice.model.UserDto;
 import com.gridstudentpractice.chatservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +33,22 @@ public class ORMUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateUser(UserDto userDto) {
-        ormUserRepository.save(mapper.toEntity(userDto));
+    public void updateUserLoginAndPassword(UserDto userDto) {
+        User user = ormUserRepository.findById(userDto.getId())
+                .orElseThrow(() -> new RepositoryException("No such user found with id " + userDto.getId()));
+        user.setLogin(userDto.getLogin());
+        user.setPassword(userDto.getPassword());
+        ormUserRepository.save(user);
+    }
+
+    @Override
+    public void updateUserRole(UserDto userDto) {
+        User user = ormUserRepository.findById(userDto.getId())
+                .orElseThrow(() -> new RepositoryException("No such user found with id " + userDto.getId()));
+        Role role = new Role();
+        role.setId(Integer.parseInt(userDto.getRole()));
+        user.setRole(role);
+        ormUserRepository.save(user);
     }
 
     @Override

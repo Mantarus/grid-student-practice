@@ -6,7 +6,8 @@ public interface UserRepository {
 
     void createUser(UserDto userDto);
     UserDto getUserByLogin(String userLogin);
-    void updateUser(UserDto userDto);
+    void updateUserLoginAndPassword(UserDto userDto);
+    void updateUserRole(UserDto userDto);
     void deleteUserById(int id);
 
 }

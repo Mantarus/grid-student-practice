@@ -23,7 +23,8 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     final static private String checkUserSql = "SELECT u.id, u.login, u.password, r.name FROM users u " +
                                                 "JOIN roles r on u.role = r.id " +
                                                 "WHERE u.login = ? ORDER BY u.id";
-    final static private String updateUserSql = "UPDATE users u SET login = ?, password = ?, role = ? WHERE u.id = ?";
+    final static private String updateUserLoginAndPasswordSql = "UPDATE users u SET login = ?, password = ? WHERE u.id = ?";
+    final static private String updateUserRoleSql = "UPDATE users u SET role = ? WHERE u.id = ?";
     final static private String deleteUserSql = "DELETE FROM users u WHERE u.id = ?";
 
     @Override
@@ -42,7 +43,11 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public UserDto getUserByLogin(String userLogin) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(checkUserSql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                checkUserSql,
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY
+        )) {
 
             preparedStatement.setString(1, userLogin);
 
@@ -65,17 +70,29 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateUser(UserDto userDto) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(updateUserSql)) {
+    public void updateUserLoginAndPassword(UserDto userDto) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateUserLoginAndPasswordSql)) {
 
             preparedStatement.setString(1, userDto.getLogin());
             preparedStatement.setString(2, userDto.getPassword());
-            preparedStatement.setString(3, userDto.getRole());
-            preparedStatement.setInt(4, userDto.getId());
+            preparedStatement.setInt(3, userDto.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("UserDto update error", e);
+            throw new RepositoryException("UserDto login and password update error", e);
+        }
+    }
+
+    @Override
+    public void updateUserRole(UserDto userDto) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateUserRoleSql)) {
+
+            preparedStatement.setString(1, userDto.getRole());
+            preparedStatement.setInt(2, userDto.getId());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RepositoryException("UserDto role update error", e);
         }
     }
 

@@ -37,7 +37,8 @@ public class ChatroomRepositoryImplTest {
                                                                             "(3, 'chatroom3', 'description3');";
     private static final String getChatrooms = "SELECT * FROM chatrooms ";
     private static final String insertOneChatroomQuery = "INSERT INTO chatrooms VALUES (1, 'chatroom', 'description1'); ";
-    private static final String insertOneUserQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'); ";
+    private static final String insertOneUserQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1', 1); ";
+    private static final String insertOneRoleQuery = "INSERT INTO roles VALUES (1, 'foo_role'); ";
     private static final String getUserChatroom = "SELECT * FROM user_chatroom ";
     private static final String clearUserChatroomQuery = "DELETE FROM user_chatroom CASCADE";
 
@@ -67,7 +68,10 @@ public class ChatroomRepositoryImplTest {
 
     @Test
     public void getChatroomById() throws SQLException {
-        Statement statement = connection.createStatement();
+        Statement statement = connection.createStatement(
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY
+        );
         statement.executeUpdate(insertChatroomQuery);
         int chatroomId = 3;
         ChatroomDto chatroomDto = chatroomRepository.getChatroomById(chatroomId);
@@ -187,6 +191,7 @@ public class ChatroomRepositoryImplTest {
     public void addUserToChatroom() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(insertOneChatroomQuery);
+        statement.executeUpdate(insertOneRoleQuery);
         statement.executeUpdate(insertOneUserQuery);
 
         chatroomRepository.addUserToChatroom(1,1);

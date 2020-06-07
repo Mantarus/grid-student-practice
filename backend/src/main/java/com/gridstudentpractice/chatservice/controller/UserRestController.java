@@ -25,8 +25,8 @@ public class UserRestController {
     }
 
     @PutMapping
-    public void updateUser(@Valid @RequestBody UserDto userDto) {
-        userService.updateUser(userDto);
+    public void updateUserLoginAndPassword(@Valid @RequestBody UserDto userDto) {
+        userService.updateUserLoginAndPassword(userDto);
     }
 
     @DeleteMapping("/{id}")

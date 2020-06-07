@@ -8,7 +8,7 @@ public interface MessageService {
 
     void sendMessage(MessageDto messageDto);
     List<MessageDto> getMessageDtos();
-    void updateMessage(MessageDto messageDto);
+    void updateMessageBody(MessageDto messageDto);
     void deleteMessageById(int id);
 
 }

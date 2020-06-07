@@ -1,6 +1,30 @@
 databaseChangeLog:
   - logicalFilePath: db/changelog/db.changelog-master.yaml
   - changeSet:
+      id: createRolesTable
+      author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: roles
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: varchar(30)
+
+  - changeSet:
       id: createUsersTable
       author: chatservice
 
@@ -30,8 +54,12 @@ databaseChangeLog:
                   name: password
                   type: varchar(30)
               - column:
-                  name: roles
-                  type: varchar(30)
+                  name: role
+                  type: integer
+                  constraints:
+                    foreignKeyName: users_roles_id_fk
+                    references: roles(id)
+
   - changeSet:
       id: createChatroomsTable
       author: chatservice

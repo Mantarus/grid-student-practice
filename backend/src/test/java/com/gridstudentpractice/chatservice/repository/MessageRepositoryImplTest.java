@@ -41,7 +41,8 @@ public class MessageRepositoryImplTest {
     private static final String insertMessagesQuery = "INSERT INTO messages (id, sender, body, time1, chatroom) " +
             "VALUES (1, 1, 'body1', now(), 1), (2, 2, 'body2', now(), 2), (3, 3, 'body3', now(), 3);";
     private static final String selectMessagesQuery = "SELECT * FROM messages;";
-    private static final String insertIntoRequiredTablesQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), (2, 'foo2', 'pass2'), (3, 'foo3', 'pass3'); " +
+    private static final String insertIntoRequiredTablesQuery = "INSERT INTO roles VALUES (1, 'role1'), (2, 'role2'); " +
+            "INSERT INTO users VALUES (1, 'foo1', 'pass1', 1), (2, 'foo2', 'pass2', 1), (3, 'foo3', 'pass3', 2); " +
             "INSERT INTO chatrooms VALUES (1, 'chat1', 'desc1'), (2, 'chat2', 'desc2'), (3, 'chat3', 'desc3');";
     private static final String selectUsersQuery = "SELECT * FROM users;";
     private static final String selectChatroomsQuery = "SELECT * FROM chatrooms;";
@@ -181,7 +182,7 @@ public class MessageRepositoryImplTest {
                 .chatroom("1")
                 .build();
 
-        messageRepository.updateMessage(foo);
+        messageRepository.updateMessageBody(foo);
 
         ResultSet rs = statement.executeQuery(selectMessagesQuery);
         List<MessageDto> messageDtos = new ArrayList<>();
