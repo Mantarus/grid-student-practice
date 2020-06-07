@@ -20,7 +20,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     private Connection connection;
 
     final static private String addUserSql = "INSERT INTO users (login, password, role) VALUES (?, ?, ?::integer)";
-    final static private String checkUserSql = "SELECT u.id, u.login, u.password, r.name FROM users u " +
+    final static private String checkUserSql = "SELECT u.id, u.login, u.password, r.name AS role FROM users u " +
                                                 "JOIN roles r on u.role = r.id " +
                                                 "WHERE u.login = ? ORDER BY u.id";
     final static private String updateUserLoginAndPasswordSql = "UPDATE users u SET login = ?, password = ? WHERE u.id = ?";
