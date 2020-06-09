@@ -1,10 +1,12 @@
 package com.gridstudentpractice.chatservice.security;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/springSecurity")
-public class RegistrationRestController {
+public class SecurityController {
 
     @GetMapping("/")
     public String home() {
@@ -16,9 +18,9 @@ public class RegistrationRestController {
         return ("<h1>Welcome User</h1>");
     }
 
-    @GetMapping("/admin")
-    public String admin() {
-        return ("<h1>Welcome Admin</h1>");
+    @GetMapping("/login")
+    public String login(Model model) {
+        return "login";
     }
 
 }
