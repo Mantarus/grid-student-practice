@@ -11,6 +11,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import java.util.HashMap;
+import java.util.Map;
+
 @Profile("orm")
 @Repository
 public class ORMUserRepositoryImpl implements UserRepository {
@@ -22,9 +27,18 @@ public class ORMUserRepositoryImpl implements UserRepository {
     @Autowired
     private UserMapper mapper;
 
+    @Autowired
+    private EntityManager entityManager;
+
     @Override
     public void createUser(UserDto userDto) {
-        ormUserRepository.save(mapper.toEntity(userDto));
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("user-entity-graph");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("javax.persistence.fetchgraph", entityGraph);
+        User user = mapper.toEntity(userDto);
+        Role role = entityManager.find(Role.class, 1, properties);
+        user.getRoleEntities().add(role);
+        ormUserRepository.save(user);
     }
 
     @Override
@@ -42,13 +56,17 @@ public class ORMUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateUserRole(UserDto userDto) {
-        User user = ormUserRepository.findById(userDto.getId())
-                .orElseThrow(() -> new RepositoryException("No such user found with id " + userDto.getId()));
-        Role role = new Role();
-        role.setId(Integer.parseInt(userDto.getRole()));
-        user.setRole(role);
-        ormUserRepository.save(user);
+    public void addRoleToUser(int rId, int uId) {
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("user-entity-graph");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("javax.persistence.fetchgraph", entityGraph);
+        Role role = entityManager.find(Role.class, rId, properties);
+        User user = entityManager.find(User.class, uId, properties);
+
+        if(!user.getRoleEntities().contains(role)) {
+            user.getRoleEntities().add(role);
+            ormUserRepository.save(user);
+        }
     }
 
     @Override

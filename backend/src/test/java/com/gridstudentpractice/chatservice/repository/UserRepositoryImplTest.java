@@ -25,7 +25,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@ActiveProfiles({"test","orm"})
+@ActiveProfiles({"test","jdbc"})
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class UserRepositoryImplTest {
 
@@ -36,11 +36,13 @@ public class UserRepositoryImplTest {
     private UserRepository userRepository;
 
     private static final String insertRolesQuery = "INSERT INTO roles VALUES (1, 'foo_role1'), (2, 'foo_role2');";
-    private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1', 1), " +
-                                                                            "(2, 'foo2', 'pass2', 1), " +
-                                                                            "(3, 'foo3', 'pass3', 2);";
+    private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +
+                                                                            "(2, 'foo2', 'pass2'), " +
+                                                                            "(3, 'foo3', 'pass3');";
     private static final String selectUsersQuery = "SELECT * FROM users;";
     private static final String selectRolesQuery = "SELECT * FROM roles;";
+    private static final String selectUserRolesQuery = "SELECT * FROM user_role;";
+    private static final String clearUserRolesQuery = "DELETE FROM user_role CASCADE;";
 
     @Before
     public void before() throws SQLException, IOException {
@@ -60,15 +62,6 @@ public class UserRepositoryImplTest {
         for (UserDto userDto : userDtos) {
             if (userDto.getId() == id) {
                 return userDto;
-            }
-        }
-        return null;
-    }
-
-    private RoleDto findRoleById(int id, List<RoleDto> roleDtos) {
-        for (RoleDto roleDto : roleDtos) {
-            if (roleDto.getId() == id) {
-                return roleDto;
             }
         }
         return null;
@@ -100,7 +93,6 @@ public class UserRepositoryImplTest {
                     .id(rs2.getInt("id"))
                     .login(rs2.getString("login"))
                     .password(rs2.getString("password"))
-                    .role(rs2.getString("role"))
                     .build();
             userDtos.add(userDto);
         }
@@ -111,7 +103,6 @@ public class UserRepositoryImplTest {
                 assertEquals(userDto.getId(), repoUserDto.getId());
                 assertEquals(userDto.getLogin(), repoUserDto.getLogin());
                 assertEquals(userDto.getPassword(), repoUserDto.getPassword());
-                assertEquals(findRoleById(Integer.parseInt(userDto.getRole()), roleDtos).getName(), repoUserDto.getRole());
             }
         }
     }
@@ -124,18 +115,24 @@ public class UserRepositoryImplTest {
                 .id(1)
                 .login("foo1")
                 .password("pass1")
-                .role("2")
                 .build();
 
         userRepository.createUser(foo1);
 
         ResultSet rs = statement.executeQuery(selectUsersQuery);
-        if (rs.next()) {
-            assertEquals(foo1.getId(), rs.getInt("id"));
-            assertEquals(foo1.getLogin(), rs.getString("login"));
-            assertEquals(foo1.getPassword(), rs.getString("password"));
+        List<UserDto> userDtos = new ArrayList<>();
+        while (rs.next()) {
+           UserDto userDto = UserDto.builder()
+                   .id(rs.getInt("id"))
+                   .login(rs.getString("login"))
+                   .password(rs.getString("password"))
+                   .build();
+           userDtos.add(userDto);
         }
         statement.close();
+        assertEquals(foo1.getId(), findUserById(foo1.getId(), userDtos).getId());
+        assertEquals(foo1.getLogin(), findUserById(foo1.getId(), userDtos).getLogin());
+        assertEquals(foo1.getPassword(), findUserById(foo1.getId(), userDtos).getPassword());
     }
 
     @Test
@@ -148,10 +145,8 @@ public class UserRepositoryImplTest {
                 .id(1)
                 .login("foo01")
                 .password("pass01")
-                .role("2")
                 .build();
         userRepository.updateUserLoginAndPassword(foo1);
-        userRepository.updateUserRole(foo1);
 
         ResultSet rs = statement.executeQuery(selectUsersQuery);
         List<UserDto> userDtos = new ArrayList<>();
@@ -160,7 +155,6 @@ public class UserRepositoryImplTest {
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
-                    .role(rs.getString("role"))
                     .build();
             userDtos.add(userDto);
         }
@@ -169,7 +163,6 @@ public class UserRepositoryImplTest {
         assertEquals(foo1.getId(), findUserById(foo1.getId(), userDtos).getId());
         assertEquals(foo1.getLogin(), findUserById(foo1.getId(), userDtos).getLogin());
         assertEquals(foo1.getPassword(), findUserById(foo1.getId(), userDtos).getPassword());
-        assertEquals(foo1.getRole(), findUserById(foo1.getId(), userDtos).getRole());
     }
 
     @Test
@@ -188,7 +181,6 @@ public class UserRepositoryImplTest {
                     .id(rs.getInt("id"))
                     .login(rs.getString("login"))
                     .password(rs.getString("password"))
-                    .role(rs.getString("role"))
                     .build();
             userDtos.add(userDto);
         }
@@ -197,4 +189,19 @@ public class UserRepositoryImplTest {
         assertNull(findUserById(userId, userDtos));
     }
 
+    @Test
+    public void addRoleToUser() throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(insertUsersQuery);
+        statement.executeUpdate(insertRolesQuery);
+        int roleId = 1, userId = 2;
+        userRepository.addRoleToUser(roleId, userId);
+        ResultSet rs = statement.executeQuery(selectUserRolesQuery);
+        if (rs.next()) {
+            assertEquals(rs.getInt("user_id"), userId);
+            assertEquals(rs.getInt("role_id"), roleId);
+        }
+        statement.executeUpdate(clearUserRolesQuery);
+        statement.close();
+    }
 }

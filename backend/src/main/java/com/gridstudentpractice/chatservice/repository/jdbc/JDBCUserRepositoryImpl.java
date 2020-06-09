@@ -19,13 +19,11 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     @Autowired
     private Connection connection;
 
-    final static private String addUserSql = "INSERT INTO users (login, password, role) VALUES (?, ?, ?::integer)";
-    final static private String checkUserSql = "SELECT u.id, u.login, u.password, r.name AS role FROM users u " +
-                                                "JOIN roles r on u.role = r.id " +
-                                                "WHERE u.login = ? ORDER BY u.id";
-    final static private String updateUserLoginAndPasswordSql = "UPDATE users u SET login = ?, password = ? WHERE u.id = ?";
-    final static private String updateUserRoleSql = "UPDATE users u SET role = ? WHERE u.id = ?";
-    final static private String deleteUserSql = "DELETE FROM users u WHERE u.id = ?";
+    final static private String addUserSql = "INSERT INTO users (login, password) VALUES (?, ?);";
+    final static private String checkUserSql = "SELECT u.* FROM users u WHERE u.login = ? ORDER BY u.id;";
+    final static private String updateUserLoginAndPasswordSql = "UPDATE users u SET login = ?, password = ? WHERE u.id = ?;";
+    final static private String addRoleToUser = "INSERT INTO user_role (user_id, role_id) VALUES (?, ?);";
+    final static private String deleteUserSql = "DELETE FROM users u WHERE u.id = ?;";
 
     @Override
     public void createUser(UserDto userDto) {
@@ -33,11 +31,21 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
             preparedStatement.setString(1, userDto.getLogin());
             preparedStatement.setString(2, userDto.getPassword());
-            preparedStatement.setString(3, userDto.getRole());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RepositoryException("UserDto creation error", e);
+        }
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(addRoleToUser)) {
+
+            preparedStatement.setInt(1, userDto.getId());
+            preparedStatement.setInt(2, 1);
+            preparedStatement.executeUpdate();
+
+        }
+        catch (SQLException e) {
+            throw new RepositoryException("User role creation error", e);
         }
     }
 
@@ -57,7 +65,6 @@ public class JDBCUserRepositoryImpl implements UserRepository {
                             .id(rs.getInt("id"))
                             .login(rs.getString("login"))
                             .password(rs.getString("password"))
-                            .role(rs.getString("role"))
                             .build();
                 } else throw new RepositoryException("No such user") ;
 
@@ -84,15 +91,14 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateUserRole(UserDto userDto) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(updateUserRoleSql)) {
-
-            preparedStatement.setString(1, userDto.getRole());
-            preparedStatement.setInt(2, userDto.getId());
+    public void addRoleToUser(int rId, int uId) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(addRoleToUser)) {
+            preparedStatement.setInt(1, uId);
+            preparedStatement.setInt(2, rId);
             preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RepositoryException("UserDto role update error", e);
+        }
+        catch (SQLException e) {
+            throw new RepositoryException("UserDto creation error", e);
         }
     }
 

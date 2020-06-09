@@ -24,6 +24,11 @@ public class UserRestController {
         userService.addUser(userDto);
     }
 
+    @PostMapping("/add-role/{roleId}/{userId}")
+    public void addRoleToUser(@PathVariable("roleId") int roleId, @PathVariable("userId") int userId) {
+        userService.addRoleToUser(roleId, userId);
+    }
+
     @PutMapping
     public void updateUserLoginAndPassword(@Valid @RequestBody UserDto userDto) {
         userService.updateUserLoginAndPassword(userDto);

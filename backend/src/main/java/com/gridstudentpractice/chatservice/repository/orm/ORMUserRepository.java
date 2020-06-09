@@ -11,8 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ORMUserRepository extends JpaRepository<User, Integer> {
 
-    @EntityGraph(value = "user-entity-graph")
-    @Query("SELECT u FROM User u WHERE u.login = ?1")
     User findByLogin(String login);
 
 }

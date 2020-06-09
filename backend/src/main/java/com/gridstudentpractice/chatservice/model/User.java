@@ -14,16 +14,12 @@ import java.util.List;
 @NamedEntityGraph(
         name = "user-entity-graph",
         attributeNodes = {
-                @NamedAttributeNode(value = "role", subgraph = "role-entity-subgraph")
+                @NamedAttributeNode(value = "roleEntities", subgraph = "role-entity-subgraph")
         },
-        subgraphs = {
-                @NamedSubgraph(
-                        name = "role-entity-subgraph",
-                        attributeNodes = {
-                                @NamedAttributeNode("name")
-                        }
-                )
-        }
+        subgraphs = @NamedSubgraph(
+                name = "role-entity-subgraph",
+                attributeNodes = @NamedAttributeNode("id")
+        )
 )
 public class User {
 
@@ -38,9 +34,17 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "role")
-    private Role role;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = {
+                   @JoinColumn(name = "user_id", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "role_id", referencedColumnName = "id")
+            }
+    )
+    private List<Role> roleEntities;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userEntities",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})

@@ -1,15 +1,15 @@
 package com.gridstudentpractice.chatservice.service;
 
-import com.gridstudentpractice.chatservice.model.RoleDto;
 import com.gridstudentpractice.chatservice.model.UserDto;
 import com.gridstudentpractice.chatservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class DbUserServiceImpl implements UserService {
@@ -33,8 +33,8 @@ public class DbUserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserRole(UserDto userDto) {
-        userRepository.updateUserRole(userDto);
+    public void addRoleToUser(int rId, int uId) {
+        userRepository.addRoleToUser(rId, uId);
     }
 
     @Override
@@ -45,14 +45,13 @@ public class DbUserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         UserDto userDto = userRepository.getUserByLogin(s);
-        if (userDto == null) {
-            throw new UsernameNotFoundException("Invalid login or password");
+
+        if (userDto.getLogin() == null) {
+            throw new UsernameNotFoundException("Not found: " + s);
         }
-        return null;
-//        return new User(userDto.getLogin(),userDto.getPassword(), mapRoleToAuthority(userDto.getRole()));
+
+        return new User(userDto.getLogin(), userDto.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
-//    private GrantedAuthority mapRoleToAuthority(String role) {
-//        return new SimpleGrantedAuthority(role);
-//    }
 }

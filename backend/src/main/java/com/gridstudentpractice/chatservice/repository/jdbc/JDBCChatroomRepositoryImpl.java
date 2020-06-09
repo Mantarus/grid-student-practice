@@ -28,8 +28,6 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
     final static private String updateChatroom = "UPDATE chatrooms c SET name = ?, description = ? WHERE c.id = ?";
     final static private String deleteChatroom = "DELETE FROM chatrooms c WHERE c.id = ?";
 
-
-
     @Override
     public void createChatroom(ChatroomDto chatroomDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(createChatroom)) {
@@ -123,8 +121,6 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
         }
     }
 
-
-    //TODO: not working yet
     @Override
     public void addUserToChatroom(int uId, int cId) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(createUserInChatroom)) {

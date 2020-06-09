@@ -53,12 +53,6 @@ databaseChangeLog:
               - column:
                   name: password
                   type: varchar(30)
-              - column:
-                  name: role
-                  type: integer
-                  constraints:
-                    foreignKeyName: users_roles_id_fk
-                    references: roles(id)
 
   - changeSet:
       id: createChatroomsTable
@@ -150,3 +144,28 @@ databaseChangeLog:
                   constraints:
                     foreignKeyName: user_chatroom_users_id_fk
                     references: users(id)
+
+  - changeSet:
+      id: createUserRoleTable
+      author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: user_role
+      changes:
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: user_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: user_role_users_id_fk
+                    references: users(id)
+              - column:
+                  name: role_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: user_role_roles_id_fk
+                    references: roles(id)
