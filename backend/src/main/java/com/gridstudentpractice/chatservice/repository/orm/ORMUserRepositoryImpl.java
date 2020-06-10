@@ -9,10 +9,12 @@ import com.gridstudentpractice.chatservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,14 +32,17 @@ public class ORMUserRepositoryImpl implements UserRepository {
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public void createUser(UserDto userDto) {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("user-entity-graph");
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("javax.persistence.fetchgraph", entityGraph);
+
         User user = mapper.toEntity(userDto);
-        Role role = entityManager.find(Role.class, 1, properties);
-        user.getRoleEntities().add(role);
+        Role role = entityManager.find(Role.class, 1);
+        user.setRoleEntities(Collections.singletonList(role));
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
         ormUserRepository.save(user);
     }
 
