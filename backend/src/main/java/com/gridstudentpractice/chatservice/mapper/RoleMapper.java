@@ -16,7 +16,7 @@ public interface RoleMapper {
             @Mapping(target = "id", source = "role.id"),
             @Mapping(target = "name", source = "role.name")
     })
-    RoleDto toDto(Role role);
+    RoleDto toDTO(Role role);
 
     @Mappings({
             @Mapping(target = "id", source = "roleDto.id"),

@@ -14,6 +14,17 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph(
+        name = "role-entity-graph",
+        attributeNodes = @NamedAttributeNode(value = "userEntities", subgraph = "user-entity-subgraph"),
+        subgraphs = @NamedSubgraph(
+                name = "user-entity-subgraph",
+                attributeNodes = {
+                        @NamedAttributeNode("id"),
+                        @NamedAttributeNode("login")
+                }
+        )
+)
 public class Role {
 
     @Id

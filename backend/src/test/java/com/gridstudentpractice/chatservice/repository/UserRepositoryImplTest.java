@@ -25,7 +25,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"test","jdbc"})
+//@ActiveProfiles({"test","orm"})
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class UserRepositoryImplTest {
 
@@ -39,6 +39,7 @@ public class UserRepositoryImplTest {
     private static final String insertUsersQuery = "INSERT INTO users VALUES (1, 'foo1', 'pass1'), " +
                                                                             "(2, 'foo2', 'pass2'), " +
                                                                             "(3, 'foo3', 'pass3');";
+    private static final String insertUserRolesQuery = "INSERT INTO user_role (user_id, role_id) VALUES (1, 1), (1, 2), (2, 1), (3, 1);";
     private static final String selectUsersQuery = "SELECT * FROM users;";
     private static final String selectRolesQuery = "SELECT * FROM roles;";
     private static final String selectUserRolesQuery = "SELECT * FROM user_role;";
@@ -203,5 +204,41 @@ public class UserRepositoryImplTest {
         }
         statement.executeUpdate(clearUserRolesQuery);
         statement.close();
+    }
+
+    @Test
+    public void getUserRoles() throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(insertRolesQuery);
+        statement.executeUpdate(insertUsersQuery);
+        statement.executeUpdate(insertUserRolesQuery);
+        int userId = 1;
+
+        List<UserDto> testUserDtos = new ArrayList<>();
+        ResultSet rs = statement.executeQuery(selectUsersQuery);
+        while (rs.next()) {
+            UserDto testUserDto = UserDto.builder()
+                    .id(rs.getInt("id"))
+                    .login(rs.getString("login"))
+                    .password(rs.getString("password"))
+                    .build();
+            testUserDtos.add(testUserDto);
+        }
+        List<RoleDto> testRoleDtos = new ArrayList<>();
+        ResultSet rs1 = statement.executeQuery(selectRolesQuery);
+        while (rs1.next()) {
+            RoleDto testRoleDto = RoleDto.builder()
+                    .id(rs1.getInt("id"))
+                    .name(rs1.getString("name"))
+                    .build();
+            testRoleDtos.add(testRoleDto);
+        }
+        List<RoleDto> repoRoleDtos = userRepository.getUserRoles(findUserById(userId, testUserDtos).getLogin());
+
+        for (int i = 0; i < testRoleDtos.size(); i++) {
+            if (repoRoleDtos.get(i).getId() == testRoleDtos.get(i).getId()) {
+                assertEquals(repoRoleDtos.get(i).getName(), testRoleDtos.get(i).getName());
+            }
+        }
     }
 }

@@ -1,8 +1,10 @@
 package com.gridstudentpractice.chatservice.repository.orm;
 
 import com.gridstudentpractice.chatservice.exception.RepositoryException;
+import com.gridstudentpractice.chatservice.mapper.RoleMapper;
 import com.gridstudentpractice.chatservice.mapper.UserMapper;
 import com.gridstudentpractice.chatservice.model.Role;
+import com.gridstudentpractice.chatservice.model.RoleDto;
 import com.gridstudentpractice.chatservice.model.User;
 import com.gridstudentpractice.chatservice.model.UserDto;
 import com.gridstudentpractice.chatservice.repository.UserRepository;
@@ -16,7 +18,9 @@ import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Profile("orm")
 @Repository
@@ -26,29 +30,29 @@ public class ORMUserRepositoryImpl implements UserRepository {
     @Autowired
     private ORMUserRepository ormUserRepository;
 
+    @Lazy@Autowired
+    private ORMRoleRepository ormRoleRepository;
+
     @Autowired
-    private UserMapper mapper;
+    private UserMapper userMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Autowired
     private EntityManager entityManager;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
     @Override
     public void createUser(UserDto userDto) {
-
-        User user = mapper.toEntity(userDto);
+        User user = userMapper.toEntity(userDto);
         Role role = entityManager.find(Role.class, 1);
         user.setRoleEntities(Collections.singletonList(role));
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
         ormUserRepository.save(user);
     }
 
     @Override
     public UserDto getUserByLogin(String userLogin) {
-        return mapper.toDTO(ormUserRepository.findByLogin(userLogin) );
+        return userMapper.toDTO(ormUserRepository.findByLogin(userLogin) );
     }
 
     @Override
@@ -77,5 +81,13 @@ public class ORMUserRepositoryImpl implements UserRepository {
     @Override
     public void deleteUserById(int id) {
         ormUserRepository.deleteById(id);
+    }
+
+    @Override
+    public List<RoleDto> getUserRoles(String userLogin) {
+        List<Role> roles = ormRoleRepository.getUserRoles(userLogin);
+        return roles.stream()
+                .map(role -> roleMapper.toDTO(role))
+                .collect(Collectors.toList());
     }
 }

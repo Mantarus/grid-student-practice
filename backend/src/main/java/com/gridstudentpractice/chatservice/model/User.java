@@ -18,7 +18,9 @@ import java.util.List;
         },
         subgraphs = @NamedSubgraph(
                 name = "role-entity-subgraph",
-                attributeNodes = @NamedAttributeNode("id")
+                attributeNodes = {
+                        @NamedAttributeNode("id"),
+                }
         )
 )
 public class User {
