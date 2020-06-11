@@ -9,7 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -23,16 +23,16 @@ public class DbUserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void addUser(UserDto userDto) {
         userRepository.createUser(
                 UserDto.builder()
-                .id(userDto.getId())
-                .login(userDto.getLogin())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .build()
+                        .id(userDto.getId())
+                        .login(userDto.getLogin())
+                        .password(passwordEncoder.encode(userDto.getPassword()))
+                        .build()
         );
     }
 
@@ -65,8 +65,13 @@ public class DbUserServiceImpl implements UserService {
             throw new UsernameNotFoundException("Not found: " + s);
         }
 
-        return new User(userDto.getLogin(), userDto.getPassword(),
-                mapRolesToAuthorities(roleDtos));
+        User user = new User(
+                userDto.getLogin(),
+                userDto.getPassword(),
+                mapRolesToAuthorities(roleDtos)
+        );
+        System.out.println(user.getPassword());
+        return user;
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<RoleDto> roleDtos) {
