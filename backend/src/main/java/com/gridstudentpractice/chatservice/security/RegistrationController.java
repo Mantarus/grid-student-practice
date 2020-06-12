@@ -20,7 +20,7 @@ public class RegistrationController {
     private UserService userService;
 
     @ModelAttribute("user")
-    public UserDto userRegistrationDto() {
+    public UserDto userDto() {
         return UserDto.builder().build();
     }
 

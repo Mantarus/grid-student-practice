@@ -12,11 +12,6 @@ public class SecurityController {
         return "index";
     }
 
-    @GetMapping("/user")
-    public String user() {
-        return "user/index";
-    }
-
     @GetMapping("/login")
     public String login(Model model) {
         return "login";
