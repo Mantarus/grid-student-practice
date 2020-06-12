@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "chatrooms")
@@ -36,7 +37,7 @@ public class Chatroom {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "user_chatroom",
             joinColumns = {
@@ -46,7 +47,7 @@ public class Chatroom {
                     @JoinColumn(name = "user_id", referencedColumnName = "id")
             }
     )
-    private List<User> userEntities;
+    private Set<User> userEntities;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
             mappedBy = "chatroom")

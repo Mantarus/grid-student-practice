@@ -46,7 +46,7 @@ public class ORMUserRepositoryImpl implements UserRepository {
     public void createUser(UserDto userDto) {
         User user = userMapper.toEntity(userDto);
         Role role = entityManager.find(Role.class, 1);
-        user.setRoleEntities(Collections.singletonList(role));
+        user.setRoleEntities(Collections.singleton(role));
         ormUserRepository.save(user);
     }
 

@@ -43,7 +43,13 @@ public class DbUserServiceImpl implements UserService {
 
     @Override
     public void updateUserLoginAndPassword(UserDto userDto) {
-        userRepository.updateUserLoginAndPassword(userDto);
+        userRepository.updateUserLoginAndPassword(
+                UserDto.builder()
+                        .id(userDto.getId())
+                        .login(userDto.getLogin())
+                        .password(passwordEncoder.encode(userDto.getPassword()))
+                        .build()
+        );
     }
 
     @Override
