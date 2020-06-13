@@ -15,7 +15,7 @@ public class MessageDto {
     @NotBlank
     private String sender;
     @NotBlank
-    private  String chatroom;
+    private String chatroom;
     @NotBlank
     private String body;
     private LocalDateTime timestamp;
