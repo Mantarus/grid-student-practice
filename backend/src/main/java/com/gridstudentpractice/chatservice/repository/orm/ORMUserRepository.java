@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface ORMUserRepository extends JpaRepository<User, Integer> {
 
     User findByLogin(String login);
+
 }

@@ -14,7 +14,8 @@ public interface UserMapper {
     @Mappings({
             @Mapping(target = "id", source = "user.id"),
             @Mapping(target = "login", source = "user.login"),
-            @Mapping(target = "password", source = "user.password")
+            @Mapping(target = "password", source = "user.password"),
+            @Mapping(target = "confirmPassword", ignore = true)
     })
     UserDto toDTO(User user);
 
@@ -22,6 +23,7 @@ public interface UserMapper {
             @Mapping(target = "id", source = "userDto.id"),
             @Mapping(target = "login", source = "userDto.login"),
             @Mapping(target = "password", source = "userDto.password"),
+            @Mapping(target = "roleEntities", ignore = true),
             @Mapping(target = "chatroomEntities", ignore = true),
             @Mapping(target = "messageEntities", ignore = true)
     })

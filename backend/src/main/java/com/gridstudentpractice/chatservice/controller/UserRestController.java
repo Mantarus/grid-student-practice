@@ -3,6 +3,7 @@ package com.gridstudentpractice.chatservice.controller;
 import com.gridstudentpractice.chatservice.model.UserDto;
 import com.gridstudentpractice.chatservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,16 +21,25 @@ public class UserRestController {
     }
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public void addUser(@Valid @RequestBody UserDto userDto) {
         userService.addUser(userDto);
     }
 
+    @PostMapping("/add-role/{roleId}/{userId}")
+    @Secured("ROLE_ADMIN")
+    public void addRoleToUser(@PathVariable("roleId") int roleId, @PathVariable("userId") int userId) {
+        userService.addRoleToUser(roleId, userId);
+    }
+
     @PutMapping
-    public void updateUser(@Valid @RequestBody UserDto userDto) {
-        userService.updateUser(userDto);
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    public void updateUserLoginAndPassword(@Valid @RequestBody UserDto userDto) {
+        userService.updateUserLoginAndPassword(userDto);
     }
 
     @DeleteMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     public void deleteUserById(@PathVariable int id) {
         userService.deleteUserById(id);
     }

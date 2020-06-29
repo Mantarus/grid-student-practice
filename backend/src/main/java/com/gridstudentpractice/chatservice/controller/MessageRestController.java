@@ -28,8 +28,8 @@ public class MessageRestController {
     }
 
     @PutMapping
-    public void editMessage(@RequestBody MessageDto messageDto) {
-        messageService.updateMessage(messageDto);
+    public void editMessageBody(@RequestBody MessageDto messageDto) {
+        messageService.updateMessageBody(messageDto);
     }
 
     @DeleteMapping("/{id}")

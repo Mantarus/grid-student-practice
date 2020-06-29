@@ -25,8 +25,8 @@ import java.util.List;
     }
 
     @Override
-    public void updateMessage(MessageDto messageDto) {
-        messageRepository.updateMessage(messageDto);
+    public void updateMessageBody(MessageDto messageDto) {
+        messageRepository.updateMessageBody(messageDto);
     }
 
     @Override

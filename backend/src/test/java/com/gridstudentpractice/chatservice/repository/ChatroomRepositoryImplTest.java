@@ -67,7 +67,10 @@ public class ChatroomRepositoryImplTest {
 
     @Test
     public void getChatroomById() throws SQLException {
-        Statement statement = connection.createStatement();
+        Statement statement = connection.createStatement(
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY
+        );
         statement.executeUpdate(insertChatroomQuery);
         int chatroomId = 3;
         ChatroomDto chatroomDto = chatroomRepository.getChatroomById(chatroomId);

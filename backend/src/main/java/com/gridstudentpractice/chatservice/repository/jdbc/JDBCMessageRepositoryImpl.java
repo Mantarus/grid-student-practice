@@ -25,9 +25,9 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
                                                 "m.body AS body, " +
                                                 "m.time1 AS time1, " +
                                                 "ch.name AS chatroom " +
-            "FROM messages m " +
-            "JOIN users u ON u.id=m.sender " +
-            "JOIN chatrooms ch ON  ch.id=m.chatroom";
+                                                "FROM messages m " +
+                                                "JOIN users u ON u.id=m.sender " +
+                                                "JOIN chatrooms ch ON  ch.id=m.chatroom";
     final static private String updateMessage = "UPDATE messages m SET body = ? WHERE m.id = ?";
     final static private String deleteMessage = "DELETE FROM messages m WHERE m.id = ?";
 
@@ -48,7 +48,10 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<MessageDto> getMessages() {
-        try (Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE
+        )) {
             try (ResultSet rs = statement.executeQuery(selectTableSql)) {
                 List<MessageDto> messageDtos = new ArrayList<>();
                 while (rs.next()) {
@@ -74,7 +77,7 @@ public class JDBCMessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public void updateMessage(MessageDto messageDto) {
+    public void updateMessageBody(MessageDto messageDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateMessage)) {
 
             preparedStatement.setString(1, messageDto.getBody());

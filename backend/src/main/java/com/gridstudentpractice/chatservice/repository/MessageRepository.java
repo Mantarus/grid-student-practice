@@ -8,7 +8,7 @@ public interface MessageRepository {
 
     void createMessage(MessageDto messageDto);
     List<MessageDto> getMessages();
-    void updateMessage(MessageDto messageDto);
+    void updateMessageBody(MessageDto messageDto);
     void deleteMessageById(int id);
 
 }

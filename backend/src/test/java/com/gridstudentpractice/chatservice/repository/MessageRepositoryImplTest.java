@@ -181,7 +181,7 @@ public class MessageRepositoryImplTest {
                 .chatroom("1")
                 .build();
 
-        messageRepository.updateMessage(foo);
+        messageRepository.updateMessageBody(foo);
 
         ResultSet rs = statement.executeQuery(selectMessagesQuery);
         List<MessageDto> messageDtos = new ArrayList<>();

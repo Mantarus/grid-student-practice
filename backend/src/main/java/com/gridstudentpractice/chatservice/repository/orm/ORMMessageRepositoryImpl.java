@@ -1,5 +1,6 @@
 package com.gridstudentpractice.chatservice.repository.orm;
 
+import com.gridstudentpractice.chatservice.exception.RepositoryException;
 import com.gridstudentpractice.chatservice.mapper.MessageMapper;
 import com.gridstudentpractice.chatservice.model.MessageDto;
 import com.gridstudentpractice.chatservice.model.Message;
@@ -39,8 +40,11 @@ public class ORMMessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public void updateMessage(MessageDto messageDto) {
-        ormMessageRepository.save(mapper.toEntity(messageDto));
+    public void updateMessageBody(MessageDto messageDto) {
+        Message message = ormMessageRepository.findById(messageDto.getId())
+                .orElseThrow(() -> new RepositoryException("No message with found with id " + messageDto.getId()));
+        message.setBody(messageDto.getBody());
+        ormMessageRepository.save(message);
     }
 
     @Override

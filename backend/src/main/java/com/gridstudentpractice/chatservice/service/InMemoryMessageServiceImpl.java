@@ -22,7 +22,7 @@ public class InMemoryMessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void updateMessage(MessageDto messageDto) {
+    public void updateMessageBody(MessageDto messageDto) {
 
     }
 

@@ -28,8 +28,6 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
     final static private String updateChatroom = "UPDATE chatrooms c SET name = ?, description = ? WHERE c.id = ?";
     final static private String deleteChatroom = "DELETE FROM chatrooms c WHERE c.id = ?";
 
-
-
     @Override
     public void createChatroom(ChatroomDto chatroomDto) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(createChatroom)) {
@@ -45,7 +43,11 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public ChatroomDto getChatroomById(int chatroomId) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(getChatroomById)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                getChatroomById,
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY
+        )) {
             preparedStatement.setInt(1, chatroomId);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -66,7 +68,11 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
 
     @Override
     public List<ChatroomDto> getChatroomsByName(String chatroomName) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(getChatroomByName)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                getChatroomByName,
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY
+        )) {
             preparedStatement.setString(1, chatroomName);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -115,8 +121,6 @@ public class JDBCChatroomRepositoryImpl implements ChatroomRepository {
         }
     }
 
-
-    //TODO: not working yet
     @Override
     public void addUserToChatroom(int uId, int cId) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(createUserInChatroom)) {

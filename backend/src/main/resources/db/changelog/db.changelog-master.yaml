@@ -1,9 +1,61 @@
 databaseChangeLog:
   - logicalFilePath: db/changelog/db.changelog-master.yaml
   - changeSet:
+      id: createRolesTable
+      author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: roles
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: varchar(30)
+
+  - changeSet:
+      id: insertRolesToTable
+      author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        sqlCheck:
+          expectedResult: 0
+          sql: select count(*) from roles
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: name
+                  value: "ROLE_USER"
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: name
+                  value: "ROLE_ADMIN"
+
+  - changeSet:
       id: createUsersTable
       author: chatservice
-      validCheckSum: 8:58694c5e4cdde97cdaad106991639402
+
       preConditions:
         onFail: MARK_RAN
         not:
@@ -29,6 +81,7 @@ databaseChangeLog:
               - column:
                   name: password
                   type: varchar(30)
+
   - changeSet:
       id: createChatroomsTable
       author: chatservice
@@ -119,3 +172,28 @@ databaseChangeLog:
                   constraints:
                     foreignKeyName: user_chatroom_users_id_fk
                     references: users(id)
+
+  - changeSet:
+      id: createUserRoleTable
+      author: chatservice
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: user_role
+      changes:
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: user_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: user_role_users_id_fk
+                    references: users(id)
+              - column:
+                  name: role_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: user_role_roles_id_fk
+                    references: roles(id)
